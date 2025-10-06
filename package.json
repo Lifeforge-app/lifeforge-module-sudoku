@@ -1,0 +1,12 @@
+{
+  "name": "sudoku",
+  "version": "dev. 25w41",
+  "description": "Generate printable Sudoku boards infinitely.",
+  "scripts": {
+    "types": "cd client && bun tsc && cd ../server && bun tsc"
+  },
+  "dependencies": {
+    "react-to-print": "^3.1.1"
+  },
+  "devDependencies": {}
+}
