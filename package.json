@@ -3,10 +3,19 @@
   "version": "dev. 25w41",
   "description": "Generate printable Sudoku boards infinitely.",
   "scripts": {
-    "types": "cd client && bun tsc && cd ../server && bun tsc"
+    "types": "cd client && bun tsc"
   },
   "dependencies": {
-    "react-to-print": "^3.1.1"
+    "@iconify/react": "^6.0.2",
+    "@tanstack/react-query": "^5.90.2",
+    "clsx": "^2.1.1",
+    "lifeforge-ui": "workspace:*",
+    "react-i18next": "^16.0.0",
+    "react-to-print": "^3.1.1",
+    "shared": "workspace:*",
+    "tailwindcss": "^4.1.14",
+    "vite": "^7.1.9",
+    "zod": "^4.1.12"
   },
   "devDependencies": {}
 }
