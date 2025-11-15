@@ -5,7 +5,7 @@ export default {
   name: 'Sudoku',
   icon: 'uil:table',
   routes: {
-    sudoku: lazy(() => import('@'))
+    '/': lazy(() => import('@'))
   },
   category: 'Utilities'
 } satisfies ModuleConfig
