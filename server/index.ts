@@ -3,7 +3,12 @@ import z from 'zod'
 
 const generateBoard = forgeController
   .query()
-  .description('Generate 6 Sudoku boards by difficulty level')
+  .description({
+    en: 'Generate Sudoku boards from external API',
+    ms: 'Hasilkan papan Sudoku dari API luaran',
+    'zh-CN': '从外部API生成数独棋盘',
+    'zh-TW': '從外部API生成數獨棋盤'
+  })
   .input({
     query: z.object({
       difficulty: z.enum([
