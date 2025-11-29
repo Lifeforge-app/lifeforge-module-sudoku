@@ -73,8 +73,8 @@ function Sudoku() {
           icon="tabler:category"
           label="difficulty"
           namespace="apps.sudoku"
-          setValue={setDifficulty}
           value={difficulty}
+          onChange={setDifficulty}
         >
           {DIFFICULTIES.map((diff, index) => (
             <ListboxOption
@@ -91,7 +91,7 @@ function Sudoku() {
             <span className="text-lg">{t('inputs.showSolution')}</span>
           </div>
           <Switch
-            checked={showSolution}
+            value={showSolution}
             onChange={() => {
               setShowSolution(!showSolution)
             }}
