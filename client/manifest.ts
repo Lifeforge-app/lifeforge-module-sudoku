@@ -5,7 +5,9 @@ export default {
   name: 'Sudoku',
   icon: 'uil:table',
   routes: {
-    '/': lazy(() => import('@'))
+    '/': lazy(() => import('@')),
+    '/play/:sessionId': lazy(() => import('@/pages/Play')),
+    '/print/:sessionId': lazy(() => import('@/pages/Print'))
   },
   category: 'Utilities'
 } satisfies ModuleConfig

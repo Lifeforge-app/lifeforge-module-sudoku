@@ -1,6 +1,20 @@
 {
   "title": "Sudoku",
   "description": "Generate printable Sudoku boards infinitely.",
+  "buttons": {
+    "play": "Play",
+    "newGame": "New Game",
+    "continue": "Continue",
+    "delete": "Delete",
+    "sync": "Sync",
+    "retry": "Play Again",
+    "normal": "Normal",
+    "candidate": "Candidate",
+    "clear": "Clear",
+    "clearBoard": "Clear Board",
+    "print": "Print",
+    "createFirst": "Create Your First Session"
+  },
   "difficulties": {
     "easy": "Easy",
     "medium": "Medium",
@@ -11,6 +25,55 @@
   },
   "inputs": {
     "difficulty": "Difficulty",
-    "showSolution": "Show Solution"
+    "showSolution": "Show Solution",
+    "boardCount": "Board Count"
+  },
+  "headers": {
+    "sessions": "Game Sessions",
+    "printPreview": "Print Preview"
+  },
+  "items": {
+    "session": "session"
+  },
+  "session": {
+    "create": "Create Session",
+    "lastPlayed": "Last played",
+    "complete": "complete",
+    "completed": "Completed",
+    "avgTime": "Avg Time"
+  },
+  "messages": {
+    "savedGameFound": "Saved game found",
+    "continueOrStartNew": "You can continue your previous game or start a new one.",
+    "congratulations": "Congratulations!",
+    "puzzleSolved": "You solved the puzzle!"
+  },
+  "empty": {
+    "sessions": {
+      "title": "No Sessions Yet",
+      "description": "Create your first Sudoku session to get started."
+    }
+  },
+  "modals": {
+    "confirmRefresh": {
+      "title": "Generate New Boards?",
+      "description": "You have a game in progress. Generating new boards will overwrite your current progress. Are you sure you want to continue?"
+    },
+    "confirmNewGame": {
+      "title": "Start New Game?",
+      "description": "You have a game in progress. Starting a new game will overwrite your current progress. Are you sure you want to continue?"
+    },
+    "confirmDelete": {
+      "title": "Delete Session?",
+      "description": "This will permanently delete this session and all its progress. This action cannot be undone."
+    },
+    "confirmClearBoard": {
+      "title": "Clear Board?",
+      "description": "This will clear all your answers on the current board. Your timer will continue. Are you sure?"
+    },
+    "confirmPlayAgain": {
+      "title": "Play Again?",
+      "description": "This will reset the board and start fresh. Your completion time will be lost. Are you sure?"
+    }
   }
 }

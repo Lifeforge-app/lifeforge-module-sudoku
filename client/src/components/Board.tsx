@@ -4,13 +4,15 @@ import type { SudokuBoard } from '..'
 
 function Board({
   data,
-  showSolution
+  showSolution,
+  boardCount
 }: {
   data: SudokuBoard
   showSolution?: boolean
+  boardCount: number
 }) {
   return (
-    <div className="aspect-square size-full p-4">
+    <div className="aspect-square w-full p-[1rem]">
       <div className="border-bg-800 dark:border-bg-100 relative grid size-full grid-cols-9 border-[3px] print:border-black">
         {Array(9)
           .fill(0)
@@ -34,7 +36,14 @@ function Board({
                         'border-bg-500 print:border-bg-400! border-b'
                     )}
                   >
-                    <div className="flex size-full items-center justify-center text-lg">
+                    <div
+                      className={clsx(
+                        'flex size-full items-center justify-center font-medium',
+                        boardCount === 1
+                          ? 'print:text-[2rem]'
+                          : 'print:text-[1rem]'
+                      )}
+                    >
                       {(() => {
                         const target = showSolution
                           ? data.solution

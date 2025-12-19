@@ -1,5 +1,8 @@
-import { forgeController, forgeRouter } from '@functions/routes'
 import z from 'zod'
+
+import { forgeController, forgeRouter } from '@functions/routes'
+
+import sessions from './routes/sessions'
 
 const generateBoard = forgeController
   .query()
@@ -56,4 +59,4 @@ const generateBoard = forgeController
     return boards
   })
 
-export default forgeRouter({ generateBoard })
+export default forgeRouter({ generateBoard, sessions })

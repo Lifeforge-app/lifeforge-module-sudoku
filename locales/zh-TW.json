@@ -1,6 +1,20 @@
 {
   "title": "數獨",
   "description": "無限生成可打印的數獨棋盤。",
+  "buttons": {
+    "play": "開始",
+    "newGame": "新遊戲",
+    "continue": "繼續",
+    "delete": "刪除",
+    "sync": "同步",
+    "retry": "再玩一次",
+    "normal": "普通",
+    "candidate": "候選",
+    "clear": "清除",
+    "clearBoard": "清空棋盤",
+    "print": "列印",
+    "createFirst": "創建您的第一個會話"
+  },
   "difficulties": {
     "easy": "簡單",
     "medium": "中等",
@@ -11,6 +25,55 @@
   },
   "inputs": {
     "difficulty": "難度",
-    "showSolution": "顯示解答"
+    "showSolution": "顯示解答",
+    "boardCount": "棋盤數量"
+  },
+  "headers": {
+    "sessions": "遊戲會話",
+    "printPreview": "列印預覽"
+  },
+  "items": {
+    "session": "會話"
+  },
+  "session": {
+    "create": "創建會話",
+    "lastPlayed": "上次遊玩",
+    "complete": "完成",
+    "completed": "已完成",
+    "avgTime": "平均時間"
+  },
+  "messages": {
+    "savedGameFound": "發現已保存的遊戲",
+    "continueOrStartNew": "您可以繼續之前的遊戲或開始新遊戲。",
+    "congratulations": "恭喜！",
+    "puzzleSolved": "你解開了謎題！"
+  },
+  "empty": {
+    "sessions": {
+      "title": "暫無會話",
+      "description": "創建您的第一個數獨會話開始遊戲。"
+    }
+  },
+  "modals": {
+    "confirmRefresh": {
+      "title": "生成新棋盤？",
+      "description": "您有正在進行的遊戲。生成新棋盤將覆蓋當前進度。確定要繼續嗎？"
+    },
+    "confirmNewGame": {
+      "title": "開始新遊戲？",
+      "description": "您有正在進行的遊戲。開始新遊戲將覆蓋當前進度。確定要繼續嗎？"
+    },
+    "confirmDelete": {
+      "title": "刪除會話？",
+      "description": "這將永久刪除此會話及其所有進度。此操作無法撤消。"
+    },
+    "confirmClearBoard": {
+      "title": "清空棋盤？",
+      "description": "這將清除當前棋盤上的所有答案。計時器將繼續運行。確定嗎？"
+    },
+    "confirmPlayAgain": {
+      "title": "再玩一次？",
+      "description": "這將重置棋盤並重新開始。您的完成時間將丟失。確定嗎？"
+    }
   }
 }
