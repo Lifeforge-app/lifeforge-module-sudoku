@@ -1,4 +1,5 @@
 import type { Session } from '@'
+import { DIFFICULTY_COLORS } from '@/constants/constants'
 import forgeAPI from '@/utils/forgeAPI'
 import { formatTime } from '@/utils/time'
 import { Icon } from '@iconify/react'
@@ -15,15 +16,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { anyColorToHex, useNavigate } from 'shared'
 import colors from 'tailwindcss/colors'
-
-const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: colors.green[500],
-  medium: colors.yellow[500],
-  hard: colors.orange[500],
-  expert: colors.blue[500],
-  evil: colors.red[500],
-  extreme: colors.gray[900]
-}
 
 function SessionItem({ session }: { session: Session }) {
   const { t } = useTranslation('apps.sudoku')
@@ -106,15 +98,17 @@ function SessionItem({ session }: { session: Session }) {
               <Icon className="size-4.5" icon="tabler:grid-3x3" />
               {t('session.boards')}: {session.boardCount}
             </span>
-            <span className="flex items-center gap-1">
-              <Icon className="size-4.5" icon="tabler:clock" />
-              {t('session.avgTime')}:
-              <span className="text-custom-500 font-mono font-semibold">
-                {formatTime(
-                  Math.round(session.totalDuration / session.boardCount)
-                )}
+            {session.progress.total > 0 && (
+              <span className="flex items-center gap-1">
+                <Icon className="size-4.5" icon="tabler:clock" />
+                {t('session.avgTime')}:
+                <span className="text-custom-500 font-mono font-semibold">
+                  {formatTime(
+                    Math.round(session.totalDuration / session.boardCount)
+                  )}
+                </span>
               </span>
-            </span>
+            )}
           </p>
         </div>
         <div className="hidden w-32 flex-col items-end gap-1 sm:flex">

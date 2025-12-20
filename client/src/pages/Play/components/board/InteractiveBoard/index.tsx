@@ -4,8 +4,8 @@ import {
   GRID_INDICES,
   GRID_SIZE,
   getCellIndex
-} from '../../../../constants/constants'
-import { useBoardState, useInputMode, useSession } from '../../providers'
+} from '../../../../../constants/constants'
+import { useBoardState, useInputMode, useSession } from '../../../providers'
 import Column from './components/Column'
 import GridDividers from './components/GridDividers'
 
@@ -86,8 +86,8 @@ function InteractiveBoard() {
   if (!currentBoard) return null
 
   return (
-    <div className="aspect-square w-full max-w-xl p-4">
-      <div className="border-bg-800 dark:border-bg-100 relative grid size-full grid-cols-9 border-[3px]">
+    <div className="aspect-square w-full max-w-xl">
+      <div className="border-bg-500 relative grid size-full grid-cols-9 border-2 sm:border-[3px]">
         {GRID_INDICES.map(col => (
           <Column key={col} col={col} onKeyDown={handleKeyDown} />
         ))}

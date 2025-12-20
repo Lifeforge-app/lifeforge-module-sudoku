@@ -9,6 +9,9 @@ import {
   useState
 } from 'react'
 
+import { useBoardState } from './BoardStateProvider'
+import { useSession } from './SessionProvider'
+
 const TIMER_INTERVAL_MS = 1000 // 1 second
 
 interface TimerContextType {
@@ -16,28 +19,28 @@ interface TimerContextType {
   allDurationsRef: RefObject<number[]>
   currentElapsedTimeRef: RefObject<number>
   elapsedTime: number
+  isPaused: boolean
   setAllDurationsElapsed: (durations: number[]) => void
   initializeTimers: (durations: number[], currentIndex: number) => void
   resetCurrentTimer: () => void
   switchBoard: (fromIndex: number, toIndex: number) => void
+  togglePause: () => void
 }
 
 const TimerContext = createContext<TimerContextType | null>(null)
 
 interface TimerProviderProps {
   children: ReactNode
-  currentBoardIndex: number
-  isInitialized: boolean
-  isBoardCompleted: boolean
 }
 
-export function TimerProvider({
-  children,
-  currentBoardIndex,
-  isInitialized,
-  isBoardCompleted
-}: TimerProviderProps) {
+export function TimerProvider({ children }: TimerProviderProps) {
+  const { currentBoardIndex, isInitialized } = useSession()
+
+  const { isBoardCompleted } = useBoardState()
+
   const [allDurationsElapsed, setAllDurationsElapsed] = useState<number[]>([])
+
+  const [isPaused, setIsPaused] = useState(false)
 
   const allDurationsRef = useRef<number[]>([])
 
@@ -69,9 +72,13 @@ export function TimerProvider({
     currentElapsedTimeRef.current = allDurationsRef.current[toIndex] || 0
   }, [])
 
-  // Timer interval - increment every second, pause when completed
+  const togglePause = useCallback(() => {
+    setIsPaused(prev => !prev)
+  }, [])
+
+  // Timer interval - increment every second, pause when completed or paused
   useEffect(() => {
-    if (!isInitialized || isBoardCompleted) return
+    if (!isInitialized || isBoardCompleted || isPaused) return
 
     const intervalId = setInterval(() => {
       currentElapsedTimeRef.current += 1
@@ -80,17 +87,19 @@ export function TimerProvider({
     }, TIMER_INTERVAL_MS)
 
     return () => clearInterval(intervalId)
-  }, [isInitialized, isBoardCompleted, currentBoardIndex])
+  }, [isInitialized, isBoardCompleted, isPaused, currentBoardIndex])
 
   const value: TimerContextType = {
     allDurationsElapsed,
     allDurationsRef,
     currentElapsedTimeRef,
     elapsedTime,
+    isPaused,
     setAllDurationsElapsed,
     initializeTimers,
     resetCurrentTimer,
-    switchBoard
+    switchBoard,
+    togglePause
   }
 
   return <TimerContext value={value}>{children}</TimerContext>

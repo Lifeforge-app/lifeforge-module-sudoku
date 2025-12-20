@@ -1,7 +1,7 @@
 import { formatTime } from '@/utils/time'
 import clsx from 'clsx'
 
-import { useBoardState, useSession, useTimer } from '../providers'
+import { useBoardState, useSession, useTimer } from '../../providers'
 
 interface BoardSelectorProps {
   onBoardSwitch: (index: number) => void

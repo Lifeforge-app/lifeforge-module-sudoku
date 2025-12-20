@@ -2,6 +2,7 @@ import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import {
   Button,
+  ContextMenuItem,
   EmptyStateScreen,
   FAB,
   ModuleHeader,
@@ -13,8 +14,9 @@ import { useTranslation } from 'react-i18next'
 import type { InferOutput } from 'shared'
 import colors from 'tailwindcss/colors'
 
-import SessionItem from './components/SessionItem'
 import CreateSessionModal from './components/CreateSessionModal'
+import SessionItem from './components/SessionItem'
+import StatsModal from './components/StatsModal'
 
 export type SudokuBoard = {
   id: number
@@ -47,6 +49,10 @@ function Sudoku() {
     open(CreateSessionModal, {})
   }
 
+  const handleOpenStats = () => {
+    open(StatsModal, {})
+  }
+
   return (
     <>
       <ModuleHeader
@@ -63,6 +69,18 @@ function Sudoku() {
             new
           </Button>
         }
+        contextMenuProps={{
+          children: (
+            <>
+              <ContextMenuItem
+                icon="tabler:chart-bar"
+                label="stats.title"
+                namespace="apps.sudoku"
+                onClick={handleOpenStats}
+              />
+            </>
+          )
+        }}
       />
 
       <WithQuery query={sessionsQuery}>

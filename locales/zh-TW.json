@@ -14,7 +14,12 @@
     "clearBoard": "清空棋盤",
     "print": "列印",
     "createFirst": "創建您的第一個會話",
-    "nextBoard": "下一棋盤"
+    "nextBoard": "下一棋盤",
+    "hint": "提示",
+    "undo": "撤銷",
+    "redo": "重做",
+    "resume": "繼續",
+    "smartFill": "智能填充"
   },
   "difficulties": {
     "easy": "簡單",
@@ -27,7 +32,8 @@
   "inputs": {
     "difficulty": "難度",
     "showSolution": "顯示解答",
-    "boardCount": "棋盤數量"
+    "boardCount": "棋盤數量",
+    "autoCheckMode": "自動檢查模式"
   },
   "headers": {
     "sessions": "遊戲會話",
@@ -48,7 +54,8 @@
     "savedGameFound": "發現已保存的遊戲",
     "continueOrStartNew": "您可以繼續之前的遊戲或開始新遊戲。",
     "congratulations": "恭喜！",
-    "puzzleSolved": "你解開了謎題！"
+    "puzzleSolved": "你解開了謎題！",
+    "gamePaused": "遊戲暫停"
   },
   "empty": {
     "sessions": {
@@ -71,11 +78,48 @@
     },
     "confirmClearBoard": {
       "title": "清空棋盤？",
-      "description": "這將清除當前棋盤上的所有答案。計時器將繼續運行。確定嗎？"
+      "description": "這將清除當前棋盤上的所有答案。計時器將被重置。確定嗎？"
     },
     "confirmPlayAgain": {
       "title": "再玩一次？",
       "description": "這將重置棋盤並重新開始。您的完成時間將丟失。確定嗎？"
-    }
+    },
+    "confirmSmartFill": {
+      "title": "智能填充候選？",
+      "description": "這將為每個空單元格自動填充所有可能的候選數字。現有的候選將被替換。繼續嗎？"
+    },
+    "settings": "設定"
+  },
+  "stats": {
+    "title": "統計",
+    "overall": "總體",
+    "byDifficulty": "按難度",
+    "totalBoards": "總棋盤數",
+    "completed": "已完成",
+    "noData": "暫無統計數據。完成一些謎題後查看您的統計！",
+    "streak": "連續天數",
+    "days": "天",
+    "bestStreak": "最佳",
+    "totalTime": "總時長",
+    "daysPlayed": "天遊玩",
+    "recentActivity": "近期活動",
+    "completionHistory": "完成率趨勢",
+    "bestTimes": "最佳時間排行榜",
+    "noBestTimes": "完成謎題後查看您的最佳時間！",
+    "timeDistribution": "時間分布",
+    "noTimeData": "完成謎題後查看時間分布！",
+    "difficulty": "難度",
+    "played": "已玩",
+    "avgTime": "平均時間",
+    "bestTime": "最佳時間",
+    "hours": "時",
+    "minutes": "分",
+    "seconds": "秒",
+    "activityCalendar": "活動日曆",
+    "puzzlesCompleted": "道謎題完成於",
+    "puzzlesOn": "道謎題於"
+  },
+  "emptyState": {
+    "activities": "暫無活動記錄。完成一些謎題後查看您的活動！"
   }
 }

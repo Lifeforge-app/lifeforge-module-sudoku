@@ -1,4 +1,5 @@
 import type { SudokuBoard } from '@'
+import colors from 'tailwindcss/colors'
 
 // Grid constants
 export const GRID_SIZE = 9
@@ -8,6 +9,16 @@ export const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const
 export const GRID_INDICES = Array.from({ length: GRID_SIZE }, (_, i) => i)
 
 export const BOX_BORDERS = new Set([2, 5, 8])
+
+// Difficulty color mapping
+export const DIFFICULTY_COLORS: Record<string, string> = {
+  easy: colors.green[500],
+  medium: colors.yellow[500],
+  hard: colors.orange[500],
+  expert: colors.blue[500],
+  evil: colors.red[500],
+  extreme: colors.gray[900]
+}
 
 // Helper function to calculate cell index
 export const getCellIndex = (row: number, col: number) => row * GRID_SIZE + col
@@ -67,6 +78,55 @@ export function checkViolation(
   return false
 }
 
+// Helper function to get all valid candidates for a cell
+export function getValidCandidates(
+  cellIndex: number,
+  mission: string,
+  userInputs: string[]
+): Set<number> {
+  const row = Math.floor(cellIndex / GRID_SIZE)
+
+  const col = cellIndex % GRID_SIZE
+
+  const boxRow = Math.floor(row / 3) * 3
+
+  const boxCol = Math.floor(col / 3) * 3
+
+  // Start with all numbers as candidates
+  const candidates = new Set<number>(NUMBERS)
+
+  // Remove numbers that exist in the same row
+  for (let c = 0; c < GRID_SIZE; c++) {
+    const idx = getCellIndex(row, c)
+
+    const value = mission[idx] !== '0' ? mission[idx] : userInputs[idx]
+
+    if (value) candidates.delete(Number(value))
+  }
+
+  // Remove numbers that exist in the same column
+  for (let r = 0; r < GRID_SIZE; r++) {
+    const idx = getCellIndex(r, col)
+
+    const value = mission[idx] !== '0' ? mission[idx] : userInputs[idx]
+
+    if (value) candidates.delete(Number(value))
+  }
+
+  // Remove numbers that exist in the same 3x3 box
+  for (let r = boxRow; r < boxRow + 3; r++) {
+    for (let c = boxCol; c < boxCol + 3; c++) {
+      const idx = getCellIndex(r, c)
+
+      const value = mission[idx] !== '0' ? mission[idx] : userInputs[idx]
+
+      if (value) candidates.delete(Number(value))
+    }
+  }
+
+  return candidates
+}
+
 // Type definitions
 export interface InteractiveBoardProps {
   data: SudokuBoard
@@ -114,5 +174,6 @@ export interface CellContentProps {
   isThemeDark: boolean
   highlightedNumber: string | null
   hasViolation: boolean
+  isIncorrect: boolean
   cellCandidates: Set<number>
 }

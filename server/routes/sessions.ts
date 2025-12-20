@@ -496,6 +496,366 @@ const resetBoard = forgeController
     return { success: true }
   })
 
+// Get statistics for all sessions
+const stats = forgeController
+  .query()
+  .description({
+    en: 'Get Sudoku statistics',
+    ms: 'Dapatkan statistik Sudoku',
+    'zh-CN': '获取数独统计数据',
+    'zh-TW': '獲取數獨統計數據'
+  })
+  .input({})
+  .callback(async ({ pb }) => {
+    // Fetch all entries with expanded session data
+    const allEntries = await pb.getFullList
+      .collection('sudoku__entries')
+      .expand({ session: 'sudoku__sessions' })
+      .execute()
+
+    // Calculate statistics
+    const difficulties = ['easy', 'medium', 'hard', 'expert', 'evil', 'extreme']
+
+    const statsByDifficulty: Record<
+      string,
+      {
+        totalBoards: number
+        completedBoards: number
+        totalTime: number
+        bestTime: number | null
+        times: number[]
+      }
+    > = {}
+
+    for (const diff of difficulties) {
+      statsByDifficulty[diff] = {
+        totalBoards: 0,
+        completedBoards: 0,
+        totalTime: 0,
+        bestTime: null,
+        times: []
+      }
+    }
+
+    // Track completion dates for streak calculation and history
+    const completionDates = new Set<string>()
+
+    const completionsByDate: Record<string, number> = {}
+
+    const completionsByMonth: Record<
+      string,
+      { completed: number; total: number }
+    > = {}
+
+    // Process each entry
+    for (const entry of allEntries) {
+      const difficulty = entry.difficulty as string
+
+      const session = entry.expand?.session
+
+      if (!statsByDifficulty[difficulty]) continue
+
+      statsByDifficulty[difficulty].totalBoards++
+
+      const isCompleted = entry.is_completed as boolean
+
+      const duration = (entry.duration_elapsed as number) || 0
+
+      // Track by month for completion rate graph
+      const createdDate = new Date(entry.created as string)
+
+      const monthKey = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}`
+
+      if (!completionsByMonth[monthKey]) {
+        completionsByMonth[monthKey] = { completed: 0, total: 0 }
+      }
+      completionsByMonth[monthKey].total++
+
+      if (isCompleted) {
+        statsByDifficulty[difficulty].completedBoards++
+        statsByDifficulty[difficulty].totalTime += duration
+        statsByDifficulty[difficulty].times.push(duration)
+
+        if (
+          statsByDifficulty[difficulty].bestTime === null ||
+          duration < statsByDifficulty[difficulty].bestTime!
+        ) {
+          statsByDifficulty[difficulty].bestTime = duration
+        }
+
+        // Track completion date for streak
+        if (session) {
+          const completedDate = new Date(session.updated as string)
+            .toISOString()
+            .split('T')[0]
+
+          completionDates.add(completedDate)
+
+          // Track completions by date
+          completionsByDate[completedDate] =
+            (completionsByDate[completedDate] || 0) + 1
+        }
+
+        completionsByMonth[monthKey].completed++
+      }
+    }
+
+    // Calculate streak (consecutive days with completions)
+    const sortedDates = Array.from(completionDates).sort().reverse()
+
+    let currentStreak = 0
+    let longestStreak = 0
+    let tempStreak = 0
+
+    const today = new Date().toISOString().split('T')[0]
+
+    const yesterday = new Date(Date.now() - 86400000)
+      .toISOString()
+      .split('T')[0]
+
+    // Check if streak is active (played today or yesterday)
+    const streakActive =
+      sortedDates.length > 0 &&
+      (sortedDates[0] === today || sortedDates[0] === yesterday)
+
+    if (streakActive) {
+      let prevDate: Date | null = null
+
+      for (const dateStr of sortedDates) {
+        const date = new Date(dateStr)
+
+        if (!prevDate) {
+          tempStreak = 1
+          currentStreak = 1
+        } else {
+          const diff =
+            (prevDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+
+          if (diff === 1) {
+            tempStreak++
+            currentStreak = tempStreak
+          } else {
+            break
+          }
+        }
+
+        prevDate = date
+        longestStreak = Math.max(longestStreak, tempStreak)
+      }
+    }
+
+    // Calculate longest streak ever
+    tempStreak = 0
+    let prevDate: Date | null = null
+
+    for (const dateStr of sortedDates.slice().reverse()) {
+      const date = new Date(dateStr)
+
+      if (!prevDate) {
+        tempStreak = 1
+      } else {
+        const diff =
+          (date.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)
+
+        if (diff === 1) {
+          tempStreak++
+        } else {
+          tempStreak = 1
+        }
+      }
+
+      longestStreak = Math.max(longestStreak, tempStreak)
+      prevDate = date
+    }
+
+    // Calculate averages and format response
+    const difficultyStats = difficulties.map(diff => {
+      const stats = statsByDifficulty[diff]
+
+      // Calculate time distribution (group by time ranges)
+      const timeRanges = {
+        under2min: 0,
+        under5min: 0,
+        under10min: 0,
+        under20min: 0,
+        over20min: 0
+      }
+
+      for (const time of stats.times) {
+        if (time < 120) timeRanges.under2min++
+        else if (time < 300) timeRanges.under5min++
+        else if (time < 600) timeRanges.under10min++
+        else if (time < 1200) timeRanges.under20min++
+        else timeRanges.over20min++
+      }
+
+      return {
+        difficulty: diff,
+        totalBoards: stats.totalBoards,
+        avgTime:
+          stats.completedBoards > 0
+            ? Math.round(stats.totalTime / stats.completedBoards)
+            : null,
+        bestTime: stats.bestTime,
+        totalTime: stats.totalTime,
+        timeDistribution: timeRanges
+      }
+    })
+
+    // Overall stats
+    const totalBoards = difficultyStats.reduce(
+      (sum, d) => sum + d.totalBoards,
+      0
+    )
+
+    const totalPlayTime = difficultyStats.reduce(
+      (sum, d) => sum + d.totalTime,
+      0
+    )
+
+    // Get last 6 months of completion history
+    const now = new Date()
+
+    const completionHistory: Array<{
+      month: string
+      completed: number
+      total: number
+      rate: number
+    }> = []
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+
+      const monthData = completionsByMonth[monthKey] || {
+        completed: 0,
+        total: 0
+      }
+
+      completionHistory.push({
+        month: monthKey,
+        completed: monthData.completed,
+        total: monthData.total,
+        rate:
+          monthData.total > 0
+            ? Math.round((monthData.completed / monthData.total) * 100)
+            : 0
+      })
+    }
+
+    // Recent activity (last 7 days)
+    const recentActivity: Array<{ date: string; count: number }> = []
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(Date.now() - i * 86400000)
+        .toISOString()
+        .split('T')[0]
+
+      recentActivity.push({
+        date,
+        count: completionsByDate[date] || 0
+      })
+    }
+
+    return {
+      overall: {
+        totalBoards,
+        totalPlayTime,
+        daysPlayed: completionDates.size
+      },
+      streak: {
+        current: currentStreak,
+        longest: longestStreak,
+        isActive: streakActive
+      },
+      byDifficulty: difficultyStats,
+      completionHistory,
+      recentActivity
+    }
+  })
+
+// Get activities for activity calendar
+const getActivities = forgeController
+  .query()
+  .description({
+    en: 'Get Sudoku activities for calendar',
+    ms: 'Dapatkan aktiviti Sudoku untuk kalendar',
+    'zh-CN': '获取数独活动日历',
+    'zh-TW': '獲取數獨活動日曆'
+  })
+  .input({
+    query: z.object({
+      year: z.string()
+    })
+  })
+  .callback(async ({ pb, query: { year } }) => {
+    // Fetch all completed entries
+    const allEntries = await pb.getFullList
+      .collection('sudoku__entries')
+      .filter([{ field: 'is_completed', operator: '=', value: true }])
+      .execute()
+
+    // Count completions by date for the requested year
+    const completionsByDate: Record<string, number> = {}
+
+    let firstYear = parseInt(year)
+
+    for (const entry of allEntries) {
+      const createdDate = new Date(entry.created as string)
+
+      const entryYear = createdDate.getFullYear()
+
+      if (entryYear < firstYear) {
+        firstYear = entryYear
+      }
+
+      if (entryYear === parseInt(year)) {
+        const dateStr = createdDate.toISOString().split('T')[0]
+
+        completionsByDate[dateStr] = (completionsByDate[dateStr] || 0) + 1
+      }
+    }
+
+    // Generate activity data for the entire year
+    const yearNum = parseInt(year)
+
+    const startDate = new Date(yearNum, 0, 1)
+
+    const endDate = new Date(yearNum, 11, 31)
+
+    const activities: Array<{ date: string; count: number; level: number }> = []
+
+    for (
+      let date = new Date(startDate);
+      date <= endDate;
+      date.setDate(date.getDate() + 1)
+    ) {
+      const dateStr = date.toISOString().split('T')[0]
+
+      const count = completionsByDate[dateStr] || 0
+
+      // Calculate level (0-4) based on count
+      let level = 0
+
+      if (count >= 5) level = 4
+      else if (count >= 3) level = 3
+      else if (count >= 2) level = 2
+      else if (count >= 1) level = 1
+
+      activities.push({
+        date: dateStr,
+        count,
+        level
+      })
+    }
+
+    return {
+      data: activities,
+      firstYear
+    }
+  })
+
 export default forgeRouter({
   list,
   get,
@@ -504,5 +864,7 @@ export default forgeRouter({
   save,
   remove,
   markComplete,
-  resetBoard
+  resetBoard,
+  stats,
+  getActivities
 })

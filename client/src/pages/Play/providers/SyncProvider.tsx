@@ -2,7 +2,6 @@ import type { SudokuBoard } from '@'
 import forgeAPI from '@/utils/forgeAPI'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  type ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -11,6 +10,10 @@ import {
 } from 'react'
 import { toast } from 'react-toastify'
 import { usePromiseLoading } from 'shared'
+
+import { useBoardState } from './BoardStateProvider'
+import { useSession } from './SessionProvider'
+import { useTimer } from './TimerProvider'
 
 const SYNC_INTERVAL_MS = 30000 // 30 seconds
 
@@ -52,32 +55,16 @@ export async function syncToDatabase(params: {
 
 const SyncContext = createContext<SyncContextType | null>(null)
 
-interface SyncProviderProps {
-  children: ReactNode
-  sessionId: string | undefined
-  boards: SudokuBoard[]
-  allUserInputs: string[][]
-  allCandidates: Set<number>[][]
-  currentBoardIndex: number
-  difficulty: string
-  allDurationsElapsed: number[]
-  currentElapsedTimeRef: React.MutableRefObject<number>
-  onResetSuccess: () => void
-}
-
-export function SyncProvider({
-  children,
-  sessionId,
-  boards,
-  allUserInputs,
-  allCandidates,
-  currentBoardIndex,
-  difficulty,
-  allDurationsElapsed,
-  currentElapsedTimeRef,
-  onResetSuccess
-}: SyncProviderProps) {
+export function SyncProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient()
+
+  const { allUserInputs, allCandidates, resetCurrentBoard, isBoardCompleted } =
+    useBoardState()
+
+  const { sessionId, boards, currentBoardIndex, difficulty } = useSession()
+
+  const { allDurationsElapsed, currentElapsedTimeRef, resetCurrentTimer } =
+    useTimer()
 
   const isSyncingRef = useRef(false)
 
@@ -124,9 +111,25 @@ export function SyncProvider({
   const resetBoardMutation = useMutation(
     forgeAPI.sudoku.sessions.resetBoard.mutationOptions({
       onSuccess: () => {
-        onResetSuccess()
+        resetCurrentBoard()
+        resetCurrentTimer()
         queryClient.invalidateQueries({ queryKey: ['sudoku', 'sessions'] })
         toast.success('Board reset successfully!')
+      }
+    })
+  )
+
+  // Mark complete mutation
+  const markCompleteMutation = useMutation(
+    forgeAPI.sudoku.sessions.markComplete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['sudoku', 'sessions'] })
+        queryClient.invalidateQueries({
+          queryKey: ['sudoku', 'sessions', 'stats']
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['sudoku', 'sessions', 'getActivities']
+        })
       }
     })
   )
@@ -135,6 +138,25 @@ export function SyncProvider({
     if (!sessionId) return
     resetBoardMutation.mutate({ sessionId, boardIndex: currentBoardIndex })
   }, [sessionId, currentBoardIndex, resetBoardMutation])
+
+  // Sync to database and mark complete when board is completed
+  useEffect(() => {
+    if (isBoardCompleted && sessionId) {
+      syncToDatabaseHandler().then(() => {
+        // Mark the board as completed in the database
+        markCompleteMutation.mutate({
+          sessionId,
+          boardIndex: currentBoardIndex
+        })
+      })
+    }
+  }, [
+    isBoardCompleted,
+    sessionId,
+    currentBoardIndex,
+    syncToDatabaseHandler,
+    markCompleteMutation
+  ])
 
   // Auto sync interval
   useEffect(() => {

@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 import { Button, ConfirmationModal, useModalStore } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
 
-import { useSession, useSync } from '../providers'
+import { useSession, useSync } from '../../providers'
 
 interface VictoryOverlayProps {
   onBoardSwitch: (index: number) => void
@@ -35,8 +35,8 @@ function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
   }
 
   return (
-    <div className="bg-bg-50/50 dark:bg-bg-900/50 absolute inset-0 flex items-center justify-center rounded-xl">
-      <div className="bg-bg-50 dark:bg-bg-900 flex w-full flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm sm:min-w-[30vw]">
+    <div className="bg-bg-50/50 dark:bg-bg-900/50 absolute inset-0 flex items-center justify-center">
+      <div className="bg-bg-50 dark:bg-bg-900 flex w-full flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm sm:w-[30vw]">
         <div className="bg-custom-500/20 flex size-20 items-center justify-center rounded-full">
           <Icon className="text-custom-500 size-10" icon="tabler:trophy" />
         </div>

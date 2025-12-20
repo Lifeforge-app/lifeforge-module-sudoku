@@ -5,7 +5,7 @@ import {
   BOX_BORDERS,
   GRID_INDICES,
   getCellIndex
-} from '../../../../../constants/constants'
+} from '../../../../../../constants/constants'
 import Cell from './Cell'
 
 interface ColumnProps {
@@ -18,7 +18,7 @@ function Column({ col, onKeyDown }: ColumnProps) {
     <div
       className={clsx(
         'grid size-full grid-rows-9',
-        !BOX_BORDERS.has(col) && 'border-bg-500 border-r'
+        !BOX_BORDERS.has(col) && 'border-bg-300 dark:border-bg-700 border-r'
       )}
     >
       {GRID_INDICES.map(row => {

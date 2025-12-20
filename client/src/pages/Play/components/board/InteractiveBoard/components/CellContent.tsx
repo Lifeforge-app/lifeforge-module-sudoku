@@ -4,7 +4,7 @@ import { memo } from 'react'
 import {
   type CellContentProps,
   NUMBERS
-} from '../../../../../constants/constants'
+} from '../../../../../../constants/constants'
 
 function CellContent({
   cellValue,
@@ -13,43 +13,36 @@ function CellContent({
   isThemeDark,
   highlightedNumber,
   hasViolation,
+  isIncorrect,
   cellCandidates
 }: CellContentProps) {
   // Render main value (original or user input)
   if (cellValue) {
     const isHighlighted = highlightedNumber === cellValue
 
+    const hasError = hasViolation || isIncorrect
+
+    const getBackgroundClass = () => {
+      if (isSelected) return hasError ? 'bg-red-500' : 'bg-custom-500'
+      if (isHighlighted) return hasError ? 'bg-red-500/20' : 'bg-custom-500/20'
+
+      return ''
+    }
+
+    const getTextClass = () => {
+      if (isSelected) return isThemeDark ? 'text-white' : 'text-bg-900'
+      if (hasError) return 'text-red-600 dark:text-red-400'
+      if (isOriginal) return 'text-bg-800 dark:text-bg-100'
+
+      return 'text-custom-600 dark:text-custom-400'
+    }
+
     return (
       <span
         className={clsx(
-          'flex-center relative size-[85%] rounded-full text-lg font-medium transition-all',
-          // Selected cell background: red if violation, theme color otherwise
-          isSelected && !hasViolation && 'bg-custom-500',
-          isSelected && hasViolation && 'bg-red-500',
-          isSelected && isThemeDark && 'text-white',
-          isSelected && !isThemeDark && 'text-bg-900',
-          !isSelected && isHighlighted && !hasViolation && 'bg-custom-500/20',
-          !isSelected && isHighlighted && hasViolation && 'bg-red-500/20',
-          // Original cells without violation: use default text color
-          !isSelected &&
-            isOriginal &&
-            !hasViolation &&
-            'text-bg-800 dark:text-bg-100',
-          // Original cells with violation: show red
-          !isSelected &&
-            isOriginal &&
-            hasViolation &&
-            'text-red-600 dark:text-red-400',
-          // User input with violation: show red
-          !isSelected &&
-            !isOriginal &&
-            hasViolation &&
-            'text-red-600 dark:text-red-400',
-          // User input without violation: use theme color
-          !isSelected &&
-            !isOriginal &&
-            !hasViolation &&
-            'text-custom-600 dark:text-custom-400'
+          'flex-center relative size-[85%] rounded-full font-medium transition-all sm:text-lg',
+          getBackgroundClass(),
+          getTextClass()
         )}
       >
         {cellValue}
@@ -82,7 +75,7 @@ function CellContent({
               <span
                 key={num}
                 className={clsx(
-                  'flex-center text-sm leading-none transition-all',
+                  'flex-center text-[8px] leading-none transition-all sm:text-xs',
                   hasCandidate && isHighlighted && 'text-custom-500 font-bold',
                   hasCandidate && !isHighlighted && 'text-text-secondary'
                 )}

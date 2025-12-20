@@ -8,6 +8,8 @@ import {
   useState
 } from 'react'
 
+import { useSync } from './SyncProvider'
+
 interface InputModeContextType {
   isCandidate: boolean
   setIsCandidate: (value: boolean) => void
@@ -16,15 +18,9 @@ interface InputModeContextType {
 
 const InputModeContext = createContext<InputModeContextType | null>(null)
 
-interface InputModeProviderProps {
-  children: ReactNode
-  onSyncToDB: () => void
-}
+export function InputModeProvider({ children }: { children: ReactNode }) {
+  const { onSyncToDB } = useSync()
 
-export function InputModeProvider({
-  children,
-  onSyncToDB
-}: InputModeProviderProps) {
   const [isCandidate, setIsCandidate] = useState(false)
 
   const isCandidateModeLockedRef = useRef(false)

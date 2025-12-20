@@ -14,7 +14,13 @@
     "clearBoard": "Clear Board",
     "print": "Print",
     "createFirst": "Create Your First Session",
-    "nextBoard": "Next Board"
+    "nextBoard": "Next Board",
+    "hint": "Hint",
+    "undo": "Undo",
+    "redo": "Redo",
+    "resume": "Resume",
+    "smartFill": "Smart Fill",
+    "close": "Close"
   },
   "difficulties": {
     "easy": "Easy",
@@ -27,7 +33,8 @@
   "inputs": {
     "difficulty": "Difficulty",
     "showSolution": "Show Solution",
-    "boardCount": "Board Count"
+    "boardCount": "Board Count",
+    "autoCheckMode": "Auto-check Mode"
   },
   "headers": {
     "sessions": "Game Sessions",
@@ -48,7 +55,8 @@
     "savedGameFound": "Saved game found",
     "continueOrStartNew": "You can continue your previous game or start a new one.",
     "congratulations": "Congratulations!",
-    "puzzleSolved": "You solved the puzzle!"
+    "puzzleSolved": "You solved the puzzle!",
+    "gamePaused": "Game Paused"
   },
   "empty": {
     "sessions": {
@@ -71,11 +79,48 @@
     },
     "confirmClearBoard": {
       "title": "Clear Board?",
-      "description": "This will clear all your answers on the current board. Your timer will continue. Are you sure?"
+      "description": "This will clear all your answers on the current board. Your timer will be reset. Are you sure?"
     },
     "confirmPlayAgain": {
       "title": "Play Again?",
       "description": "This will reset the board and start fresh. Your completion time will be lost. Are you sure?"
-    }
+    },
+    "confirmSmartFill": {
+      "title": "Smart Fill Candidates?",
+      "description": "This will auto-fill all possible candidates for every empty cell. Any existing candidates will be replaced. Continue?"
+    },
+    "settings": "Settings"
+  },
+  "stats": {
+    "title": "Statistics",
+    "overall": "Overall",
+    "byDifficulty": "By Difficulty",
+    "totalBoards": "Total Boards",
+    "completed": "Completed",
+    "noData": "No statistics available yet. Complete some puzzles to see your stats!",
+    "streak": "Streak",
+    "days": "days",
+    "bestStreak": "Best",
+    "totalTime": "Total Time",
+    "daysPlayed": "days played",
+    "recentActivity": "Recent Activity",
+    "completionHistory": "Completion Rate Over Time",
+    "bestTimes": "Best Times Leaderboard",
+    "noBestTimes": "Complete puzzles to see your best times!",
+    "timeDistribution": "Time Distribution",
+    "noTimeData": "Complete puzzles to see time distribution!",
+    "difficulty": "Difficulty",
+    "played": "Played",
+    "avgTime": "Avg Time",
+    "bestTime": "Best Time",
+    "hours": "h",
+    "minutes": "m",
+    "seconds": "s",
+    "activityCalendar": "Activity Calendar",
+    "puzzlesCompleted": "puzzles completed in",
+    "puzzlesOn": "puzzles on"
+  },
+  "emptyState": {
+    "activities": "No activity recorded yet. Complete some puzzles to see your activity!"
   }
 }

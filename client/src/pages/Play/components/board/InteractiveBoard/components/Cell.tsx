@@ -7,8 +7,8 @@ import {
   BOX_BORDERS,
   GRID_SIZE,
   checkViolation
-} from '../../../../../constants/constants'
-import { useBoardState, useSession } from '../../../providers'
+} from '../../../../../../constants/constants'
+import { useBoardState, useSession, useSettings } from '../../../../providers'
 import CellContent from './CellContent'
 
 interface CellProps {
@@ -31,12 +31,20 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
     setSelectedCell
   } = useBoardState()
 
+  const { autoCheckMode } = useSettings()
+
   const isThemeDark = useMemo(
     () => tinycolor(derivedThemeColor).isDark(),
     [derivedThemeColor]
   )
 
   const row = Math.floor(cellIndex / GRID_SIZE)
+
+  const col = cellIndex % GRID_SIZE
+
+  const boxRow = Math.floor(row / 3)
+
+  const boxCol = Math.floor(col / 3)
 
   const isOriginal = currentBoard?.mission[cellIndex] !== '0'
 
@@ -50,6 +58,27 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
 
   const cellValue = isOriginal ? missionValue : userValue || null
 
+  // Check if this cell is in the same row, column, or box as the selected cell
+  const isChainHighlighted = useMemo(() => {
+    if (selectedCell === null || isSelected) return false
+
+    const selectedRow = Math.floor(selectedCell / GRID_SIZE)
+
+    const selectedCol = selectedCell % GRID_SIZE
+
+    const selectedBoxRow = Math.floor(selectedRow / 3)
+
+    const selectedBoxCol = Math.floor(selectedCol / 3)
+
+    const sameRow = row === selectedRow
+
+    const sameCol = col === selectedCol
+
+    const sameBox = boxRow === selectedBoxRow && boxCol === selectedBoxCol
+
+    return sameRow || sameCol || sameBox
+  }, [selectedCell, isSelected, row, col, boxRow, boxCol])
+
   // Check for Sudoku rule violations
   const hasViolation = useMemo(() => {
     if (!cellValue || !currentBoard) return false
@@ -61,6 +90,14 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
       userInputs
     )
   }, [cellIndex, cellValue, currentBoard, userInputs])
+
+  // Check if user input is incorrect (for auto-check mode)
+  const isIncorrect = useMemo(() => {
+    if (!autoCheckMode || isOriginal || !userValue || !currentBoard)
+      return false
+
+    return userValue !== currentBoard.solution[cellIndex]
+  }, [autoCheckMode, isOriginal, userValue, currentBoard, cellIndex])
 
   // Auto-focus when selected
   useEffect(() => {
@@ -85,8 +122,9 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
       ref={cellRef}
       className={clsx(
         'size-full cursor-pointer transition-colors outline-none',
-        !BOX_BORDERS.has(row) && 'border-bg-500 border-b',
-        !isOriginal && 'hover:bg-bg-200 dark:hover:bg-bg-700/50'
+        !BOX_BORDERS.has(row) && 'border-bg-300 dark:border-bg-700 border-b',
+        !isOriginal && 'hover:bg-bg-200 dark:hover:bg-bg-700/50',
+        (isSelected || isChainHighlighted) && 'bg-bg-500/5 hover:bg-bg-500/20!'
       )}
       tabIndex={0}
       onClick={handleClick}
@@ -104,6 +142,7 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
           cellValue={cellValue}
           hasViolation={hasViolation}
           highlightedNumber={highlightedNumber}
+          isIncorrect={isIncorrect}
           isOriginal={isOriginal}
           isSelected={isSelected}
           isThemeDark={isThemeDark}
