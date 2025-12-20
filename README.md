@@ -1,23 +1,48 @@
-# Sudoku Generator
+# Sudoku
 
-A powerful and elegant Sudoku generator module for LifeForge, designed to create printable Sudoku boards infinitely. This module allows users to generate, view, and print Sudoku puzzles of various difficulty levels.
+A powerful and elegant Sudoku module for LifeForge, designed to generate, play, and track Sudoku puzzles. This module offers both interactive gameplay and printable puzzle generation with comprehensive statistics tracking.
 
 ## Features
 
-- **Infinite Generation**: Generate fresh Sudoku boards on demand.
-- **Multiple Difficulties**: Choose from 6 difficulty levels:
-  - Easy
-  - Medium
-  - Hard
-  - Expert
-  - Evil
-  - Extreme
-- **Print Ready**: optimized layout for A4 printing, fitting 6 boards perfectly on a single page.
-- **Solution Toggle**: Option to reveal or hide solutions for the generated puzzles.
-- **Internationalization**: Fully localized interface (English, Malay, Simplified Chinese, Traditional Chinese).
+### 🎮 Interactive Gameplay
+- **Play Mode**: Solve Sudoku puzzles directly in the browser with an intuitive interface.
+- **Candidate Mode**: Toggle between normal input and candidate/pencil marks for advanced solving techniques.
+- **Real-time Validation**: Instant feedback on incorrect entries with rule violation highlighting.
+- **Auto-save**: Progress is automatically saved to the database.
+- **Timer**: Track your solving time with pause/resume functionality.
+- **Hints System**: Get help when stuck (optional).
+- **Smart Candidate**: Automatically generate all possible candidates for empty cells.
+- **Undo/Redo**: Easily revert or reapply moves during gameplay.
+
+### 📊 Statistics & Tracking
+- **Activity Calendar**: GitHub-style heatmap showing daily puzzle completion activity.
+- **Streak Tracking**: Current and longest streak of consecutive days played.
+- **Best Times**: Leaderboard of best completion times per difficulty level.
+- **Time Distribution**: Visual breakdown of completion times across difficulty levels.
+- **Detailed Stats**: Per-difficulty statistics including games played, average time, and best time.
+
+### 🎯 Difficulty Levels
+Choose from 6 difficulty levels:
+- Easy
+- Medium
+- Hard
+- Expert
+- Evil
+- Extreme
+
+### 🖨️ Print Support
+- **Session Printing**: Print individual sessions with optimized A4 layout.
+- **Batch Printing**: Print multiple boards on a single page.
+- **Solution Toggle**: Option to include or hide solutions.
+
+### 🌐 Internationalization
+Fully localized interface supporting:
+- English
+- Bahasa Malaysia
+- 简体中文 (Simplified Chinese)
+- 繁體中文 (Traditional Chinese)
 
 ## Screenshots
 
 <img width="49%" alt="image" src="https://github.com/user-attachments/assets/0ce1caf8-b7b2-4100-bd54-ec33a671daae" />
 <img width="49%" alt="image" src="https://github.com/user-attachments/assets/b71e5f00-93a8-42c5-86b7-1a4acc8bae7d" />
-
