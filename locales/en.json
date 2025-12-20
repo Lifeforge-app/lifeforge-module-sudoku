@@ -13,7 +13,8 @@
     "clear": "Clear",
     "clearBoard": "Clear Board",
     "print": "Print",
-    "createFirst": "Create Your First Session"
+    "createFirst": "Create Your First Session",
+    "nextBoard": "Next Board"
   },
   "difficulties": {
     "easy": "Easy",
@@ -40,7 +41,8 @@
     "lastPlayed": "Last played",
     "complete": "complete",
     "completed": "Completed",
-    "avgTime": "Avg Time"
+    "avgTime": "Avg Time",
+    "boards": "Boards"
   },
   "messages": {
     "savedGameFound": "Saved game found",

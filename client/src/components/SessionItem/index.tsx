@@ -77,9 +77,9 @@ function SessionItem({ session }: { session: Session }) {
       className="flex-between cursor-pointer gap-4"
       onClick={handleContinue}
     >
-      <div className="flex flex-1 items-center gap-4">
+      <div className="flex min-w-0 flex-1 items-center gap-4">
         <div
-          className="flex size-16 shrink-0 items-center justify-center rounded-lg p-3 text-lg font-bold text-white"
+          className="hidden size-16 min-w-0 shrink-0 items-center justify-center rounded-lg p-3 text-lg font-bold text-white sm:flex"
           style={{ backgroundColor: anyColorToHex(difficultyColor) + '20' }}
         >
           <Icon
@@ -91,8 +91,8 @@ function SessionItem({ session }: { session: Session }) {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="truncate text-xl font-medium">
+          <div className="flex min-w-0 flex-col-reverse items-start gap-2 sm:flex-row sm:items-center">
+            <h3 className="w-full min-w-0 truncate text-xl font-medium sm:w-auto">
               Session {dayjs(session.created).format('DD MMM YYYY HH:mm')}
             </h3>
             <TagChip
@@ -101,16 +101,20 @@ function SessionItem({ session }: { session: Session }) {
               label={t('difficulties.' + session.difficulty)}
             />
           </div>
-          <p className="text-bg-500 mt-1 flex items-center gap-2">
-            <div className="text-bg-500 flex items-center gap-1">
+          <p className="text-bg-500 mt-1 flex flex-wrap items-center gap-x-4">
+            <span className="flex items-center gap-1">
+              <Icon className="size-4.5" icon="tabler:grid-3x3" />
+              {t('session.boards')}: {session.boardCount}
+            </span>
+            <span className="flex items-center gap-1">
               <Icon className="size-4.5" icon="tabler:clock" />
               {t('session.avgTime')}:
-            </div>
-            <div className="text-custom-500 font-mono font-semibold">
-              {formatTime(
-                Math.round(session.totalDuration / session.boardCount)
-              )}
-            </div>
+              <span className="text-custom-500 font-mono font-semibold">
+                {formatTime(
+                  Math.round(session.totalDuration / session.boardCount)
+                )}
+              </span>
+            </span>
           </p>
         </div>
         <div className="hidden w-32 flex-col items-end gap-1 sm:flex">

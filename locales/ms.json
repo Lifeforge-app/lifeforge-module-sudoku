@@ -13,7 +13,8 @@
     "clear": "Kosongkan",
     "clearBoard": "Kosongkan Papan",
     "print": "Cetak",
-    "createFirst": "Cipta Sesi Pertama Anda"
+    "createFirst": "Cipta Sesi Pertama Anda",
+    "nextBoard": "Papan Seterusnya"
   },
   "difficulties": {
     "easy": "Mudah",
@@ -40,7 +41,8 @@
     "lastPlayed": "Terakhir dimainkan",
     "complete": "selesai",
     "completed": "Selesai",
-    "avgTime": "Purata Masa"
+    "avgTime": "Purata Masa",
+    "boards": "Papan"
   },
   "messages": {
     "savedGameFound": "Permainan tersimpan ditemui",

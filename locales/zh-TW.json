@@ -13,7 +13,8 @@
     "clear": "清除",
     "clearBoard": "清空棋盤",
     "print": "列印",
-    "createFirst": "創建您的第一個會話"
+    "createFirst": "創建您的第一個會話",
+    "nextBoard": "下一棋盤"
   },
   "difficulties": {
     "easy": "簡單",
@@ -40,7 +41,8 @@
     "lastPlayed": "上次遊玩",
     "complete": "完成",
     "completed": "已完成",
-    "avgTime": "平均時間"
+    "avgTime": "平均時間",
+    "boards": "棋盤"
   },
   "messages": {
     "savedGameFound": "發現已保存的遊戲",

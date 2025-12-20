@@ -14,7 +14,7 @@ import type { InferOutput } from 'shared'
 import colors from 'tailwindcss/colors'
 
 import SessionItem from './components/SessionItem'
-import CreateSessionModal from './components/modals/CreateSessionModal'
+import CreateSessionModal from './components/CreateSessionModal'
 
 export type SudokuBoard = {
   id: number

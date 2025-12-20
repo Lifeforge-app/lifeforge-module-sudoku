@@ -49,7 +49,7 @@ function NumberButtons() {
     selectedCell !== null && currentBoard?.mission[selectedCell] === '0'
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => {
         const remaining = remainingCounts[num - 1]
 
@@ -58,7 +58,7 @@ function NumberButtons() {
         return (
           <button
             key={num}
-            className={`flex-center flex aspect-square w-16 flex-col rounded-lg border-2 text-lg font-semibold transition-all duration-150 ${
+            className={`flex-center flex aspect-square w-14 shrink-0 flex-col rounded-lg border-2 text-base font-semibold transition-all duration-150 sm:text-lg ${
               isDisabled
                 ? 'bg-bg-100 dark:bg-bg-800 border-bg-200 dark:border-bg-700 text-bg-400 dark:text-bg-600 cursor-not-allowed'
                 : 'bg-bg-50 dark:bg-bg-900 border-bg-300 dark:border-bg-600 text-bg-800 dark:text-bg-100 hover:border-custom-500 hover:text-custom-500 active:scale-90'
@@ -79,12 +79,12 @@ function NumberButtons() {
             }}
           >
             {num}
-            <p className="text-bg-500 text-sm">{remaining}</p>
+            <p className="text-bg-500 text-[10px] sm:text-xs">{remaining}</p>
           </button>
         )
       })}
       <button
-        className={`border-bg-300 dark:border-bg-600 flex-center flex aspect-square w-16 flex-col rounded-lg border-2 text-lg font-semibold transition-all duration-150 active:scale-90 ${
+        className={`border-bg-300 dark:border-bg-600 flex-center flex aspect-square w-14 shrink-0 flex-col rounded-lg border-2 text-lg font-semibold transition-all duration-150 active:scale-90 sm:text-lg ${
           canClearSelectedCell
             ? 'bg-bg-50 dark:bg-bg-900 text-bg-800 dark:text-bg-100 hover:border-red-500 hover:text-red-500'
             : 'bg-bg-100 dark:bg-bg-800 text-bg-400 dark:text-bg-600 cursor-not-allowed'
@@ -97,7 +97,7 @@ function NumberButtons() {
           }
         }}
       >
-        <Icon className="size-6" icon="tabler:trash" />
+        <Icon className="size-5 sm:size-6" icon="tabler:trash" />
       </button>
     </div>
   )

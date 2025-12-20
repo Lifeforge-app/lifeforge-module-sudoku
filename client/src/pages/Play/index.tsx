@@ -164,10 +164,12 @@ function PlayContent() {
             <>
               <BoardSelector onBoardSwitch={handleBoardSwitch} />
               <TimerDisplay />
-              <div className="flex-center relative mb-12 flex-1 flex-col">
+              <div className="flex-center relative mb-4 flex-1 flex-col sm:mb-8 md:mb-12">
                 <div className="flex-center w-full flex-1">
                   <InteractiveBoard />
-                  {isBoardCompleted && <VictoryOverlay />}
+                  {isBoardCompleted && (
+                    <VictoryOverlay onBoardSwitch={handleBoardSwitch} />
+                  )}
                 </div>
                 {!isBoardCompleted && <BottomToolbar />}
               </div>

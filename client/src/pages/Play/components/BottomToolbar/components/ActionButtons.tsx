@@ -36,52 +36,55 @@ function ActionButtons() {
   }
 
   return (
-    <div className="flex items-center justify-center gap-3">
-      <Button
-        className="flex-1 sm:flex-none"
-        icon="tabler:pencil"
-        namespace="apps.sudoku"
-        variant={!isCandidate ? 'primary' : 'secondary'}
-        onClick={() => {
-          isCandidateModeLockedRef.current = false
-          setIsCandidate(false)
-        }}
-      >
-        normal
-      </Button>
-      <Button
-        className="flex-1 sm:flex-none"
-        icon="tabler:notes"
-        namespace="apps.sudoku"
-        variant={isCandidate ? 'primary' : 'secondary'}
-        onClick={() => {
-          isCandidateModeLockedRef.current = true
-          setIsCandidate(true)
-        }}
-      >
-        candidate
-      </Button>
-      <div className="bg-bg-300 dark:bg-bg-600 mx-2 hidden h-8 w-px sm:block" />
-      <Button
-        className="flex-1 sm:flex-none"
-        icon="tabler:eraser"
-        namespace="apps.sudoku"
-        variant="secondary"
-        onClick={handleClearBoard}
-      >
-        clearBoard
-      </Button>
-      <div className="bg-bg-300 dark:bg-bg-600 mx-2 hidden h-8 w-px sm:block" />
-      <Button
-        className="flex-1 sm:flex-none"
-        icon="tabler:cloud-upload"
-        loading={syncLoading}
-        namespace="apps.sudoku"
-        variant="secondary"
-        onClick={onSyncToDB}
-      >
-        sync
-      </Button>
+    <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 lg:flex-row">
+      <div className="flex w-full items-center gap-2 md:w-auto">
+        <Button
+          className="min-w-0 flex-1 md:flex-none"
+          icon="tabler:pencil"
+          namespace="apps.sudoku"
+          variant={!isCandidate ? 'primary' : 'secondary'}
+          onClick={() => {
+            isCandidateModeLockedRef.current = false
+            setIsCandidate(false)
+          }}
+        >
+          normal
+        </Button>
+        <Button
+          className="min-w-0 flex-1 md:flex-none"
+          icon="tabler:notes"
+          namespace="apps.sudoku"
+          variant={isCandidate ? 'primary' : 'secondary'}
+          onClick={() => {
+            isCandidateModeLockedRef.current = true
+            setIsCandidate(true)
+          }}
+        >
+          candidate
+        </Button>
+      </div>
+      <div className="bg-bg-300 dark:bg-bg-600 mx-2 hidden h-8 w-px lg:block" />
+      <div className="flex w-full items-center gap-2 md:w-auto">
+        <Button
+          className="min-w-0 flex-1 md:flex-none"
+          icon="tabler:eraser"
+          namespace="apps.sudoku"
+          variant="secondary"
+          onClick={handleClearBoard}
+        >
+          clearBoard
+        </Button>
+        <Button
+          className="min-w-0 flex-1 md:flex-none"
+          icon="tabler:cloud-upload"
+          loading={syncLoading}
+          namespace="apps.sudoku"
+          variant="secondary"
+          onClick={onSyncToDB}
+        >
+          sync
+        </Button>
+      </div>
     </div>
   )
 }

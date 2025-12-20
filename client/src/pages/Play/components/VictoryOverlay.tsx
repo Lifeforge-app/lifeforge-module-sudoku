@@ -2,14 +2,22 @@ import { Icon } from '@iconify/react'
 import { Button, ConfirmationModal, useModalStore } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
 
-import { useSync } from '../providers'
+import { useSession, useSync } from '../providers'
 
-function VictoryOverlay() {
+interface VictoryOverlayProps {
+  onBoardSwitch: (index: number) => void
+}
+
+function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
   const { t } = useTranslation('apps.sudoku')
 
   const open = useModalStore(state => state.open)
 
+  const { boards, currentBoardIndex } = useSession()
+
   const { resetBoardMutation, handleRetry } = useSync()
+
+  const hasNextBoard = currentBoardIndex < boards.length - 1
 
   const handlePlayAgain = () => {
     open(ConfirmationModal, {
@@ -22,9 +30,13 @@ function VictoryOverlay() {
     })
   }
 
+  const handleNextBoard = () => {
+    onBoardSwitch(currentBoardIndex + 1)
+  }
+
   return (
     <div className="bg-bg-50/50 dark:bg-bg-900/50 absolute inset-0 flex items-center justify-center rounded-xl">
-      <div className="bg-bg-50 dark:bg-bg-900 flex min-w-[30vw] flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-bg-50 dark:bg-bg-900 flex w-full flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm sm:min-w-[30vw]">
         <div className="bg-custom-500/20 flex size-20 items-center justify-center rounded-full">
           <Icon className="text-custom-500 size-10" icon="tabler:trophy" />
         </div>
@@ -34,14 +46,25 @@ function VictoryOverlay() {
           </h2>
           <p className="text-bg-500 mt-2">{t('messages.puzzleSolved')}</p>
         </div>
-        <Button
-          icon="tabler:refresh"
-          loading={resetBoardMutation.isPending}
-          variant="primary"
-          onClick={handlePlayAgain}
-        >
-          {t('buttons.retry')}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            icon="tabler:refresh"
+            loading={resetBoardMutation.isPending}
+            variant="secondary"
+            onClick={handlePlayAgain}
+          >
+            {t('buttons.retry')}
+          </Button>
+          {hasNextBoard && (
+            <Button
+              icon="tabler:arrow-right"
+              variant="primary"
+              onClick={handleNextBoard}
+            >
+              {t('buttons.nextBoard')}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )
