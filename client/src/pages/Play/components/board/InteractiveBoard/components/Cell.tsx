@@ -124,7 +124,8 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
         'size-full cursor-pointer transition-colors outline-none',
         !BOX_BORDERS.has(row) && 'border-bg-300 dark:border-bg-700 border-b',
         !isOriginal && 'hover:bg-bg-200 dark:hover:bg-bg-700/50',
-        (isSelected || isChainHighlighted) && 'bg-bg-500/5 hover:bg-bg-500/20!'
+        (isSelected || isChainHighlighted) &&
+          'bg-bg-500/5 dark:bg-bg-500/10 hover:bg-bg-500/20!'
       )}
       tabIndex={0}
       onClick={handleClick}

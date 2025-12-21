@@ -38,7 +38,7 @@ function NumberButtons() {
   return (
     <div className="flex flex-col gap-2">
       <ViewModeSelector
-        className="component-bg-lighter w-full"
+        className="component-bg-lighter bg-bg-100 w-full"
         currentMode={isCandidate ? 'candidate' : 'normal'}
         options={modeOptions}
         onModeChange={handleModeChange}

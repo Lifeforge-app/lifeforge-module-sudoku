@@ -37,7 +37,7 @@ function RightToolbar() {
   return (
     <Card className="flex flex-col gap-3">
       <ViewModeSelector
-        className="component-bg-lighter bg-bg-100!"
+        className="component-bg-lighter bg-bg-100"
         currentMode={isCandidate ? 'candidate' : 'normal'}
         options={modeOptions}
         onModeChange={handleModeChange}
