@@ -8,7 +8,6 @@ const sudokuSchemas = {
       updated: z.string()
     }),
     raw: {
-      id: 'pbc_1095810794',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -20,7 +19,6 @@ const sudokuSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -33,7 +31,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'number535196252',
           max: null,
           min: null,
           name: 'current_board_index',
@@ -45,7 +42,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate2990389176',
           name: 'created',
           onCreate: true,
           onUpdate: false,
@@ -55,7 +51,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate3332085495',
           name: 'updated',
           onCreate: true,
           onUpdate: true,
@@ -82,7 +77,6 @@ const sudokuSchemas = {
       updated: z.string()
     }),
     raw: {
-      id: 'pbc_2786237679',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -94,7 +88,6 @@ const sudokuSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -108,7 +101,6 @@ const sudokuSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text3144380399',
           max: 0,
           min: 0,
           name: 'difficulty',
@@ -121,7 +113,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'number3051213438',
           max: null,
           min: null,
           name: 'duration_elapsed',
@@ -133,7 +124,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'json1482042183',
           maxSize: 0,
           name: 'board',
           presentable: false,
@@ -143,7 +133,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'json1355859462',
           maxSize: 0,
           name: 'user_answers',
           presentable: false,
@@ -153,7 +142,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'json3440393952',
           maxSize: 0,
           name: 'user_candidates',
           presentable: false,
@@ -163,9 +151,8 @@ const sudokuSchemas = {
         },
         {
           cascadeDelete: true,
-          collectionId: 'pbc_1095810794',
+          collectionId: 'sudoku__sessions',
           hidden: false,
-          id: 'relation3494172116',
           maxSelect: 1,
           minSelect: 0,
           name: 'session',
@@ -176,7 +163,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'number2155046657',
           max: null,
           min: null,
           name: 'index',
@@ -188,7 +174,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'bool1023422721',
           name: 'is_completed',
           presentable: false,
           required: false,
@@ -197,7 +182,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate2990389176',
           name: 'created',
           onCreate: true,
           onUpdate: false,
@@ -207,7 +191,6 @@ const sudokuSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate3332085495',
           name: 'updated',
           onCreate: true,
           onUpdate: true,
