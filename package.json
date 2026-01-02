@@ -16,6 +16,7 @@
     "react-dom": "^19.2.0",
     "react-i18next": "^15.1.1",
     "react-to-print": "^3.1.1",
+    "react-toastify": "^11.0.5",
     "react-tooltip": "^5.28.0",
     "shared": "workspace:*",
     "tailwindcss": "^4.1.14",
