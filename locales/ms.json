@@ -1,0 +1,125 @@
+{
+  "title": "Sudoku",
+  "description": "Jana papan Sudoku yang boleh dicetak tanpa had.",
+  "buttons": {
+    "play": "Main",
+    "newGame": "Permainan Baru",
+    "continue": "Teruskan",
+    "delete": "Padam",
+    "sync": "Segerakkan",
+    "retry": "Main Lagi",
+    "normal": "Normal",
+    "candidate": "Calon",
+    "clear": "Kosongkan",
+    "clearBoard": "Kosongkan Papan",
+    "print": "Cetak",
+    "createFirst": "Cipta Sesi Pertama Anda",
+    "nextBoard": "Papan Seterusnya",
+    "hint": "Petunjuk",
+    "undo": "Buat Asal",
+    "redo": "Buat Semula",
+    "resume": "Sambung",
+    "smartFill": "Isi Pintar"
+  },
+  "difficulties": {
+    "easy": "Mudah",
+    "medium": "Sederhana",
+    "hard": "Sukar",
+    "expert": "Pakar",
+    "evil": "Jahat",
+    "extreme": "Melampau"
+  },
+  "inputs": {
+    "difficulty": "Kesukaran",
+    "showSolution": "Tunjukkan Penyelesaian",
+    "boardCount": "Jumlah Papan",
+    "autoCheckMode": "Mod Semak Auto"
+  },
+  "headers": {
+    "sessions": "Sesi Permainan",
+    "printPreview": "Pratonton Cetakan"
+  },
+  "items": {
+    "session": "sesi"
+  },
+  "session": {
+    "create": "Cipta Sesi",
+    "lastPlayed": "Terakhir dimainkan",
+    "complete": "selesai",
+    "completed": "Selesai",
+    "avgTime": "Purata Masa",
+    "boards": "Papan"
+  },
+  "messages": {
+    "savedGameFound": "Permainan tersimpan ditemui",
+    "continueOrStartNew": "Anda boleh meneruskan permainan sebelumnya atau memulakan yang baru.",
+    "congratulations": "Tahniah!",
+    "puzzleSolved": "Anda berjaya menyelesaikan teka-teki ini!",
+    "gamePaused": "Permainan Dijeda"
+  },
+  "empty": {
+    "sessions": {
+      "title": "Tiada Sesi Lagi",
+      "description": "Cipta sesi Sudoku pertama anda untuk bermula."
+    }
+  },
+  "modals": {
+    "confirmRefresh": {
+      "title": "Jana Papan Baru?",
+      "description": "Anda mempunyai permainan yang sedang berjalan. Menjana papan baru akan menimpa kemajuan semasa anda. Adakah anda pasti mahu meneruskan?"
+    },
+    "confirmNewGame": {
+      "title": "Mulakan Permainan Baru?",
+      "description": "Anda mempunyai permainan yang sedang berjalan. Memulakan permainan baru akan menimpa kemajuan semasa anda. Adakah anda pasti mahu meneruskan?"
+    },
+    "confirmDelete": {
+      "title": "Padam Sesi?",
+      "description": "Ini akan memadam sesi ini dan semua kemajuannya secara kekal. Tindakan ini tidak boleh dibatalkan."
+    },
+    "confirmClearBoard": {
+      "title": "Kosongkan Papan?",
+      "description": "Ini akan mengosongkan semua jawapan anda pada papan semasa. Pemasa anda akan direset. Adakah anda pasti?"
+    },
+    "confirmPlayAgain": {
+      "title": "Main Lagi?",
+      "description": "Ini akan menetapkan semula papan dan mulakan dari awal. Masa penyelesaian anda akan hilang. Adakah anda pasti?"
+    },
+    "confirmSmartFill": {
+      "title": "Isi Pintar Calon?",
+      "description": "Ini akan mengisi semua calon yang mungkin untuk setiap sel kosong. Sebarang calon sedia ada akan digantikan. Teruskan?"
+    },
+    "settings": "Tetapan"
+  },
+  "stats": {
+    "title": "Statistik",
+    "overall": "Keseluruhan",
+    "byDifficulty": "Mengikut Kesukaran",
+    "totalBoards": "Jumlah Papan",
+    "completed": "Selesai",
+    "noData": "Tiada statistik lagi. Selesaikan beberapa teka-teki untuk melihat statistik anda!",
+    "streak": "Berturutan",
+    "days": "hari",
+    "bestStreak": "Terbaik",
+    "totalTime": "Jumlah Masa",
+    "daysPlayed": "hari dimainkan",
+    "recentActivity": "Aktiviti Terkini",
+    "completionHistory": "Kadar Penyelesaian Sepanjang Masa",
+    "bestTimes": "Papan Pendahulu Masa Terbaik",
+    "noBestTimes": "Selesaikan teka-teki untuk melihat masa terbaik anda!",
+    "timeDistribution": "Taburan Masa",
+    "noTimeData": "Selesaikan teka-teki untuk melihat taburan masa!",
+    "difficulty": "Kesukaran",
+    "played": "Dimainkan",
+    "avgTime": "Masa Purata",
+    "bestTime": "Masa Terbaik",
+    "hours": "j",
+    "minutes": "m",
+    "seconds": "s",
+    "activityCalendar": "Kalendar Aktiviti",
+    "puzzlesCompleted": "teka-teki selesai pada",
+    "puzzlesOn": "teka-teki pada"
+  },
+  "emptyState": {
+    "activities": "Tiada aktiviti direkodkan lagi. Selesaikan beberapa teka-teki untuk melihat aktiviti anda!"
+  }
+}

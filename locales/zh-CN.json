@@ -1,0 +1,125 @@
+{
+  "title": "数独",
+  "description": "无限生成可打印的数独棋盘。",
+  "buttons": {
+    "play": "开始",
+    "newGame": "新游戏",
+    "continue": "继续",
+    "delete": "删除",
+    "sync": "同步",
+    "retry": "再玩一次",
+    "normal": "普通",
+    "candidate": "候选",
+    "clear": "清除",
+    "clearBoard": "清空棋盘",
+    "print": "打印",
+    "createFirst": "创建您的第一个会话",
+    "nextBoard": "下一棋盘",
+    "hint": "提示",
+    "undo": "撤销",
+    "redo": "重做",
+    "resume": "继续",
+    "smartFill": "智能填充"
+  },
+  "difficulties": {
+    "easy": "简单",
+    "medium": "中等",
+    "hard": "困难",
+    "expert": "专家",
+    "evil": "邪恶",
+    "extreme": "极限"
+  },
+  "inputs": {
+    "difficulty": "难度",
+    "showSolution": "显示解答",
+    "boardCount": "棋盘数量",
+    "autoCheckMode": "自动检查模式"
+  },
+  "headers": {
+    "sessions": "游戏会话",
+    "printPreview": "打印预览"
+  },
+  "items": {
+    "session": "会话"
+  },
+  "session": {
+    "create": "创建会话",
+    "lastPlayed": "上次游玩",
+    "complete": "完成",
+    "completed": "已完成",
+    "avgTime": "平均时间",
+    "boards": "棋盘"
+  },
+  "messages": {
+    "savedGameFound": "发现已保存的游戏",
+    "continueOrStartNew": "您可以继续之前的游戏或开始新游戏。",
+    "congratulations": "恭喜！",
+    "puzzleSolved": "你解开了谜题！",
+    "gamePaused": "游戏暂停"
+  },
+  "empty": {
+    "sessions": {
+      "title": "暂无会话",
+      "description": "创建您的第一个数独会话开始游戏。"
+    }
+  },
+  "modals": {
+    "confirmRefresh": {
+      "title": "生成新棋盘？",
+      "description": "您有正在进行的游戏。生成新棋盘将覆盖当前进度。确定要继续吗？"
+    },
+    "confirmNewGame": {
+      "title": "开始新游戏？",
+      "description": "您有正在进行的游戏。开始新游戏将覆盖当前进度。确定要继续吗？"
+    },
+    "confirmDelete": {
+      "title": "删除会话？",
+      "description": "这将永久删除此会话及其所有进度。此操作无法撤消。"
+    },
+    "confirmClearBoard": {
+      "title": "清空棋盘？",
+      "description": "这将清除当前棋盘上的所有答案。计时器将被重置。确定吗？"
+    },
+    "confirmPlayAgain": {
+      "title": "再玩一次？",
+      "description": "这将重置棋盘并重新开始。您的完成时间将丢失。确定吗？"
+    },
+    "confirmSmartFill": {
+      "title": "智能填充候选？",
+      "description": "这将为每个空单元格自动填充所有可能的候选数字。现有的候选将被替换。继续吗？"
+    },
+    "settings": "设置"
+  },
+  "stats": {
+    "title": "统计",
+    "overall": "总体",
+    "byDifficulty": "按难度",
+    "totalBoards": "总棋盘数",
+    "completed": "已完成",
+    "noData": "暂无统计数据。完成一些谜题后查看您的统计！",
+    "streak": "连续天数",
+    "days": "天",
+    "bestStreak": "最佳",
+    "totalTime": "总时长",
+    "daysPlayed": "天游玩",
+    "recentActivity": "近期活动",
+    "completionHistory": "完成率趋势",
+    "bestTimes": "最佳时间排行榜",
+    "noBestTimes": "完成谜题后查看您的最佳时间！",
+    "timeDistribution": "时间分布",
+    "noTimeData": "完成谜题后查看时间分布！",
+    "difficulty": "难度",
+    "played": "已玩",
+    "avgTime": "平均时间",
+    "bestTime": "最佳时间",
+    "hours": "时",
+    "minutes": "分",
+    "seconds": "秒",
+    "activityCalendar": "活动日历",
+    "puzzlesCompleted": "道谜题完成于",
+    "puzzlesOn": "道谜题于"
+  },
+  "emptyState": {
+    "activities": "暂无活动记录。完成一些谜题后查看您的活动！"
+  }
+}

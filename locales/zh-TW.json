@@ -1,0 +1,125 @@
+{
+  "title": "數獨",
+  "description": "無限生成可打印的數獨棋盤。",
+  "buttons": {
+    "play": "開始",
+    "newGame": "新遊戲",
+    "continue": "繼續",
+    "delete": "刪除",
+    "sync": "同步",
+    "retry": "再玩一次",
+    "normal": "普通",
+    "candidate": "候選",
+    "clear": "清除",
+    "clearBoard": "清空棋盤",
+    "print": "列印",
+    "createFirst": "創建您的第一個會話",
+    "nextBoard": "下一棋盤",
+    "hint": "提示",
+    "undo": "撤銷",
+    "redo": "重做",
+    "resume": "繼續",
+    "smartFill": "智能填充"
+  },
+  "difficulties": {
+    "easy": "簡單",
+    "medium": "中等",
+    "hard": "困難",
+    "expert": "專家",
+    "evil": "邪惡",
+    "extreme": "極限"
+  },
+  "inputs": {
+    "difficulty": "難度",
+    "showSolution": "顯示解答",
+    "boardCount": "棋盤數量",
+    "autoCheckMode": "自動檢查模式"
+  },
+  "headers": {
+    "sessions": "遊戲會話",
+    "printPreview": "列印預覽"
+  },
+  "items": {
+    "session": "會話"
+  },
+  "session": {
+    "create": "創建會話",
+    "lastPlayed": "上次遊玩",
+    "complete": "完成",
+    "completed": "已完成",
+    "avgTime": "平均時間",
+    "boards": "棋盤"
+  },
+  "messages": {
+    "savedGameFound": "發現已保存的遊戲",
+    "continueOrStartNew": "您可以繼續之前的遊戲或開始新遊戲。",
+    "congratulations": "恭喜！",
+    "puzzleSolved": "你解開了謎題！",
+    "gamePaused": "遊戲暫停"
+  },
+  "empty": {
+    "sessions": {
+      "title": "暫無會話",
+      "description": "創建您的第一個數獨會話開始遊戲。"
+    }
+  },
+  "modals": {
+    "confirmRefresh": {
+      "title": "生成新棋盤？",
+      "description": "您有正在進行的遊戲。生成新棋盤將覆蓋當前進度。確定要繼續嗎？"
+    },
+    "confirmNewGame": {
+      "title": "開始新遊戲？",
+      "description": "您有正在進行的遊戲。開始新遊戲將覆蓋當前進度。確定要繼續嗎？"
+    },
+    "confirmDelete": {
+      "title": "刪除會話？",
+      "description": "這將永久刪除此會話及其所有進度。此操作無法撤消。"
+    },
+    "confirmClearBoard": {
+      "title": "清空棋盤？",
+      "description": "這將清除當前棋盤上的所有答案。計時器將被重置。確定嗎？"
+    },
+    "confirmPlayAgain": {
+      "title": "再玩一次？",
+      "description": "這將重置棋盤並重新開始。您的完成時間將丟失。確定嗎？"
+    },
+    "confirmSmartFill": {
+      "title": "智能填充候選？",
+      "description": "這將為每個空單元格自動填充所有可能的候選數字。現有的候選將被替換。繼續嗎？"
+    },
+    "settings": "設定"
+  },
+  "stats": {
+    "title": "統計",
+    "overall": "總體",
+    "byDifficulty": "按難度",
+    "totalBoards": "總棋盤數",
+    "completed": "已完成",
+    "noData": "暫無統計數據。完成一些謎題後查看您的統計！",
+    "streak": "連續天數",
+    "days": "天",
+    "bestStreak": "最佳",
+    "totalTime": "總時長",
+    "daysPlayed": "天遊玩",
+    "recentActivity": "近期活動",
+    "completionHistory": "完成率趨勢",
+    "bestTimes": "最佳時間排行榜",
+    "noBestTimes": "完成謎題後查看您的最佳時間！",
+    "timeDistribution": "時間分布",
+    "noTimeData": "完成謎題後查看時間分布！",
+    "difficulty": "難度",
+    "played": "已玩",
+    "avgTime": "平均時間",
+    "bestTime": "最佳時間",
+    "hours": "時",
+    "minutes": "分",
+    "seconds": "秒",
+    "activityCalendar": "活動日曆",
+    "puzzlesCompleted": "道謎題完成於",
+    "puzzlesOn": "道謎題於"
+  },
+  "emptyState": {
+    "activities": "暫無活動記錄。完成一些謎題後查看您的活動！"
+  }
+}
