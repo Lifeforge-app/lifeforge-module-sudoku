@@ -1,6 +1,12 @@
 {
-  "name": "sudoku",
-  "version": "dev. 25w41",
+  "name": "@lifeforge/lifeforge--sudoku",
+  "displayName": "Sudoku",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lifeforge-app/lifeforge-module-sudoku.git"
+  },
+  "version": "0.0.1",
+  "author": "Melvin Chia <melvinchia623600@gmail.com>",
   "description": "Generate printable Sudoku boards infinitely.",
   "scripts": {
     "types": "cd client && bun tsc"
@@ -28,5 +34,17 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/tinycolor2": "^1.4.6"
+  },
+  "exports": {
+    "./server": "./server/index.ts",
+    "./manifest": {
+      "types": "./manifest.d.ts",
+      "default": "./manifest.ts"
+    },
+    "./server/schema": "./server/schema.ts"
+  },
+  "lifeforge": {
+    "icon": "uil:table",
+    "category": "Utilities"
   }
 }
