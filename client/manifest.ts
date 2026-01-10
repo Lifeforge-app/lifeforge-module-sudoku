@@ -6,5 +6,5 @@ export default {
     '/': lazy(() => import('@')),
     '/play/:sessionId': lazy(() => import('@/pages/Play')),
     '/print/:sessionId': lazy(() => import('@/pages/Print'))
-  },
+  }
 } satisfies ModuleConfig

@@ -11,7 +11,7 @@ interface VictoryOverlayProps {
 function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
   const { t } = useTranslation('apps.sudoku')
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const { boards, currentBoardIndex } = useSession()
 

@@ -1,12 +1,13 @@
 /* eslint-disable react-compiler/react-compiler */
-import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'
 import { Button, ConfirmationModal, useModalStore } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
+
+import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'
 
 function ActionButtons() {
   const { t } = useTranslation('apps.sudoku')
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const {
     resetCurrentBoard,
@@ -15,7 +16,8 @@ function ActionButtons() {
     canUndo,
     canRedo,
     undo,
-    redo
+    redo,
+    smartFillCandidates
   } = useBoardState()
 
   const { resetCurrentTimer } = useTimer()
@@ -30,6 +32,17 @@ function ActionButtons() {
       onConfirm: async () => {
         resetCurrentBoard()
         resetCurrentTimer()
+      }
+    })
+  }
+
+  const handleSmartFill = () => {
+    open(ConfirmationModal, {
+      title: t('modals.confirmSmartFill.title'),
+      description: t('modals.confirmSmartFill.description'),
+      confirmButton: 'confirm',
+      onConfirm: async () => {
+        smartFillCandidates()
       }
     })
   }
@@ -77,6 +90,14 @@ function ActionButtons() {
             ({MAX_HINTS - hintsUsed}/{MAX_HINTS})
           </span>
         </span>
+      </Button>
+      <Button
+        className="min-w-32 flex-1"
+        icon="mage:stars-c"
+        variant="secondary"
+        onClick={handleSmartFill}
+      >
+        <span className="truncate">{t('buttons.smartFill')}</span>
       </Button>
       <Button
         className="min-w-32 flex-1"

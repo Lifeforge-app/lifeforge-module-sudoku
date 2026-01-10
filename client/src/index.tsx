@@ -1,4 +1,3 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import {
   Button,
@@ -14,9 +13,12 @@ import { useTranslation } from 'react-i18next'
 import type { InferOutput } from 'shared'
 import colors from 'tailwindcss/colors'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 import CreateSessionModal from './components/CreateSessionModal'
 import SessionItem from './components/SessionItem'
 import StatsModal from './components/StatsModal'
+import './index.css'
 
 export type SudokuBoard = {
   id: number
@@ -39,7 +41,7 @@ export const DIFFICULTIES = {
 function Sudoku() {
   const { t } = useTranslation('apps.sudoku')
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const sessionsQuery = useQuery(
     forgeAPI.sudoku.sessions.list.input({}).queryOptions()

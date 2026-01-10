@@ -32,7 +32,7 @@ function PlayContent() {
 
   const navigate = useNavigate()
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const {
     sessionQuery,

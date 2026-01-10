@@ -1,12 +1,13 @@
-/* eslint-disable react-compiler/react-compiler */
-import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'
-import { Button, ConfirmationModal, useModalStore } from 'lifeforge-ui'
+import { Button, Card } from 'lifeforge-ui'
+import { ConfirmationModal, useModalStore } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
 
-function ActionButtons() {
+import { useBoardState, useSync, useTimer } from '../../../providers'
+
+function LeftToolbar() {
   const { t } = useTranslation('apps.sudoku')
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const {
     resetCurrentBoard,
@@ -48,75 +49,61 @@ function ActionButtons() {
 
   const MAX_HINTS = 3
 
-  // Can use hint if hints remaining (hint will pick random unfilled cell)
   const canUseHint = hintsUsed < MAX_HINTS
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {/* Undo/Redo buttons */}
+    <Card className="flex flex-row gap-2 lg:flex-col">
       <Button
-        className="min-w-32 flex-1"
+        className="!p-3"
         disabled={!canUndo}
         icon="tabler:arrow-back-up"
-        variant="secondary"
+        iconClassName="!size-6"
+        variant="plain"
         onClick={undo}
-      >
-        <span className="truncate">{t('buttons.undo')}</span>
-      </Button>
+      />
       <Button
-        className="min-w-32 flex-1"
+        className="!p-3"
         disabled={!canRedo}
         icon="tabler:arrow-forward-up"
-        variant="secondary"
+        iconClassName="!size-6"
+        variant="plain"
         onClick={redo}
-      >
-        <span className="truncate">{t('buttons.redo')}</span>
-      </Button>
-
-      {/* Other action buttons */}
+      />
+      <div className="bg-bg-300 dark:bg-bg-600 my-1 hidden h-px w-full lg:block" />
       <Button
-        className="min-w-48 flex-1"
+        className="!p-3"
         disabled={!canUseHint}
         icon="tabler:bulb"
-        variant="secondary"
+        iconClassName="!size-6"
+        variant="plain"
         onClick={() => {
           useHint()
         }}
-      >
-        <span className="truncate">
-          {t('buttons.hint')}{' '}
-          <span className="text-bg-500 text-xs">
-            ({MAX_HINTS - hintsUsed}/{MAX_HINTS})
-          </span>
-        </span>
-      </Button>
+      />
       <Button
-        className="min-w-32 flex-1"
+        className="!p-3"
         icon="mage:stars-c"
-        variant="secondary"
+        iconClassName="!size-6"
+        variant="plain"
         onClick={handleSmartFill}
-      >
-        <span className="truncate">{t('buttons.smartFill')}</span>
-      </Button>
+      />
       <Button
-        className="min-w-32 flex-1"
+        className="!p-3"
         icon="tabler:eraser"
-        variant="secondary"
+        iconClassName="!size-6"
+        variant="plain"
         onClick={handleClearBoard}
-      >
-        <span className="truncate">{t('buttons.clearBoard')}</span>
-      </Button>
+      />
       <Button
-        className="min-w-32 flex-1"
+        className="!p-3"
         icon="tabler:cloud-upload"
+        iconClassName="!size-6"
         loading={syncLoading}
-        variant="secondary"
+        variant="plain"
         onClick={onSyncToDB}
-      >
-        <span className="truncate">{t('buttons.sync')}</span>
-      </Button>
-    </div>
+      />
+    </Card>
   )
 }
 
-export default ActionButtons
+export default LeftToolbar

@@ -1,7 +1,4 @@
 import type { Session } from '@'
-import { DIFFICULTY_COLORS } from '@/constants/constants'
-import forgeAPI from '@/utils/forgeAPI'
-import { formatTime } from '@/utils/time'
 import { Icon } from '@iconify/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -17,12 +14,16 @@ import { useTranslation } from 'react-i18next'
 import { anyColorToHex, useNavigate } from 'shared'
 import colors from 'tailwindcss/colors'
 
+import { DIFFICULTY_COLORS } from '@/constants/constants'
+import forgeAPI from '@/utils/forgeAPI'
+import { formatTime } from '@/utils/time'
+
 function SessionItem({ session }: { session: Session }) {
   const { t } = useTranslation('apps.sudoku')
 
   const navigate = useNavigate()
 
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   const queryClient = useQueryClient()
 
