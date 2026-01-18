@@ -1,6 +1,7 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import { ModalHeader, WithQuery } from 'lifeforge-ui'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import ActivityCalendar from './components/ActivityCalendar'
 import BestTimes from './components/BestTimes'
@@ -9,7 +10,7 @@ import OverviewCards from './components/OverviewCards'
 import TimeDistribution from './components/TimeDistribution'
 
 function StatsModal({ onClose }: { onClose: () => void }) {
-  const statsQuery = useQuery(forgeAPI.sudoku.sessions.stats.queryOptions())
+  const statsQuery = useQuery(forgeAPI.sessions.stats.queryOptions())
 
   return (
     <div className="min-w-[70vw]">

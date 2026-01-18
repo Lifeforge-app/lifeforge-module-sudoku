@@ -27,7 +27,7 @@ export type SudokuBoard = {
   win_rate: number
 }
 
-export type Session = InferOutput<typeof forgeAPI.sudoku.sessions.list>[number]
+export type Session = InferOutput<typeof forgeAPI.sessions.list>[number]
 
 export const DIFFICULTIES = {
   easy: colors.green[500],
@@ -44,7 +44,7 @@ function Sudoku() {
   const { open } = useModalStore()
 
   const sessionsQuery = useQuery(
-    forgeAPI.sudoku.sessions.list.input({}).queryOptions()
+    forgeAPI.sessions.list.input({}).queryOptions()
   )
 
   const handleCreateSession = () => {

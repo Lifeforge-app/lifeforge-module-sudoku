@@ -1,9 +1,10 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { FormModal, defineForm } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'shared'
 import colors from 'tailwindcss/colors'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 const DIFFICULTIES = [
   { name: 'easy', color: colors.green[500] },
@@ -24,7 +25,7 @@ function CreateSessionModal({ onClose }: { onClose: () => void }) {
   const queryClient = useQueryClient()
 
   const createMutation = useMutation(
-    forgeAPI.sudoku.sessions.create.mutationOptions({
+    forgeAPI.sessions.create.mutationOptions({
       onSuccess: data => {
         queryClient.invalidateQueries({ queryKey: ['sudoku', 'sessions'] })
         navigate(`/sudoku/play/${data.sessionId}`)

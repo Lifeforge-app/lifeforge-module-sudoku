@@ -28,7 +28,7 @@ function SessionItem({ session }: { session: Session }) {
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(
-    forgeAPI.sudoku.sessions.remove.input({ id: session.id }).mutationOptions({
+    forgeAPI.sessions.remove.input({ id: session.id }).mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['sudoku', 'sessions'] })
       }

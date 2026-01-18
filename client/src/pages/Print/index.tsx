@@ -1,5 +1,4 @@
 import type { SudokuBoard } from '@'
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { Button, GoBackButton, WithQuery } from 'lifeforge-ui'
@@ -7,6 +6,8 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import { useNavigate, useParams } from 'shared'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import Board from '../../components/Board'
 
@@ -20,25 +21,21 @@ function Print() {
   const printRef = useRef<HTMLDivElement>(null)
 
   const sessionQuery = useQuery({
-    ...forgeAPI.sudoku.sessions.get.input({ id: sessionId! }).queryOptions(),
+    ...forgeAPI.sessions.get.input({ id: sessionId! }).queryOptions(),
     enabled: !!sessionId
   })
 
   const fontQuery = useQuery(
-    forgeAPI.user.personalization.getGoogleFont
-      .input({
-        family: 'Rubik'
-      })
-      .queryOptions()
+    forgeAPI.getGoogleFont({ family: 'Rubik' }).queryOptions()
   )
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    fonts: fontQuery.data?.items.length
+    fonts: fontQuery.data?.items?.length
       ? [
           {
             family: fontQuery.data.items[0].family,
-            source: fontQuery.data.items[0].files.regular
+            source: fontQuery.data.items[0].files.regular || ''
           }
         ]
       : [],

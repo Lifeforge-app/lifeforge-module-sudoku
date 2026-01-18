@@ -1,4 +1,3 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
@@ -14,6 +13,8 @@ import { useTranslation } from 'react-i18next'
 import { Tooltip } from 'react-tooltip'
 import { anyColorToHex, usePersonalization } from 'shared'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 function ActivityCalendar() {
   const { t } = useTranslation('apps.sudoku')
 
@@ -22,7 +23,7 @@ function ActivityCalendar() {
   const [year, setYear] = useState(new Date().getFullYear())
 
   const dataQuery = useQuery(
-    forgeAPI.sudoku.sessions.getActivities
+    forgeAPI.sessions.getActivities
       .input({
         year: year.toString()
       })

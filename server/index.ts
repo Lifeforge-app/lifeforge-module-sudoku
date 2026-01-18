@@ -1,17 +1,12 @@
+import { forgeRouter } from '@lifeforge/server-utils'
 import z from 'zod'
 
-import { forgeController, forgeRouter } from '@functions/routes'
+import forge from './forge'
+import * as sessionsRoutes from './routes/sessions'
 
-import sessions from './routes/sessions'
-
-const generateBoard = forgeController
+const generateBoard = forge
   .query()
-  .description({
-    en: 'Generate Sudoku boards from external API',
-    ms: 'Hasilkan papan Sudoku dari API luaran',
-    'zh-CN': '从外部API生成数独棋盘',
-    'zh-TW': '從外部API生成數獨棋盤'
-  })
+  .description('Generate Sudoku boards from external API')
   .input({
     query: z.object({
       difficulty: z.enum([
@@ -59,4 +54,4 @@ const generateBoard = forgeController
     return boards
   })
 
-export default forgeRouter({ generateBoard, sessions })
+export default forgeRouter({ generateBoard, sessions: sessionsRoutes })

@@ -1,5 +1,4 @@
 import type { SudokuBoard } from '@'
-import forgeAPI from '@/utils/forgeAPI'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   createContext,
@@ -10,6 +9,8 @@ import {
 } from 'react'
 import { toast } from 'react-toastify'
 import { usePromiseLoading } from 'shared'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import { useBoardState } from './BoardStateProvider'
 import { useSession } from './SessionProvider'
@@ -42,7 +43,7 @@ export async function syncToDatabase(params: {
   difficulty: string
   durationsElapsed: number[]
 }): Promise<void> {
-  await forgeAPI.sudoku.sessions.save.mutate({
+  await forgeAPI.sessions.save.mutate({
     sessionId: params.sessionId,
     currentBoardIndex: params.currentBoardIndex,
     difficulty: params.difficulty,
@@ -109,7 +110,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
 
   // Reset board mutation
   const resetBoardMutation = useMutation(
-    forgeAPI.sudoku.sessions.resetBoard.mutationOptions({
+    forgeAPI.sessions.resetBoard.mutationOptions({
       onSuccess: () => {
         resetCurrentBoard()
         resetCurrentTimer()
@@ -121,7 +122,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
 
   // Mark complete mutation
   const markCompleteMutation = useMutation(
-    forgeAPI.sudoku.sessions.markComplete.mutationOptions({
+    forgeAPI.sessions.markComplete.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['sudoku', 'sessions'] })
         queryClient.invalidateQueries({

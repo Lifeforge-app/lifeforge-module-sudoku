@@ -1,16 +1,11 @@
 import z from 'zod'
 
-import { forgeController, forgeRouter } from '@functions/routes'
+import forge from '../forge'
 
 // List all sessions with summary info
-const list = forgeController
+export const list = forge
   .query()
-  .description({
-    en: 'List all Sudoku sessions',
-    ms: 'Senarai semua sesi Sudoku',
-    'zh-CN': '列出所有数独会话',
-    'zh-TW': '列出所有數獨會話'
-  })
+  .description('List all Sudoku sessions')
   .input({
     query: z.object({
       difficulty: z.string().optional()
@@ -19,9 +14,9 @@ const list = forgeController
   .callback(async ({ pb, query: { difficulty } }) => {
     // Fetch all entries with expanded session data in a single query
     const allEntries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .expand({
-        session: 'sudoku__sessions'
+        session: 'sessions'
       })
       .sort(['session', 'index'])
       .execute()
@@ -121,30 +116,22 @@ const list = forgeController
   })
 
 // Get a single session with all entries
-const get = forgeController
+export const get = forge
   .query()
-  .description({
-    en: 'Get a specific Sudoku session',
-    ms: 'Dapatkan sesi Sudoku tertentu',
-    'zh-CN': '获取特定数独会话',
-    'zh-TW': '獲取特定數獨會話'
-  })
+  .description('Get a specific Sudoku session')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'sudoku__sessions'
+    id: 'sessions'
   })
   .callback(async ({ pb, query: { id } }) => {
-    const session = await pb.getOne
-      .collection('sudoku__sessions')
-      .id(id)
-      .execute()
+    const session = await pb.getOne.collection('sessions').id(id).execute()
 
     const entries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([{ field: 'session', operator: '=', value: id }])
       .sort(['index'])
       .execute()
@@ -156,19 +143,14 @@ const get = forgeController
   })
 
 // Get active session with all entries
-const getActive = forgeController
+export const getActive = forge
   .query()
-  .description({
-    en: 'Get the active Sudoku session',
-    ms: 'Dapatkan sesi Sudoku aktif',
-    'zh-CN': '获取当前数独会话',
-    'zh-TW': '獲取當前數獨會話'
-  })
+  .description('Get the active Sudoku session')
   .input({})
   .callback(async ({ pb }) => {
     // Get the most recent session
     const sessions = await pb.getFullList
-      .collection('sudoku__sessions')
+      .collection('sessions')
       .sort(['-updated'])
       .execute()
 
@@ -180,7 +162,7 @@ const getActive = forgeController
 
     // Get all entries for this session
     const entries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([{ field: 'session', operator: '=', value: session.id }])
       .sort(['index'])
       .execute()
@@ -192,14 +174,9 @@ const getActive = forgeController
   })
 
 // Create a new session
-const create = forgeController
+export const create = forge
   .mutation()
-  .description({
-    en: 'Create a new Sudoku session',
-    ms: 'Cipta sesi Sudoku baharu',
-    'zh-CN': '创建新数独会话',
-    'zh-TW': '創建新數獨會話'
-  })
+  .description('Create a new Sudoku session')
   .input({
     body: z.object({
       difficulty: z.enum([
@@ -241,7 +218,7 @@ const create = forgeController
 
     // Create session
     const session = await pb.create
-      .collection('sudoku__sessions')
+      .collection('sessions')
       .data({ current_board_index: 0 })
       .execute()
 
@@ -249,7 +226,7 @@ const create = forgeController
     await Promise.all(
       boards.map((board, index) =>
         pb.create
-          .collection('sudoku__entries')
+          .collection('entries')
           .data({
             session: session.id,
             index,
@@ -267,14 +244,9 @@ const create = forgeController
   })
 
 // Save or update session
-const save = forgeController
+export const save = forge
   .mutation()
-  .description({
-    en: 'Save Sudoku session progress',
-    ms: 'Simpan kemajuan sesi Sudoku',
-    'zh-CN': '保存数独会话进度',
-    'zh-TW': '保存數獨會話進度'
-  })
+  .description('Save Sudoku session progress')
   .input({
     body: z.object({
       sessionId: z.string().optional(),
@@ -311,14 +283,14 @@ const save = forgeController
       if (sessionId) {
         // Update existing session
         session = await pb.update
-          .collection('sudoku__sessions')
+          .collection('sessions')
           .id(sessionId)
           .data({ current_board_index: currentBoardIndex })
           .execute()
 
         // Update entries
         const existingEntries = await pb.getFullList
-          .collection('sudoku__entries')
+          .collection('entries')
           .filter([{ field: 'session', operator: '=', value: sessionId }])
           .sort(['index'])
           .execute()
@@ -329,7 +301,7 @@ const save = forgeController
 
             if (existingEntry) {
               return pb.update
-                .collection('sudoku__entries')
+                .collection('entries')
                 .id(existingEntry.id)
                 .data({
                   user_answers: userInputs[index],
@@ -339,7 +311,7 @@ const save = forgeController
                 .execute()
             } else {
               return pb.create
-                .collection('sudoku__entries')
+                .collection('entries')
                 .data({
                   session: sessionId,
                   index,
@@ -356,7 +328,7 @@ const save = forgeController
       } else {
         // Create new session
         session = await pb.create
-          .collection('sudoku__sessions')
+          .collection('sessions')
           .data({ current_board_index: currentBoardIndex })
           .execute()
 
@@ -364,7 +336,7 @@ const save = forgeController
         await Promise.all(
           boards.map((board, index) =>
             pb.create
-              .collection('sudoku__entries')
+              .collection('entries')
               .data({
                 session: session.id,
                 index,
@@ -384,49 +356,39 @@ const save = forgeController
   )
 
 // Clear/delete session
-const remove = forgeController
+export const remove = forge
   .mutation()
-  .description({
-    en: 'Delete Sudoku session',
-    ms: 'Padam sesi Sudoku',
-    'zh-CN': '删除数独会话',
-    'zh-TW': '刪除數獨會話'
-  })
+  .description('Delete Sudoku session')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'sudoku__sessions'
+    id: 'sessions'
   })
   .statusCode(204)
   .callback(async ({ pb, query: { id } }) => {
     // Delete all entries for this session first
     const entries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([{ field: 'session', operator: '=', value: id }])
       .execute()
 
     await Promise.all(
       entries.map(entry =>
-        pb.delete.collection('sudoku__entries').id(entry.id).execute()
+        pb.delete.collection('entries').id(entry.id).execute()
       )
     )
 
     // Delete the session
-    await pb.delete.collection('sudoku__sessions').id(id).execute()
+    await pb.delete.collection('sessions').id(id).execute()
   })
 
 // Mark a board entry as completed
-const markComplete = forgeController
+export const markComplete = forge
   .mutation()
-  .description({
-    en: 'Mark a Sudoku board as completed',
-    ms: 'Tandai papan Sudoku sebagai selesai',
-    'zh-CN': '将数独棋盘标记为已完成',
-    'zh-TW': '將數獨棋盤標記為已完成'
-  })
+  .description('Mark a Sudoku board as completed')
   .input({
     body: z.object({
       sessionId: z.string(),
@@ -435,7 +397,7 @@ const markComplete = forgeController
   })
   .callback(async ({ pb, body: { sessionId, boardIndex } }) => {
     const entries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([
         { field: 'session', operator: '=', value: sessionId },
         { field: 'index', operator: '=', value: boardIndex }
@@ -447,7 +409,7 @@ const markComplete = forgeController
     }
 
     await pb.update
-      .collection('sudoku__entries')
+      .collection('entries')
       .id(entries[0].id)
       .data({ is_completed: true })
       .execute()
@@ -456,14 +418,9 @@ const markComplete = forgeController
   })
 
 // Reset a board to initial state
-const resetBoard = forgeController
+export const resetBoard = forge
   .mutation()
-  .description({
-    en: 'Reset a Sudoku board to initial state',
-    ms: 'Set semula papan Sudoku kepada keadaan asal',
-    'zh-CN': '将数独棋盘重置为初始状态',
-    'zh-TW': '將數獨棋盤重置為初始狀態'
-  })
+  .description('Reset a Sudoku board to initial state')
   .input({
     body: z.object({
       sessionId: z.string(),
@@ -472,7 +429,7 @@ const resetBoard = forgeController
   })
   .callback(async ({ pb, body: { sessionId, boardIndex } }) => {
     const entries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([
         { field: 'session', operator: '=', value: sessionId },
         { field: 'index', operator: '=', value: boardIndex }
@@ -484,7 +441,7 @@ const resetBoard = forgeController
     }
 
     await pb.update
-      .collection('sudoku__entries')
+      .collection('entries')
       .id(entries[0].id)
       .data({
         user_answers: Array(81).fill(''),
@@ -497,20 +454,15 @@ const resetBoard = forgeController
   })
 
 // Get statistics for all sessions
-const stats = forgeController
+export const stats = forge
   .query()
-  .description({
-    en: 'Get Sudoku statistics',
-    ms: 'Dapatkan statistik Sudoku',
-    'zh-CN': '获取数独统计数据',
-    'zh-TW': '獲取數獨統計數據'
-  })
+  .description('Get Sudoku statistics')
   .input({})
   .callback(async ({ pb }) => {
     // Fetch all entries with expanded session data
     const allEntries = await pb.getFullList
-      .collection('sudoku__entries')
-      .expand({ session: 'sudoku__sessions' })
+      .collection('entries')
+      .expand({ session: 'sessions' })
       .execute()
 
     // Calculate statistics
@@ -776,14 +728,9 @@ const stats = forgeController
   })
 
 // Get activities for activity calendar
-const getActivities = forgeController
+export const getActivities = forge
   .query()
-  .description({
-    en: 'Get Sudoku activities for calendar',
-    ms: 'Dapatkan aktiviti Sudoku untuk kalendar',
-    'zh-CN': '获取数独活动日历',
-    'zh-TW': '獲取數獨活動日曆'
-  })
+  .description('Get Sudoku activities for calendar')
   .input({
     query: z.object({
       year: z.string()
@@ -792,7 +739,7 @@ const getActivities = forgeController
   .callback(async ({ pb, query: { year } }) => {
     // Fetch all completed entries
     const allEntries = await pb.getFullList
-      .collection('sudoku__entries')
+      .collection('entries')
       .filter([{ field: 'is_completed', operator: '=', value: true }])
       .execute()
 
@@ -855,16 +802,3 @@ const getActivities = forgeController
       firstYear
     }
   })
-
-export default forgeRouter({
-  list,
-  get,
-  getActive,
-  create,
-  save,
-  remove,
-  markComplete,
-  resetBoard,
-  stats,
-  getActivities
-})

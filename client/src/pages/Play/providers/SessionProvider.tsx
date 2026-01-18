@@ -1,5 +1,4 @@
 import type { SudokuBoard } from '@'
-import forgeAPI from '@/utils/forgeAPI'
 import { type UseQueryResult, useQuery } from '@tanstack/react-query'
 import {
   type ReactNode,
@@ -10,9 +9,11 @@ import {
 } from 'react'
 import { type InferOutput, useParams } from 'shared'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 interface SessionContextType {
   sessionId: string | undefined
-  sessionQuery: UseQueryResult<InferOutput<typeof forgeAPI.sudoku.sessions.get>>
+  sessionQuery: UseQueryResult<InferOutput<typeof forgeAPI.sessions.get>>
   boards: SudokuBoard[]
   currentBoard: SudokuBoard | undefined
   currentBoardIndex: number
@@ -32,7 +33,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
   const { sessionId } = useParams<{ sessionId: string }>()
 
   const sessionQuery = useQuery({
-    ...forgeAPI.sudoku.sessions.get.input({ id: sessionId! }).queryOptions(),
+    ...forgeAPI.sessions.get.input({ id: sessionId! }).queryOptions(),
     enabled: !!sessionId
   })
 

@@ -1,6 +1,7 @@
+import { cleanSchemas } from '@lifeforge/server-utils'
 import z from 'zod'
 
-const sudokuSchemas = {
+export const schemas = {
   sessions: {
     schema: z.object({
       current_board_index: z.number(),
@@ -205,4 +206,4 @@ const sudokuSchemas = {
   }
 }
 
-export default sudokuSchemas
+export default cleanSchemas(schemas)
