@@ -1,6 +1,7 @@
-import { Card, ViewModeSelector } from 'lifeforge-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { Card, ViewModeSelector } from '@lifeforge/ui'
 
 import { useInputMode } from '../../../providers'
 import NumberGrid from '../components/NumberGrid'

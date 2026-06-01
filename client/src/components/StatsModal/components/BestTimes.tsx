@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
+
+import { Widget } from '@lifeforge/ui'
+
 import { DIFFICULTY_COLORS } from '@/constants/constants'
 import { formatTime } from '@/utils/time'
-import { Widget } from 'lifeforge-ui'
-import { useTranslation } from 'react-i18next'
 
 interface DifficultyStat {
   difficulty: string

@@ -6,12 +6,12 @@ import {
   ListboxOption,
   Widget,
   WithQuery
-} from 'lifeforge-ui'
+} from '@lifeforge/ui'
 import { cloneElement, useState } from 'react'
 import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
 import { useTranslation } from 'react-i18next'
 import { Tooltip } from 'react-tooltip'
-import { anyColorToHex, usePersonalization } from 'shared'
+import { anyColorToHex, usePersonalization } from '@lifeforge/shared'
 
 import forgeAPI from '@/utils/forgeAPI'
 

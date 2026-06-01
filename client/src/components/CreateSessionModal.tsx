@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FormModal, defineForm } from 'lifeforge-ui'
+import { FormModal, defineForm } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'shared'
+import { useNavigate } from '@lifeforge/shared'
 import colors from 'tailwindcss/colors'
 
 import forgeAPI from '@/utils/forgeAPI'

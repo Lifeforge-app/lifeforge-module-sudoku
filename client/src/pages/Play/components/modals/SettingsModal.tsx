@@ -1,4 +1,4 @@
-import { FormModal, defineForm } from 'lifeforge-ui'
+import { FormModal, defineForm } from '@lifeforge/ui'
 
 interface SettingsModalData {
   autoCheckMode: boolean

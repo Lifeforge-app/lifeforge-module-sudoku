@@ -1,6 +1,8 @@
-import { DIFFICULTY_COLORS } from '@/constants/constants'
-import { Widget } from 'lifeforge-ui'
 import { useTranslation } from 'react-i18next'
+
+import { Widget } from '@lifeforge/ui'
+
+import { DIFFICULTY_COLORS } from '@/constants/constants'
 
 interface TimeDistributionData {
   under2min: number

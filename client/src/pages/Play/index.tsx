@@ -1,5 +1,5 @@
-import { Button, GoBackButton, WithQuery, useModalStore } from 'lifeforge-ui'
-import { useNavigate } from 'shared'
+import { Button, GoBackButton, WithQuery, useModalStore } from '@lifeforge/ui'
+import { useNavigate } from '@lifeforge/shared'
 
 import TimerDisplay from './components/TimerDisplay'
 import BoardSelector from './components/board/BoardSelector'

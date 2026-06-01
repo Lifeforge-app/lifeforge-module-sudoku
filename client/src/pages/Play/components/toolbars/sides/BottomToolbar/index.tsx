@@ -1,4 +1,4 @@
-import { Card } from 'lifeforge-ui'
+import { Card } from '@lifeforge/ui'
 
 import ActionButtons from './components/ActionButtons'
 import NumberButtons from './components/NumberButtons'

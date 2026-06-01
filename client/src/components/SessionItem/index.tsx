@@ -9,9 +9,9 @@ import {
   ContextMenuItem,
   TagChip,
   useModalStore
-} from 'lifeforge-ui'
+} from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
-import { anyColorToHex, useNavigate } from 'shared'
+import { anyColorToHex, useNavigate } from '@lifeforge/shared'
 import colors from 'tailwindcss/colors'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'

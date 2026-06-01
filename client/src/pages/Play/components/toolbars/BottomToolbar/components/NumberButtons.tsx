@@ -1,8 +1,10 @@
 /* eslint-disable react-compiler/react-compiler */
-import { useInputMode } from '@/pages/Play/providers'
-import { ViewModeSelector } from 'lifeforge-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { ViewModeSelector } from '@lifeforge/ui'
+
+import { useInputMode } from '@/pages/Play/providers'
 
 import NumberGrid from '../../components/NumberGrid'
 

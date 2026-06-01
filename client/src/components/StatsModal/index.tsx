@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { ModalHeader, WithQuery } from 'lifeforge-ui'
+
+import { ModalHeader, WithQuery } from '@lifeforge/ui'
 
 import forgeAPI from '@/utils/forgeAPI'
 

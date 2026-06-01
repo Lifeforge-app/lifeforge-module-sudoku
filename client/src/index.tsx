@@ -8,9 +8,9 @@ import {
   Scrollbar,
   WithQuery,
   useModalStore
-} from 'lifeforge-ui'
+} from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
-import type { InferOutput } from 'shared'
+import type { InferOutput } from '@lifeforge/shared'
 import colors from 'tailwindcss/colors'
 
 import forgeAPI from '@/utils/forgeAPI'

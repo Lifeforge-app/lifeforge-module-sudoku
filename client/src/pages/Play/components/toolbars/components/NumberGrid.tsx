@@ -1,6 +1,7 @@
 import clsx from 'clsx'
-import { Button } from 'lifeforge-ui'
 import { useMemo } from 'react'
+
+import { Button } from '@lifeforge/ui'
 
 import { useBoardState, useInputMode, useSession } from '../../../providers'
 

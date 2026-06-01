@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { usePersonalization } from 'shared'
 import tinycolor from 'tinycolor2'
+
+import { usePersonalization } from '@lifeforge/shared'
 
 import {
   BOX_BORDERS,

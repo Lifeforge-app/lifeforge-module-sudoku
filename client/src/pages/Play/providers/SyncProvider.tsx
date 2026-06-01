@@ -8,7 +8,8 @@ import {
   useRef
 } from 'react'
 import { toast } from 'react-toastify'
-import { usePromiseLoading } from 'shared'
+
+import { usePromiseLoading } from '@lifeforge/shared'
 
 import forgeAPI from '@/utils/forgeAPI'
 

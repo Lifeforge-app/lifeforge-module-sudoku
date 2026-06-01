@@ -7,7 +7,8 @@ import {
   useMemo,
   useState
 } from 'react'
-import { type InferOutput, useParams } from 'shared'
+
+import { type InferOutput, useParams } from '@lifeforge/shared'
 
 import forgeAPI from '@/utils/forgeAPI'
 

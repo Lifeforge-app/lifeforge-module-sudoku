@@ -1,11 +1,11 @@
 import type { SudokuBoard } from '@'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Button, GoBackButton, WithQuery } from 'lifeforge-ui'
+import { Button, GoBackButton, WithQuery } from '@lifeforge/ui'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
-import { useNavigate, useParams } from 'shared'
+import { useNavigate, useParams } from '@lifeforge/shared'
 
 import forgeAPI from '@/utils/forgeAPI'
 
