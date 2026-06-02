@@ -1,18 +1,84 @@
 import z from 'zod'
 
 import forge from '../forge'
+import sudokuSchemas from '../schema'
 
-// List all sessions with summary info
-export const list = forge
-  .query()
-  .description('List all Sudoku sessions')
-  .input({
-    query: z.object({
-      difficulty: z.string().optional()
+const SessionWithInfoSchema = z.object({
+  id: z.string(),
+  difficulty: z.string(),
+  boardCount: z.number(),
+  currentBoardIndex: z.number(),
+  progress: z.object({
+    total: z.number(),
+    filled: z.number(),
+    correct: z.number()
+  }),
+  totalDuration: z.number(),
+  created: z.string(),
+  updated: z.string()
+})
+
+const SessionWithEntriesSchema = z.object({
+  session: sudokuSchemas.sessions,
+  entries: z.array(sudokuSchemas.entries)
+})
+
+const StatsResponseSchema = z.object({
+  overall: z.object({
+    totalBoards: z.number(),
+    totalPlayTime: z.number(),
+    daysPlayed: z.number()
+  }),
+  streak: z.object({
+    current: z.number(),
+    longest: z.number(),
+    isActive: z.boolean()
+  }),
+  byDifficulty: z.array(
+    z.object({
+      difficulty: z.string(),
+      totalBoards: z.number(),
+      avgTime: z.number().nullable(),
+      bestTime: z.number().nullable(),
+      totalTime: z.number(),
+      timeDistribution: z.object({
+        under2min: z.number(),
+        under5min: z.number(),
+        under10min: z.number(),
+        under20min: z.number(),
+        over20min: z.number()
+      })
     })
+  ),
+  completionHistory: z.array(
+    z.object({
+      month: z.string(),
+      completed: z.number(),
+      total: z.number(),
+      rate: z.number()
+    })
+  ),
+  recentActivity: z.array(
+    z.object({
+      date: z.string(),
+      count: z.number()
+    })
+  )
+})
+
+export const list = forge
+  .query({
+    description: 'List all Sudoku sessions',
+    input: {
+      query: z.object({
+        difficulty: z.string().optional()
+      })
+    },
+    output: {
+      OK: z.array(SessionWithInfoSchema)
+    }
   })
-  .callback(async ({ pb, query: { difficulty } }) => {
-    // Fetch all entries with expanded session data in a single query
+  .callback(async ({ pb, query: { difficulty }, response }) => {
     const allEntries = await pb.getFullList
       .collection('entries')
       .expand({
@@ -21,7 +87,6 @@ export const list = forge
       .sort(['session', 'index'])
       .execute()
 
-    // Group entries by session
     const entriesBySession = new Map<
       string,
       {
@@ -54,12 +119,10 @@ export const list = forge
       entriesBySession.get(session.id)!.entries.push(entry)
     }
 
-    // Build session info from grouped entries
     const sessionsWithInfo = Array.from(entriesBySession.values())
       .map(({ session, entries }) => {
         const firstEntry = entries[0]
 
-        // Calculate progress (how many cells are filled correctly)
         let totalCells = 0
         let filledCells = 0
         let correctCells = 0
@@ -102,32 +165,36 @@ export const list = forge
           updated: session.updated
         }
       })
-      // Sort by updated descending (most recent first)
       .sort(
         (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
       )
 
-    // Filter by difficulty if specified
     if (difficulty) {
-      return sessionsWithInfo.filter(s => s.difficulty === difficulty)
+      return response.ok(
+        sessionsWithInfo.filter(s => s.difficulty === difficulty)
+      )
     }
 
-    return sessionsWithInfo
+    return response.ok(sessionsWithInfo)
   })
 
-// Get a single session with all entries
 export const get = forge
-  .query()
-  .description('Get a specific Sudoku session')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .query({
+    description: 'Get a specific Sudoku session',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'sessions' }
+    },
+    output: {
+      OK: SessionWithEntriesSchema,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'sessions'
-  })
-  .callback(async ({ pb, query: { id } }) => {
+  .callback(async ({ pb, query: { id }, response }) => {
     const session = await pb.getOne.collection('sessions').id(id).execute()
 
     const entries = await pb.getFullList
@@ -136,62 +203,74 @@ export const get = forge
       .sort(['index'])
       .execute()
 
-    return {
+    return response.ok({
       session,
       entries
-    }
+    })
   })
 
-// Get active session with all entries
 export const getActive = forge
-  .query()
-  .description('Get the active Sudoku session')
-  .input({})
-  .callback(async ({ pb }) => {
-    // Get the most recent session
+  .query({
+    description: 'Get the active Sudoku session',
+    output: {
+      OK: SessionWithEntriesSchema.nullable()
+    }
+  })
+  .callback(async ({ pb, response }) => {
     const sessions = await pb.getFullList
       .collection('sessions')
       .sort(['-updated'])
       .execute()
 
     if (sessions.length === 0) {
-      return null
+      return response.ok(null)
     }
 
     const session = sessions[0]
 
-    // Get all entries for this session
     const entries = await pb.getFullList
       .collection('entries')
       .filter([{ field: 'session', operator: '=', value: session.id }])
       .sort(['index'])
       .execute()
 
-    return {
+    return response.ok({
       session,
       entries
-    }
-  })
-
-// Create a new session
-export const create = forge
-  .mutation()
-  .description('Create a new Sudoku session')
-  .input({
-    body: z.object({
-      difficulty: z.enum([
-        'easy',
-        'medium',
-        'hard',
-        'expert',
-        'evil',
-        'extreme'
-      ]),
-      boardCount: z.number().min(1).max(6)
     })
   })
-  .callback(async ({ pb, body: { difficulty, boardCount } }) => {
-    // Fetch boards from external API
+
+export const create = forge
+  .mutation({
+    description: 'Create a new Sudoku session',
+    input: {
+      body: z.object({
+        difficulty: z.enum([
+          'easy',
+          'medium',
+          'hard',
+          'expert',
+          'evil',
+          'extreme'
+        ]),
+        boardCount: z.number().min(1).max(6)
+      })
+    },
+    output: {
+      OK: z.object({
+        sessionId: z.string(),
+        boards: z.array(
+          z.object({
+            id: z.number(),
+            mission: z.string(),
+            solution: z.string(),
+            win_rate: z.number()
+          })
+        )
+      })
+    }
+  })
+  .callback(async ({ pb, body: { difficulty, boardCount }, response }) => {
     const boards: {
       id: number
       mission: string
@@ -200,29 +279,24 @@ export const create = forge
     }[] = []
 
     for (let i = 0; i < boardCount; i++) {
-      const response = await fetch(
-        `https://sudoku.com/api/v2/level/${difficulty}`,
-        {
-          method: 'GET',
-          headers: {
-            'x-easy-locale': 'en',
-            'X-Requested-With': 'XMLHttpRequest'
-          }
+      const res = await fetch(`https://sudoku.com/api/v2/level/${difficulty}`, {
+        method: 'GET',
+        headers: {
+          'x-easy-locale': 'en',
+          'X-Requested-With': 'XMLHttpRequest'
         }
-      )
+      })
 
-      const data = await response.json()
+      const data = await res.json()
 
       boards.push(data)
     }
 
-    // Create session
     const session = await pb.create
       .collection('sessions')
       .data({ current_board_index: 0 })
       .execute()
 
-    // Create entries for each board
     await Promise.all(
       boards.map((board, index) =>
         pb.create
@@ -240,30 +314,35 @@ export const create = forge
       )
     )
 
-    return { sessionId: session.id, boards }
+    return response.ok({ sessionId: session.id, boards })
   })
 
-// Save or update session
 export const save = forge
-  .mutation()
-  .description('Save Sudoku session progress')
-  .input({
-    body: z.object({
-      sessionId: z.string().optional(),
-      currentBoardIndex: z.number(),
-      difficulty: z.string(),
-      boards: z.array(
-        z.object({
-          id: z.number(),
-          mission: z.string(),
-          solution: z.string(),
-          win_rate: z.number()
-        })
-      ),
-      userInputs: z.array(z.array(z.string())),
-      candidates: z.array(z.array(z.array(z.number()))),
-      durationsElapsed: z.array(z.number()).optional().default([])
-    })
+  .mutation({
+    description: 'Save Sudoku session progress',
+    input: {
+      body: z.object({
+        sessionId: z.string().optional(),
+        currentBoardIndex: z.number(),
+        difficulty: z.string(),
+        boards: z.array(
+          z.object({
+            id: z.number(),
+            mission: z.string(),
+            solution: z.string(),
+            win_rate: z.number()
+          })
+        ),
+        userInputs: z.array(z.array(z.string())),
+        candidates: z.array(z.array(z.array(z.number()))),
+        durationsElapsed: z.array(z.number()).optional().default([])
+      })
+    },
+    output: {
+      OK: z.object({
+        sessionId: z.string()
+      })
+    }
   })
   .callback(
     async ({
@@ -276,19 +355,18 @@ export const save = forge
         userInputs,
         candidates,
         durationsElapsed
-      }
+      },
+      response
     }) => {
       let session: { id: string }
 
       if (sessionId) {
-        // Update existing session
         session = await pb.update
           .collection('sessions')
           .id(sessionId)
           .data({ current_board_index: currentBoardIndex })
           .execute()
 
-        // Update entries
         const existingEntries = await pb.getFullList
           .collection('entries')
           .filter([{ field: 'session', operator: '=', value: sessionId }])
@@ -326,13 +404,11 @@ export const save = forge
           })
         )
       } else {
-        // Create new session
         session = await pb.create
           .collection('sessions')
           .data({ current_board_index: currentBoardIndex })
           .execute()
 
-        // Create entries for each board
         await Promise.all(
           boards.map((board, index) =>
             pb.create
@@ -351,25 +427,27 @@ export const save = forge
         )
       }
 
-      return { sessionId: session.id }
+      return response.ok({ sessionId: session.id })
     }
   )
 
-// Clear/delete session
 export const remove = forge
-  .mutation()
-  .description('Delete Sudoku session')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .mutation({
+    description: 'Delete Sudoku session',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'sessions' }
+    },
+    output: {
+      NO_CONTENT: true,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'sessions'
-  })
-  .statusCode(204)
-  .callback(async ({ pb, query: { id } }) => {
-    // Delete all entries for this session first
+  .callback(async ({ pb, query: { id }, response }) => {
     const entries = await pb.getFullList
       .collection('entries')
       .filter([{ field: 'session', operator: '=', value: id }])
@@ -381,21 +459,26 @@ export const remove = forge
       )
     )
 
-    // Delete the session
     await pb.delete.collection('sessions').id(id).execute()
+
+    return response.noContent()
   })
 
-// Mark a board entry as completed
 export const markComplete = forge
-  .mutation()
-  .description('Mark a Sudoku board as completed')
-  .input({
-    body: z.object({
-      sessionId: z.string(),
-      boardIndex: z.number()
-    })
+  .mutation({
+    description: 'Mark a Sudoku board as completed',
+    input: {
+      body: z.object({
+        sessionId: z.string(),
+        boardIndex: z.number()
+      })
+    },
+    output: {
+      OK: z.object({ success: z.boolean() }),
+      BAD_REQUEST: z.string()
+    }
   })
-  .callback(async ({ pb, body: { sessionId, boardIndex } }) => {
+  .callback(async ({ pb, body: { sessionId, boardIndex }, response }) => {
     const entries = await pb.getFullList
       .collection('entries')
       .filter([
@@ -405,7 +488,7 @@ export const markComplete = forge
       .execute()
 
     if (entries.length === 0) {
-      throw new Error('Board entry not found')
+      return response.badRequest('Board entry not found')
     }
 
     await pb.update
@@ -414,20 +497,24 @@ export const markComplete = forge
       .data({ is_completed: true })
       .execute()
 
-    return { success: true }
+    return response.ok({ success: true })
   })
 
-// Reset a board to initial state
 export const resetBoard = forge
-  .mutation()
-  .description('Reset a Sudoku board to initial state')
-  .input({
-    body: z.object({
-      sessionId: z.string(),
-      boardIndex: z.number()
-    })
+  .mutation({
+    description: 'Reset a Sudoku board to initial state',
+    input: {
+      body: z.object({
+        sessionId: z.string(),
+        boardIndex: z.number()
+      })
+    },
+    output: {
+      OK: z.object({ success: z.boolean() }),
+      BAD_REQUEST: z.string()
+    }
   })
-  .callback(async ({ pb, body: { sessionId, boardIndex } }) => {
+  .callback(async ({ pb, body: { sessionId, boardIndex }, response }) => {
     const entries = await pb.getFullList
       .collection('entries')
       .filter([
@@ -437,7 +524,7 @@ export const resetBoard = forge
       .execute()
 
     if (entries.length === 0) {
-      throw new Error('Board entry not found')
+      return response.badRequest('Board entry not found')
     }
 
     await pb.update
@@ -450,22 +537,22 @@ export const resetBoard = forge
       })
       .execute()
 
-    return { success: true }
+    return response.ok({ success: true })
   })
 
-// Get statistics for all sessions
 export const stats = forge
-  .query()
-  .description('Get Sudoku statistics')
-  .input({})
-  .callback(async ({ pb }) => {
-    // Fetch all entries with expanded session data
+  .query({
+    description: 'Get Sudoku statistics',
+    output: {
+      OK: StatsResponseSchema
+    }
+  })
+  .callback(async ({ pb, response }) => {
     const allEntries = await pb.getFullList
       .collection('entries')
       .expand({ session: 'sessions' })
       .execute()
 
-    // Calculate statistics
     const difficulties = ['easy', 'medium', 'hard', 'expert', 'evil', 'extreme']
 
     const statsByDifficulty: Record<
@@ -489,7 +576,6 @@ export const stats = forge
       }
     }
 
-    // Track completion dates for streak calculation and history
     const completionDates = new Set<string>()
 
     const completionsByDate: Record<string, number> = {}
@@ -499,7 +585,6 @@ export const stats = forge
       { completed: number; total: number }
     > = {}
 
-    // Process each entry
     for (const entry of allEntries) {
       const difficulty = entry.difficulty as string
 
@@ -513,7 +598,6 @@ export const stats = forge
 
       const duration = (entry.duration_elapsed as number) || 0
 
-      // Track by month for completion rate graph
       const createdDate = new Date(entry.created as string)
 
       const monthKey = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}`
@@ -535,7 +619,6 @@ export const stats = forge
           statsByDifficulty[difficulty].bestTime = duration
         }
 
-        // Track completion date for streak
         if (session) {
           const completedDate = new Date(session.updated as string)
             .toISOString()
@@ -543,7 +626,6 @@ export const stats = forge
 
           completionDates.add(completedDate)
 
-          // Track completions by date
           completionsByDate[completedDate] =
             (completionsByDate[completedDate] || 0) + 1
         }
@@ -552,7 +634,6 @@ export const stats = forge
       }
     }
 
-    // Calculate streak (consecutive days with completions)
     const sortedDates = Array.from(completionDates).sort().reverse()
 
     let currentStreak = 0
@@ -565,7 +646,6 @@ export const stats = forge
       .toISOString()
       .split('T')[0]
 
-    // Check if streak is active (played today or yesterday)
     const streakActive =
       sortedDates.length > 0 &&
       (sortedDates[0] === today || sortedDates[0] === yesterday)
@@ -596,7 +676,6 @@ export const stats = forge
       }
     }
 
-    // Calculate longest streak ever
     tempStreak = 0
     let prevDate: Date | null = null
 
@@ -620,11 +699,9 @@ export const stats = forge
       prevDate = date
     }
 
-    // Calculate averages and format response
     const difficultyStats = difficulties.map(diff => {
       const stats = statsByDifficulty[diff]
 
-      // Calculate time distribution (group by time ranges)
       const timeRanges = {
         under2min: 0,
         under5min: 0,
@@ -654,7 +731,6 @@ export const stats = forge
       }
     })
 
-    // Overall stats
     const totalBoards = difficultyStats.reduce(
       (sum, d) => sum + d.totalBoards,
       0
@@ -665,7 +741,6 @@ export const stats = forge
       0
     )
 
-    // Get last 6 months of completion history
     const now = new Date()
 
     const completionHistory: Array<{
@@ -696,7 +771,6 @@ export const stats = forge
       })
     }
 
-    // Recent activity (last 7 days)
     const recentActivity: Array<{ date: string; count: number }> = []
 
     for (let i = 6; i >= 0; i--) {
@@ -710,7 +784,7 @@ export const stats = forge
       })
     }
 
-    return {
+    return response.ok({
       overall: {
         totalBoards,
         totalPlayTime,
@@ -724,26 +798,37 @@ export const stats = forge
       byDifficulty: difficultyStats,
       completionHistory,
       recentActivity
-    }
+    })
   })
 
 // Get activities for activity calendar
 export const getActivities = forge
-  .query()
-  .description('Get Sudoku activities for calendar')
-  .input({
-    query: z.object({
-      year: z.string()
-    })
+  .query({
+    description: 'Get Sudoku activities for calendar',
+    input: {
+      query: z.object({
+        year: z.string()
+      })
+    },
+    output: {
+      OK: z.object({
+        data: z.array(
+          z.object({
+            date: z.string(),
+            count: z.number(),
+            level: z.number()
+          })
+        ),
+        firstYear: z.number()
+      })
+    }
   })
-  .callback(async ({ pb, query: { year } }) => {
-    // Fetch all completed entries
+  .callback(async ({ pb, query: { year }, response }) => {
     const allEntries = await pb.getFullList
       .collection('entries')
       .filter([{ field: 'is_completed', operator: '=', value: true }])
       .execute()
 
-    // Count completions by date for the requested year
     const completionsByDate: Record<string, number> = {}
 
     let firstYear = parseInt(year)
@@ -764,7 +849,6 @@ export const getActivities = forge
       }
     }
 
-    // Generate activity data for the entire year
     const yearNum = parseInt(year)
 
     const startDate = new Date(yearNum, 0, 1)
@@ -782,7 +866,6 @@ export const getActivities = forge
 
       const count = completionsByDate[dateStr] || 0
 
-      // Calculate level (0-4) based on count
       let level = 0
 
       if (count >= 5) level = 4
@@ -797,8 +880,8 @@ export const getActivities = forge
       })
     }
 
-    return {
+    return response.ok({
       data: activities,
       firstYear
-    }
+    })
   })
