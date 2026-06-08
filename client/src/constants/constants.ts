@@ -1,5 +1,5 @@
+import { TAILWIND_PALETTE } from '@lifeforge/ui'
 import type { SudokuBoard } from '@'
-import colors from 'tailwindcss/colors'
 
 // Grid constants
 export const GRID_SIZE = 9
@@ -12,12 +12,12 @@ export const BOX_BORDERS = new Set([2, 5, 8])
 
 // Difficulty color mapping
 export const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: colors.green[500],
-  medium: colors.yellow[500],
-  hard: colors.orange[500],
-  expert: colors.blue[500],
-  evil: colors.red[500],
-  extreme: colors.gray[900]
+  easy: TAILWIND_PALETTE.green[500],
+  medium: TAILWIND_PALETTE.yellow[500],
+  hard: TAILWIND_PALETTE.orange[500],
+  expert: TAILWIND_PALETTE.blue[500],
+  evil: TAILWIND_PALETTE.red[500],
+  extreme: TAILWIND_PALETTE.gray[900]
 }
 
 // Helper function to calculate cell index

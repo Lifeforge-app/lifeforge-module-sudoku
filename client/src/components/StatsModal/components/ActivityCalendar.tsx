@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { Tooltip } from 'react-tooltip'
 import { anyColorToHex, usePersonalization } from '@lifeforge/shared'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 function ActivityCalendar() {
   const { t } = useTranslation('apps.sudoku')

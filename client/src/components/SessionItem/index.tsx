@@ -8,14 +8,15 @@ import {
   ContextMenu,
   ContextMenuItem,
   TagChip,
+  TAILWIND_PALETTE,
   useModalStore
 } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
 import { anyColorToHex, useNavigate } from '@lifeforge/shared'
-import colors from 'tailwindcss/colors'
+
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 import { formatTime } from '@/utils/time'
 
 function SessionItem({ session }: { session: Session }) {
@@ -61,7 +62,7 @@ function SessionItem({ session }: { session: Session }) {
   }
 
   const difficultyColor =
-    DIFFICULTY_COLORS[session.difficulty] || colors.gray[500]
+    DIFFICULTY_COLORS[session.difficulty] || TAILWIND_PALETTE.gray[500]
 
   return (
     <Card
@@ -130,10 +131,10 @@ function SessionItem({ session }: { session: Session }) {
                     width: `${progressPercent}%`,
                     backgroundColor:
                       correctPercent >= 80
-                        ? colors.green[500]
+                        ? TAILWIND_PALETTE.green[500]
                         : correctPercent >= 50
-                          ? colors.yellow[500]
-                          : colors.red[500]
+                          ? TAILWIND_PALETTE.yellow[500]
+                          : TAILWIND_PALETTE.red[500]
                   }}
                 />
               </div>

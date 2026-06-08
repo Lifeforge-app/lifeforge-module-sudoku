@@ -6,14 +6,15 @@ import {
   FAB,
   ModuleHeader,
   Scrollbar,
+  TAILWIND_PALETTE,
   WithQuery,
   useModalStore
 } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
 import type { InferOutput } from '@lifeforge/shared'
-import colors from 'tailwindcss/colors'
 
-import forgeAPI from '@/utils/forgeAPI'
+
+import { forgeAPI } from '@/manifest'
 
 import CreateSessionModal from './components/CreateSessionModal'
 import SessionItem from './components/SessionItem'
@@ -30,12 +31,12 @@ export type SudokuBoard = {
 export type Session = InferOutput<typeof forgeAPI.sessions.list>[number]
 
 export const DIFFICULTIES = {
-  easy: colors.green[500],
-  medium: colors.yellow[500],
-  hard: colors.orange[500],
-  expert: colors.blue[500],
-  evil: colors.red[500],
-  extreme: colors.gray[900]
+  easy: TAILWIND_PALETTE.green[500],
+  medium: TAILWIND_PALETTE.yellow[500],
+  hard: TAILWIND_PALETTE.orange[500],
+  expert: TAILWIND_PALETTE.blue[500],
+  evil: TAILWIND_PALETTE.red[500],
+  extreme: TAILWIND_PALETTE.gray[900]
 }
 
 function Sudoku() {

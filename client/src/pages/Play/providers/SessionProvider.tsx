@@ -10,7 +10,7 @@ import {
 
 import { type InferOutput, useParams } from '@lifeforge/shared'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 interface SessionContextType {
   sessionId: string | undefined

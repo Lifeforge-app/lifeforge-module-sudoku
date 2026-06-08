@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FormModal, defineForm } from '@lifeforge/ui'
+import { FormModal, TAILWIND_PALETTE, defineForm } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@lifeforge/shared'
-import colors from 'tailwindcss/colors'
 
-import forgeAPI from '@/utils/forgeAPI'
+
+import { forgeAPI } from '@/manifest'
 
 const DIFFICULTIES = [
-  { name: 'easy', color: colors.green[500] },
-  { name: 'medium', color: colors.yellow[500] },
-  { name: 'hard', color: colors.orange[500] },
-  { name: 'expert', color: colors.blue[500] },
-  { name: 'evil', color: colors.red[500] },
-  { name: 'extreme', color: colors.gray[900] }
+  { name: 'easy', color: TAILWIND_PALETTE.green[500] },
+  { name: 'medium', color: TAILWIND_PALETTE.yellow[500] },
+  { name: 'hard', color: TAILWIND_PALETTE.orange[500] },
+  { name: 'expert', color: TAILWIND_PALETTE.blue[500] },
+  { name: 'evil', color: TAILWIND_PALETTE.red[500] },
+  { name: 'extreme', color: TAILWIND_PALETTE.gray[900] }
 ]
 
 const BOARD_COUNTS = [1, 2, 4, 6]

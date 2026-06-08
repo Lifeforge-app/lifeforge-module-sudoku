@@ -1,11 +1,18 @@
 import { lazy } from 'react'
 
-import type { ModuleConfig } from '@lifeforge/shared'
+import { createForgeModuleClient } from '@lifeforge/federation'
 
-export default {
+import contract from './contract'
+
+const { forgeAPI, ...manifest } = createForgeModuleClient({
   routes: {
     '/': lazy(() => import('@')),
     '/play/:sessionId': lazy(() => import('@/pages/Play')),
     '/print/:sessionId': lazy(() => import('@/pages/Print'))
-  }
-} satisfies ModuleConfig
+  },
+  contract
+})
+
+export default manifest
+
+export { forgeAPI }

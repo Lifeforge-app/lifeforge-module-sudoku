@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 
 import { usePromiseLoading } from '@lifeforge/shared'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import { useBoardState } from './BoardStateProvider'
 import { useSession } from './SessionProvider'

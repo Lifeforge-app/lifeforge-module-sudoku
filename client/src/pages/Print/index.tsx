@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import { useNavigate, useParams } from '@lifeforge/shared'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import Board from '../../components/Board'
 
