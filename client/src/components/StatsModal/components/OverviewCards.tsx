@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
 
 // Helper to parse play time into hours/minutes/seconds

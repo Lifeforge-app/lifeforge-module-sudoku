@@ -7,9 +7,9 @@ import {
   useEffect,
   useRef
 } from 'react'
-import { toast } from 'react-toastify'
 
-import { usePromiseLoading } from '@lifeforge/shared'
+import { usePromiseLoading } from '@lifeforge/api'
+import { toast } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 

@@ -1,5 +1,5 @@
 import { Button, GoBackButton, WithQuery, useModalStore } from '@lifeforge/ui'
-import { useNavigate } from '@lifeforge/shared'
+import { useNavigate } from 'react-router'
 
 import TimerDisplay from './components/TimerDisplay'
 import BoardSelector from './components/board/BoardSelector'

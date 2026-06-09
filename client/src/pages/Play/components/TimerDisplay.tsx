@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from '@lifeforge/ui'
 
 import { formatTime } from '../../../utils/time'
 import { useBoardState, useTimer } from '../providers'

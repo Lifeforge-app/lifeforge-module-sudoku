@@ -1,4 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import type { InferOutput } from '@lifeforge/api'
 import {
   Button,
   ContextMenuItem,
@@ -10,9 +13,6 @@ import {
   WithQuery,
   useModalStore
 } from '@lifeforge/ui'
-import { useTranslation } from 'react-i18next'
-import type { InferOutput } from '@lifeforge/shared'
-
 
 import { forgeAPI } from '@/manifest'
 

@@ -1,19 +1,19 @@
 import type { Session } from '@'
-import { Icon } from '@iconify/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import {
+import { useTranslation } from 'react-i18next'
+
+import { anyColorToHex } from '@lifeforge/ui'
+import { useNavigate } from 'react-router'
+import { Icon ,
   Card,
   ConfirmationModal,
   ContextMenu,
   ContextMenuItem,
-  TagChip,
   TAILWIND_PALETTE,
+  TagChip,
   useModalStore
 } from '@lifeforge/ui'
-import { useTranslation } from 'react-i18next'
-import { anyColorToHex, useNavigate } from '@lifeforge/shared'
-
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
 import { forgeAPI } from '@/manifest'
@@ -56,7 +56,7 @@ function SessionItem({ session }: { session: Session }) {
       description: t('modals.confirmDelete.description'),
       confirmButton: 'delete',
       onConfirm: async () => {
-        await deleteMutation.mutateAsync({})
+        await deleteMutation.mutateAsync(undefined)
       }
     })
   }

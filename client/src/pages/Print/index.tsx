@@ -5,7 +5,7 @@ import { Button, GoBackButton, WithQuery } from '@lifeforge/ui'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
-import { useNavigate, useParams } from '@lifeforge/shared'
+import { useNavigate, useParams } from 'react-router'
 
 import { forgeAPI } from '@/manifest'
 

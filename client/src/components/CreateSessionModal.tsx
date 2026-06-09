@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { FormModal, TAILWIND_PALETTE, defineForm } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@lifeforge/shared'
+import { useNavigate } from 'react-router'
 
 
 import { forgeAPI } from '@/manifest'
