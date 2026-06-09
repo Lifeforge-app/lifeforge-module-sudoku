@@ -7,9 +7,9 @@ import {
   useMemo,
   useState
 } from 'react'
+import { useParams } from 'react-router'
 
 import { type InferOutput } from '@lifeforge/api'
-import { useParams } from 'react-router'
 
 import { forgeAPI } from '@/manifest'
 

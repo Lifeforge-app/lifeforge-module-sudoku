@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { Button, Card , ConfirmationModal, useModalStore } from '@lifeforge/ui'
+import { Button, Card, ConfirmationModal, useModalStore } from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '../../../providers'
 

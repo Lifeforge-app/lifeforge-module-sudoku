@@ -1,5 +1,6 @@
-import { formatTime } from '@/utils/time'
 import clsx from 'clsx'
+
+import { formatTime } from '@/utils/time'
 
 import { useBoardState, useSession, useTimer } from '../../providers'
 

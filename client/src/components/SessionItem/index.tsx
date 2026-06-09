@@ -2,14 +2,15 @@ import type { Session } from '@'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 
 import { anyColorToHex } from '@lifeforge/ui'
-import { useNavigate } from 'react-router'
-import { Icon ,
+import {
   Card,
   ConfirmationModal,
   ContextMenu,
   ContextMenuItem,
+  Icon,
   TAILWIND_PALETTE,
   TagChip,
   useModalStore

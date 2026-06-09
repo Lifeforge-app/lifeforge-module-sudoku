@@ -1,6 +1,6 @@
-import { Icon , Button, ConfirmationModal, useModalStore } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
 
+import { Button, ConfirmationModal, Icon, useModalStore } from '@lifeforge/ui'
 
 import { useSession, useSync } from '../../providers'
 

@@ -5,6 +5,7 @@ A powerful and elegant Sudoku module for LifeForge, designed to generate, play, 
 ## Features
 
 ### 🎮 Interactive Gameplay
+
 - **Play Mode**: Solve Sudoku puzzles directly in the browser with an intuitive interface.
 - **Candidate Mode**: Toggle between normal input and candidate/pencil marks for advanced solving techniques.
 - **Real-time Validation**: Instant feedback on incorrect entries with rule violation highlighting.
@@ -15,6 +16,7 @@ A powerful and elegant Sudoku module for LifeForge, designed to generate, play, 
 - **Undo/Redo**: Easily revert or reapply moves during gameplay.
 
 ### 📊 Statistics & Tracking
+
 - **Activity Calendar**: GitHub-style heatmap showing daily puzzle completion activity.
 - **Streak Tracking**: Current and longest streak of consecutive days played.
 - **Best Times**: Leaderboard of best completion times per difficulty level.
@@ -22,7 +24,9 @@ A powerful and elegant Sudoku module for LifeForge, designed to generate, play, 
 - **Detailed Stats**: Per-difficulty statistics including games played, average time, and best time.
 
 ### 🎯 Difficulty Levels
+
 Choose from 6 difficulty levels:
+
 - Easy
 - Medium
 - Hard
@@ -31,12 +35,15 @@ Choose from 6 difficulty levels:
 - Extreme
 
 ### 🖨️ Print Support
+
 - **Session Printing**: Print individual sessions with optimized A4 layout.
 - **Batch Printing**: Print multiple boards on a single page.
 - **Solution Toggle**: Option to include or hide solutions.
 
 ### 🌐 Internationalization
+
 Fully localized interface supporting:
+
 - English
 - Bahasa Malaysia
 - 简体中文 (Simplified Chinese)

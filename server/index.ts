@@ -1,5 +1,6 @@
-import { forgeRouter, writeContractFileToClient } from '@lifeforge/server-utils'
 import z from 'zod'
+
+import { forgeRouter, writeContractFileToClient } from '@lifeforge/server-utils'
 
 import forge from './forge'
 import * as sessionsRoutes from './routes/sessions'
@@ -42,16 +43,13 @@ const generateBoard = forge
     }[] = []
 
     for (let i = 0; i < parsedCount; i++) {
-      const res = await fetch(
-        `https://sudoku.com/api/v2/level/${difficulty}`,
-        {
-          method: 'GET',
-          headers: {
-            'x-easy-locale': 'en',
-            'X-Requested-With': 'XMLHttpRequest'
-          }
+      const res = await fetch(`https://sudoku.com/api/v2/level/${difficulty}`, {
+        method: 'GET',
+        headers: {
+          'x-easy-locale': 'en',
+          'X-Requested-With': 'XMLHttpRequest'
         }
-      )
+      })
 
       const data = await res.json()
 

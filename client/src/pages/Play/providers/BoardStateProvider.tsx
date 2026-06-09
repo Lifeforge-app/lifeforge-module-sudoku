@@ -1,4 +1,3 @@
-import { getValidCandidates } from '@/constants/constants'
 import {
   type ReactNode,
   createContext,
@@ -7,6 +6,8 @@ import {
   useMemo,
   useState
 } from 'react'
+
+import { getValidCandidates } from '@/constants/constants'
 
 import { useBoardHistory } from './BoardHistoryProvider'
 import { useSession } from './SessionProvider'

@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
+import { cloneElement, useState } from 'react'
+import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
+import { useTranslation } from 'react-i18next'
+import { Tooltip } from 'react-tooltip'
+
 import {
   EmptyStateScreen,
   Listbox,
@@ -7,10 +12,6 @@ import {
   Widget,
   WithQuery
 } from '@lifeforge/ui'
-import { cloneElement, useState } from 'react'
-import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
-import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'react-tooltip'
 import { anyColorToHex, usePersonalization } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'

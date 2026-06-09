@@ -1,5 +1,6 @@
-import { TAILWIND_PALETTE } from '@lifeforge/ui'
 import type { SudokuBoard } from '@'
+
+import { TAILWIND_PALETTE } from '@lifeforge/ui'
 
 // Grid constants
 export const GRID_SIZE = 9

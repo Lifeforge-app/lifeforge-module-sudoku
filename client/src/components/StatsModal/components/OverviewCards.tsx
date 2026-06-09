@@ -1,5 +1,6 @@
-import { Icon } from '@lifeforge/ui'
 import { useTranslation } from 'react-i18next'
+
+import { Icon } from '@lifeforge/ui'
 
 // Helper to parse play time into hours/minutes/seconds
 function parsePlayTime(seconds: number): {
