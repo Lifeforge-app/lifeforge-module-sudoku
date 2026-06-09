@@ -19,8 +19,6 @@ import { forgeAPI } from '@/manifest'
 import CreateSessionModal from './components/CreateSessionModal'
 import SessionItem from './components/SessionItem'
 import StatsModal from './components/StatsModal'
-import './index.css'
-
 export type SudokuBoard = {
   id: number
   mission: string
