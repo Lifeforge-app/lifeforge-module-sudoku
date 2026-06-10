@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Widget } from '@lifeforge/ui'
 
@@ -17,7 +17,7 @@ interface DetailedStatsProps {
 }
 
 function DetailedStats({ stats }: DetailedStatsProps) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   return (
     <Widget

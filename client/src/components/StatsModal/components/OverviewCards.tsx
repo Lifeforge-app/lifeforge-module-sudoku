@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Icon } from '@lifeforge/ui'
 
@@ -32,7 +32,7 @@ function OverviewCards({
   totalPlayTime,
   daysPlayed
 }: OverviewCardsProps) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">

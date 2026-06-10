@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { cloneElement, useState } from 'react'
 import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 import { Tooltip } from 'react-tooltip'
 
 import {
@@ -17,7 +17,7 @@ import { anyColorToHex, usePersonalization } from '@lifeforge/ui'
 import { forgeAPI } from '@/manifest'
 
 function ActivityCalendar() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { derivedTheme, derivedThemeColor: themeColor } = usePersonalization()
 

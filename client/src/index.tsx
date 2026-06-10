@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import type { InferOutput } from '@lifeforge/api'
 import {
@@ -38,7 +38,7 @@ export const DIFFICULTIES = {
 }
 
 function Sudoku() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { open } = useModalStore()
 

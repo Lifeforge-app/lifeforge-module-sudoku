@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 import { useNavigate } from 'react-router'
 
 import { FormModal, TAILWIND_PALETTE, defineForm } from '@lifeforge/ui'
@@ -18,7 +18,7 @@ const DIFFICULTIES = [
 const BOARD_COUNTS = [1, 2, 4, 6]
 
 function CreateSessionModal({ onClose }: { onClose: () => void }) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const navigate = useNavigate()
 

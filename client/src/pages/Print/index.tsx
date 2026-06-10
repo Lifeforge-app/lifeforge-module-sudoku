@@ -2,7 +2,7 @@ import type { SudokuBoard } from '@'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 import { useNavigate, useParams } from 'react-router'
 import { useReactToPrint } from 'react-to-print'
 
@@ -13,7 +13,7 @@ import { forgeAPI } from '@/manifest'
 import Board from '../../components/Board'
 
 function Print() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { sessionId } = useParams<{ sessionId: string }>()
 

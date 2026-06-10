@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Card, ViewModeSelector } from '@lifeforge/ui'
 
@@ -7,7 +7,7 @@ import { useInputMode } from '../../../providers'
 import NumberGrid from '../components/NumberGrid'
 
 function RightToolbar() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { isCandidate, setIsCandidate, isCandidateModeLockedRef } =
     useInputMode()

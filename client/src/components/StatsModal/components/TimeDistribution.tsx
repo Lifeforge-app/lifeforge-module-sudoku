@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Widget } from '@lifeforge/ui'
 
@@ -23,7 +23,7 @@ interface TimeDistributionProps {
 }
 
 function TimeDistribution({ stats }: TimeDistributionProps) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const statsWithBoards = stats.filter(stat => stat.totalBoards > 0)
 

@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Widget } from '@lifeforge/ui'
 
@@ -15,7 +15,7 @@ interface BestTimesProps {
 }
 
 function BestTimes({ stats }: BestTimesProps) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const statsWithBestTime = stats.filter(stat => stat.bestTime !== null)
 

@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Icon } from '@lifeforge/ui'
 
 import { useTimer } from '../../providers'
 
 function PauseOverlay() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { isPaused, togglePause } = useTimer()
 

@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Button, ConfirmationModal, Icon, useModalStore } from '@lifeforge/ui'
 
@@ -9,7 +9,7 @@ interface VictoryOverlayProps {
 }
 
 function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { open } = useModalStore()
 

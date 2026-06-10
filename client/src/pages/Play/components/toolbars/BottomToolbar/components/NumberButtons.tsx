@@ -1,6 +1,6 @@
 /* eslint-disable react-compiler/react-compiler */
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { ViewModeSelector } from '@lifeforge/ui'
 
@@ -9,7 +9,7 @@ import { useInputMode } from '@/pages/Play/providers'
 import NumberGrid from '../../components/NumberGrid'
 
 function NumberButtons() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { isCandidate, setIsCandidate, isCandidateModeLockedRef } =
     useInputMode()

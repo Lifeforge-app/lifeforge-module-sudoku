@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import { Button, Card, ConfirmationModal, useModalStore } from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '../../../providers'
 
 function LeftToolbar() {
-  const { t } = useTranslation('apps.sudoku')
+  const { t } = useModuleTranslation()
 
   const { open } = useModalStore()
 
