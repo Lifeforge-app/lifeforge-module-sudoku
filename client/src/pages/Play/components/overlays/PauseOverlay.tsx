@@ -1,5 +1,4 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-
 import { Icon } from '@lifeforge/ui'
 
 import { useTimer } from '../../providers'

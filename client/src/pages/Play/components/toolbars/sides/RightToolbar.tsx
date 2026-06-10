@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { useModuleTranslation } from '@lifeforge/localization'
 
+import { useModuleTranslation } from '@lifeforge/localization'
 import { Card, ViewModeSelector } from '@lifeforge/ui'
 
 import { useInputMode } from '../../../providers'

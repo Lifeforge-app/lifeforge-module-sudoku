@@ -1,5 +1,4 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-
 import { Widget } from '@lifeforge/ui'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
@@ -23,7 +22,6 @@ function BestTimes({ stats }: BestTimesProps) {
     <Widget
       className="component-bg-lighter"
       icon="tabler:trophy"
-      namespace="apps.sudoku"
       title={t('stats.bestTimes')}
     >
       <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">

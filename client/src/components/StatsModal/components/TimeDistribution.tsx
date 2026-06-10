@@ -1,5 +1,4 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-
 import { Widget } from '@lifeforge/ui'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
@@ -31,7 +30,6 @@ function TimeDistribution({ stats }: TimeDistributionProps) {
     <Widget
       className="component-bg-lighter"
       icon="tabler:chart-histogram"
-      namespace="apps.sudoku"
       title={t('stats.timeDistribution')}
     >
       <div className="space-y-4">

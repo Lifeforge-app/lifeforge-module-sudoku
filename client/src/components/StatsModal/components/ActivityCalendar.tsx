@@ -2,16 +2,18 @@ import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { cloneElement, useState } from 'react'
 import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
-import { useModuleTranslation } from '@lifeforge/localization'
 import { Tooltip } from 'react-tooltip'
 
+import { useModuleTranslation } from '@lifeforge/localization'
 import {
   EmptyStateScreen,
   Listbox,
   ListboxOption,
   Widget,
-  WithQuery
-, anyColorToHex, usePersonalization } from '@lifeforge/ui'
+  WithQuery,
+  anyColorToHex,
+  usePersonalization
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
@@ -34,7 +36,6 @@ function ActivityCalendar() {
     <Widget
       className="component-bg-lighter"
       icon="tabler:activity"
-      namespace="apps.sudoku"
       title={t('stats.activityCalendar')}
     >
       <WithQuery query={dataQuery}>
@@ -111,8 +112,7 @@ function ActivityCalendar() {
             <EmptyStateScreen
               icon="tabler:calendar-off"
               message={{
-                id: 'activities',
-                namespace: 'apps.sudoku'
+                id: 'activities'
               }}
             />
           )

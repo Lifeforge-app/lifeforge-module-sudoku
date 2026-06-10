@@ -1,5 +1,4 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-
 import { Button, Card, ConfirmationModal, useModalStore } from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '../../../providers'

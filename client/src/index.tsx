@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { useModuleTranslation } from '@lifeforge/localization'
 
 import type { InferOutput } from '@lifeforge/api'
+import { useModuleTranslation } from '@lifeforge/localization'
 import {
   Button,
   ContextMenuItem,
@@ -61,7 +61,6 @@ function Sudoku() {
           <Button
             className="hidden md:flex"
             icon="tabler:plus"
-            namespace="apps.sudoku"
             tProps={{
               item: t('items.session')
             }}
@@ -76,7 +75,6 @@ function Sudoku() {
               <ContextMenuItem
                 icon="tabler:chart-bar"
                 label="stats.title"
-                namespace="apps.sudoku"
                 onClick={handleOpenStats}
               />
             </>
@@ -99,8 +97,7 @@ function Sudoku() {
             <EmptyStateScreen
               icon="tabler:puzzle-off"
               message={{
-                id: 'sessions',
-                namespace: 'apps.sudoku'
+                id: 'sessions'
               }}
             />
           )

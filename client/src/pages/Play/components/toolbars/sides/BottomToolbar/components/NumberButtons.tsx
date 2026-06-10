@@ -1,7 +1,7 @@
 /* eslint-disable react-compiler/react-compiler */
 import { useMemo } from 'react'
-import { useModuleTranslation } from '@lifeforge/localization'
 
+import { useModuleTranslation } from '@lifeforge/localization'
 import { ViewModeSelector } from '@lifeforge/ui'
 
 import { useInputMode } from '@/pages/Play/providers'

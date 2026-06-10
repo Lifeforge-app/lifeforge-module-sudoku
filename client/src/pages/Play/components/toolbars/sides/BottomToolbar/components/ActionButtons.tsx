@@ -1,6 +1,5 @@
 /* eslint-disable react-compiler/react-compiler */
 import { useModuleTranslation } from '@lifeforge/localization'
-
 import { Button, ConfirmationModal, useModalStore } from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'

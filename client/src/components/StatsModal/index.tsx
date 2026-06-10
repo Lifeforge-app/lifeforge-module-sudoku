@@ -17,7 +17,6 @@ function StatsModal({ onClose }: { onClose: () => void }) {
     <div className="min-w-[70vw]">
       <ModalHeader
         icon="tabler:chart-bar"
-        namespace="apps.sudoku"
         title="stats.title"
         onClose={onClose}
       />
