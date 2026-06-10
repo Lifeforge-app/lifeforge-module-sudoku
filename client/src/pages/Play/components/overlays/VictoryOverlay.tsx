@@ -10,11 +10,8 @@ interface VictoryOverlayProps {
 
 function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
   const { t } = useModuleTranslation()
-
   const { open } = useModalStore()
-
   const { boards, currentBoardIndex } = useSession()
-
   const { resetBoardMutation, handleRetry } = useSync()
 
   const hasNextBoard = currentBoardIndex < boards.length - 1

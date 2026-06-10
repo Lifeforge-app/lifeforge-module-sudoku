@@ -6,7 +6,6 @@ import { useBoardState, useSync, useTimer } from '../../../providers'
 
 function LeftToolbar() {
   const { t } = useModuleTranslation()
-
   const { open } = useModalStore()
 
   const {
@@ -21,7 +20,6 @@ function LeftToolbar() {
   } = useBoardState()
 
   const { resetCurrentTimer } = useTimer()
-
   const { syncLoading, onSyncToDB } = useSync()
 
   const handleClearBoard = () => {

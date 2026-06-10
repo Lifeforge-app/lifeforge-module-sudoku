@@ -19,6 +19,7 @@ import { forgeAPI } from '@/manifest'
 import CreateSessionModal from './components/CreateSessionModal'
 import SessionItem from './components/SessionItem'
 import StatsModal from './components/StatsModal'
+
 export type SudokuBoard = {
   id: number
   mission: string
@@ -39,7 +40,6 @@ export const DIFFICULTIES = {
 
 function Sudoku() {
   const { t } = useModuleTranslation()
-
   const { open } = useModalStore()
 
   const sessionsQuery = useQuery(

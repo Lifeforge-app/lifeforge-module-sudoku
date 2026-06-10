@@ -4,8 +4,7 @@ import dayjs from 'dayjs'
 import { useModuleTranslation } from '@lifeforge/localization'
 import { useNavigate } from 'react-router'
 
-import { anyColorToHex } from '@lifeforge/ui'
-import {
+import { anyColorToHex ,
   Card,
   ConfirmationModal,
   ContextMenu,
@@ -22,11 +21,8 @@ import { formatTime } from '@/utils/time'
 
 function SessionItem({ session }: { session: Session }) {
   const { t } = useModuleTranslation()
-
   const navigate = useNavigate()
-
   const { open } = useModalStore()
-
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(

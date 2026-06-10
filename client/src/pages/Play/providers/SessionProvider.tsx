@@ -40,7 +40,6 @@ export function SessionProvider({ children }: SessionProviderProps) {
   })
 
   const [currentBoardIndex, setCurrentBoardIndex] = useState(0)
-
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Get boards from session data

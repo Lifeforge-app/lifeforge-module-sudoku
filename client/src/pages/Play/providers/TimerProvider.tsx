@@ -35,15 +35,10 @@ interface TimerProviderProps {
 
 export function TimerProvider({ children }: TimerProviderProps) {
   const { currentBoardIndex, isInitialized } = useSession()
-
   const { isBoardCompleted } = useBoardState()
-
   const [allDurationsElapsed, setAllDurationsElapsed] = useState<number[]>([])
-
   const [isPaused, setIsPaused] = useState(false)
-
   const allDurationsRef = useRef<number[]>([])
-
   const currentElapsedTimeRef = useRef(0)
 
   const elapsedTime = allDurationsElapsed[currentBoardIndex] || 0

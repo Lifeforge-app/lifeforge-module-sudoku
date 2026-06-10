@@ -17,7 +17,6 @@ export function useGameInitializer() {
   } = useSession()
 
   const { initializeFromSession } = useBoardState()
-
   const { initializeTimers } = useTimer()
 
   useEffect(() => {

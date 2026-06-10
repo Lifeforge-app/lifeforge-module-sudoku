@@ -19,9 +19,7 @@ interface CellProps {
 
 function Cell({ cellIndex, onKeyDown }: CellProps) {
   const cellRef = useRef<HTMLDivElement>(null)
-
   const { derivedThemeColor } = usePersonalization()
-
   const { currentBoard } = useSession()
 
   const {

@@ -7,7 +7,6 @@ import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'
 
 function ActionButtons() {
   const { t } = useModuleTranslation()
-
   const { open } = useModalStore()
 
   const {
@@ -22,7 +21,6 @@ function ActionButtons() {
   } = useBoardState()
 
   const { resetCurrentTimer } = useTimer()
-
   const { syncLoading, onSyncToDB } = useSync()
 
   const handleClearBoard = () => {

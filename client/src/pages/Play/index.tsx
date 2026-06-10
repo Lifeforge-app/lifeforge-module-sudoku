@@ -30,9 +30,7 @@ import {
 // The actual UI component that uses all the providers
 function PlayContent() {
   useGameInitializer()
-
   const navigate = useNavigate()
-
   const { open } = useModalStore()
 
   const {
@@ -44,11 +42,8 @@ function PlayContent() {
   } = useSession()
 
   const { isBoardCompleted, setSelectedCell } = useBoardState()
-
   const { switchBoard } = useTimer()
-
   const { syncToDatabaseHandler } = useSync()
-
   const { autoCheckMode, setAutoCheckMode } = useSettings()
 
   const handleBoardSwitch = (index: number) => {

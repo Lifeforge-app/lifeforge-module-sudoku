@@ -10,9 +10,7 @@ interface BoardSelectorProps {
 
 function BoardSelector({ onBoardSwitch }: BoardSelectorProps) {
   const { boards, currentBoardIndex } = useSession()
-
   const { allUserInputs } = useBoardState()
-
   const { allDurationsElapsed } = useTimer()
 
   if (boards.length <= 1) return null

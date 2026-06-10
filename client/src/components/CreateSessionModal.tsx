@@ -19,9 +19,7 @@ const BOARD_COUNTS = [1, 2, 4, 6]
 
 function CreateSessionModal({ onClose }: { onClose: () => void }) {
   const { t } = useModuleTranslation()
-
   const navigate = useNavigate()
-
   const queryClient = useQueryClient()
 
   const createMutation = useMutation(

@@ -6,7 +6,6 @@ import { useTimer } from '../../providers'
 
 function PauseOverlay() {
   const { t } = useModuleTranslation()
-
   const { isPaused, togglePause } = useTimer()
 
   if (!isPaused) return null

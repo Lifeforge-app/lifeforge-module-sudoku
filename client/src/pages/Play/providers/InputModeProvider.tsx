@@ -20,9 +20,7 @@ const InputModeContext = createContext<InputModeContextType | null>(null)
 
 export function InputModeProvider({ children }: { children: ReactNode }) {
   const { onSyncToDB } = useSync()
-
   const [isCandidate, setIsCandidate] = useState(false)
-
   const isCandidateModeLockedRef = useRef(false)
 
   // Keyboard shortcuts

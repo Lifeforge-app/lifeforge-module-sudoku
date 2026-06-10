@@ -52,9 +52,7 @@ export function useBoardHistory() {
 
 export function BoardHistoryProvider({ children }: { children: ReactNode }) {
   const { currentBoardIndex } = useSession()
-
   const historyMapRef = useRef<Map<number, HistoryData>>(new Map())
-
   // State just for triggering re-renders
   const [updateCounter, setUpdateCounter] = useState(0)
 

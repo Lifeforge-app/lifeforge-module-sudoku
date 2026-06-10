@@ -5,7 +5,6 @@ import { useBoardState, useTimer } from '../providers'
 
 function TimerDisplay() {
   const { elapsedTime, isPaused, togglePause } = useTimer()
-
   const { isBoardCompleted } = useBoardState()
 
   return (

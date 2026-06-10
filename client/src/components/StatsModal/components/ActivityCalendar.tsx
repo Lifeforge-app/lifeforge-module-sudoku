@@ -11,16 +11,13 @@ import {
   ListboxOption,
   Widget,
   WithQuery
-} from '@lifeforge/ui'
-import { anyColorToHex, usePersonalization } from '@lifeforge/ui'
+, anyColorToHex, usePersonalization } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
 function ActivityCalendar() {
   const { t } = useModuleTranslation()
-
   const { derivedTheme, derivedThemeColor: themeColor } = usePersonalization()
-
   const [year, setYear] = useState(new Date().getFullYear())
 
   const dataQuery = useQuery(

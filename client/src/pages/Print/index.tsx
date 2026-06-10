@@ -14,11 +14,8 @@ import Board from '../../components/Board'
 
 function Print() {
   const { t } = useModuleTranslation()
-
   const { sessionId } = useParams<{ sessionId: string }>()
-
   const navigate = useNavigate()
-
   const printRef = useRef<HTMLDivElement>(null)
 
   const sessionQuery = useQuery({

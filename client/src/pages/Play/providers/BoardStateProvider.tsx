@@ -66,13 +66,9 @@ function arraysToCandidates(arrays: number[][]): Set<number>[] {
 
 export function BoardStateProvider({ children }: { children: ReactNode }) {
   const { currentBoardIndex, currentBoard } = useSession()
-
   const [allUserInputs, setAllUserInputs] = useState<string[][]>([])
-
   const [allCandidates, setAllCandidates] = useState<Set<number>[][]>([])
-
   const [selectedCell, setSelectedCell] = useState<number | null>(null)
-
   const [hintsUsed, setHintsUsed] = useState(0)
 
   const {
