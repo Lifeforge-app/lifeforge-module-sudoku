@@ -43,7 +43,6 @@ function ActivityCalendar() {
           activities.length > 0 ? (
             <>
               <Listbox
-                buttonContent={<span>{year}</span>}
                 className="dark:bg-bg-800 md:hidden"
                 value={year}
                 onChange={setYear}

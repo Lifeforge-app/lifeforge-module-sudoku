@@ -4,6 +4,7 @@ import type { InferOutput } from '@lifeforge/api'
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
   Button,
+  ContextMenu,
   ContextMenuItem,
   EmptyStateScreen,
   FAB,
@@ -57,29 +58,27 @@ function Sudoku() {
   return (
     <>
       <ModuleHeader
-        actionButton={
-          <Button
-            className="hidden md:flex"
-            icon="tabler:plus"
-            tProps={{
-              item: t('items.session')
-            }}
-            onClick={handleCreateSession}
-          >
-            new
-          </Button>
-        }
-        contextMenuProps={{
-          children: (
-            <>
+        trailing={
+          <>
+            <Button
+              className="hidden md:flex"
+              icon="tabler:plus"
+              tProps={{
+                item: t('items.session')
+              }}
+              onClick={handleCreateSession}
+            >
+              new
+            </Button>
+            <ContextMenu>
               <ContextMenuItem
                 icon="tabler:chart-bar"
                 label="stats.title"
                 onClick={handleOpenStats}
               />
-            </>
-          )
-        }}
+            </ContextMenu>
+          </>
+        }
       />
 
       <WithQuery query={sessionsQuery}>
