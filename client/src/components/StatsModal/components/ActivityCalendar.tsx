@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { cloneElement, useState } from 'react'
 import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
-import { Tooltip } from 'react-tooltip'
 
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
   EmptyStateScreen,
   Listbox,
   ListboxOption,
+  ReactTooltip,
   Widget,
   WithQuery,
   anyColorToHex,
@@ -72,7 +72,7 @@ function ActivityCalendar() {
                     renderBlock={(block, activity) =>
                       cloneElement(block, {
                         'data-tooltip-id': 'sudoku-activity-tooltip',
-                        'data-tooltip-html': `${activity.count} ${t('stats.puzzlesOn')} ${activity.date}`
+                        'data-tooltip-content': `${activity.count} ${t('stats.puzzlesOn')} ${activity.date}`
                       } as unknown as Record<string, unknown>)
                     }
                     theme={{
@@ -117,7 +117,7 @@ function ActivityCalendar() {
           )
         }
       </WithQuery>
-      <Tooltip className="z-9999" id="sudoku-activity-tooltip" />
+      <ReactTooltip id="sudoku-activity-tooltip" style={{ zIndex: 9999 }} />
     </Widget>
   )
 }
