@@ -1,5 +1,5 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Icon } from '@lifeforge/ui'
+import { Button, Flex, Icon, Text, colorWithOpacity } from '@lifeforge/ui'
 
 import { useTimer } from '../../providers'
 
@@ -10,27 +10,51 @@ function PauseOverlay() {
   if (!isPaused) return null
 
   return (
-    <div className="bg-bg-50/50 dark:bg-bg-900/50 absolute inset-0 z-20 flex flex-col items-center justify-center">
-      <div className="bg-bg-50 dark:bg-bg-900 flex w-full flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm sm:w-[30vw]">
-        <div className="bg-custom-500/20 flex size-20 items-center justify-center rounded-full">
-          <Icon
-            className="text-custom-500 size-10"
-            icon="tabler:player-pause"
-          />
-        </div>
-        <h2 className="text-bg-800 dark:text-bg-100 text-2xl font-bold">
-          {t('messages.gamePaused')}
-        </h2>
-        <button
-          className="bg-custom-500 hover:bg-custom-600 flex items-center gap-2 rounded-lg px-6 py-3 text-white transition-colors"
-          type="button"
-          onClick={togglePause}
+    <Flex
+      align="center"
+      bg={{
+        base: colorWithOpacity('bg-50', '50%'),
+        dark: colorWithOpacity('bg-900', '50%')
+      }}
+      direction="column"
+      inset="0"
+      justify="center"
+      position="absolute"
+      zIndex="20"
+    >
+      <Flex
+        shadow
+        align="center"
+        bg={{ base: 'bg-50', dark: 'bg-900' }}
+        direction="column"
+        gap="lg"
+        p="xl"
+        r="2xl"
+        style={{ backdropFilter: 'blur(4px)' }}
+        width={{ base: '100%', sm: '30vw' }}
+      >
+        <Flex
+          centered
+          bg={colorWithOpacity('primary', '20%')}
+          height="5rem"
+          r="full"
+          width="5rem"
         >
-          <Icon className="size-5" icon="tabler:player-play" />
+          <Icon color="primary" icon="tabler:player-pause" size="2.5rem" />
+        </Flex>
+        <Text
+          as="h2"
+          color={{ base: 'bg-800', dark: 'bg-100' }}
+          size="2xl"
+          weight="bold"
+        >
+          {t('messages.gamePaused')}
+        </Text>
+        <Button icon="tabler:player-play" onClick={togglePause}>
           {t('buttons.resume')}
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Flex>
+    </Flex>
   )
 }
 

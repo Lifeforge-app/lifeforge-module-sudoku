@@ -1,7 +1,6 @@
-import clsx from 'clsx'
 import { useMemo } from 'react'
 
-import { Button } from '@lifeforge/ui'
+import { Bordered, Button, Grid, Text } from '@lifeforge/ui'
 
 import { useBoardState, useInputMode, useSession } from '../../../providers'
 
@@ -82,31 +81,45 @@ function NumberGrid({ showDeleteButton = true }: NumberGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-2 sm:grid-cols-3">
+    <Grid
+      gap="sm"
+      templateCols={{ base: 'repeat(auto-fill, minmax(4rem, 1fr))', sm: 3 }}
+    >
       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => {
         const remaining = remainingCounts[num - 1]
 
         const isDisabled = remaining === 0
 
         return (
-          <Button
+          <Bordered
             key={num}
-            className="text-bg-800! dark:text-bg-100! border-bg-300 dark:border-bg-700 min-w-16 flex-1 flex-col border-2 p-2!"
-            disabled={isDisabled}
-            type="button"
-            variant="tertiary"
-            onClick={() => handleNumberClick(num)}
+            asChild
+            borderColor={{ base: 'bg-300', dark: 'bg-700' }}
+            borderWidth="2px"
           >
-            {num}
-            <p className={clsx('text-bg-500', 'text-[10px]')}>{remaining}</p>
-          </Button>
+            <Button
+              direction="column"
+              disabled={isDisabled}
+              flex="1"
+              minWidth="4rem"
+              p="sm"
+              type="button"
+              variant="tertiary"
+              onClick={() => handleNumberClick(num)}
+            >
+              <Text color={{ base: 'bg-800', dark: 'bg-100' }}>{num}</Text>
+              <Text color="muted" style={{ fontSize: '10px' }}>
+                {remaining}
+              </Text>
+            </Button>
+          </Bordered>
         )
       })}
       {showDeleteButton && (
         <Button
           dangerous
-          className="col-span-3"
           disabled={!canClearSelectedCell}
+          gridColumnSpan={3}
           icon="tabler:trash"
           type="button"
           onClick={handleClear}
@@ -114,7 +127,7 @@ function NumberGrid({ showDeleteButton = true }: NumberGridProps) {
           Clear
         </Button>
       )}
-    </div>
+    </Grid>
   )
 }
 

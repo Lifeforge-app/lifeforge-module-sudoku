@@ -1,8 +1,13 @@
-import clsx from 'clsx'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import tinycolor from 'tinycolor2'
 
-import { usePersonalization } from '@lifeforge/ui'
+import {
+  Bordered,
+  Flex,
+  Transition,
+  colorWithOpacity,
+  usePersonalization
+} from '@lifeforge/ui'
 
 import {
   BOX_BORDERS,
@@ -117,38 +122,56 @@ function Cell({ cellIndex, onKeyDown }: CellProps) {
   )
 
   return (
-    <div
-      ref={cellRef}
-      className={clsx(
-        'size-full cursor-pointer transition-colors outline-none',
-        !BOX_BORDERS.has(row) && 'border-bg-300 dark:border-bg-700 border-b',
-        !isOriginal && 'hover:bg-bg-200 dark:hover:bg-bg-700/50',
-        (isSelected || isChainHighlighted) &&
-          'bg-bg-500/5 dark:bg-bg-500/10 hover:bg-bg-500/20!'
-      )}
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onMouseDown={e => {
-        // Handle ctrl+click on macOS which triggers contextmenu instead of click
-        if (e.ctrlKey || e.metaKey) {
-          handleClick()
-        }
-      }}
+    <Transition
+      duration="150ms"
+      property={['background-color', 'border-color', 'color']}
     >
-      <div className="flex size-full items-center justify-center">
-        <CellContent
-          cellCandidates={cellCandidates}
-          cellValue={cellValue}
-          hasViolation={hasViolation}
-          highlightedNumber={highlightedNumber}
-          isIncorrect={isIncorrect}
-          isOriginal={isOriginal}
-          isSelected={isSelected}
-          isThemeDark={isThemeDark}
-        />
-      </div>
-    </div>
+      <Bordered
+        ref={cellRef}
+        bg={
+          isSelected || isChainHighlighted
+            ? {
+                base: colorWithOpacity('bg-500', '5%'),
+                dark: colorWithOpacity('bg-500', '10%'),
+                hover: colorWithOpacity('bg-500', '20%'),
+                darkHover: colorWithOpacity('bg-500', '20%')
+              }
+            : !isOriginal
+              ? {
+                  hover: 'bg-200',
+                  darkHover: colorWithOpacity('bg-700', '50%')
+                }
+              : undefined
+        }
+        borderColor={{ base: 'bg-300', dark: 'bg-700' }}
+        borderSide={!BOX_BORDERS.has(row) ? 'bottom' : 'none'}
+        height="100%"
+        style={{ cursor: 'pointer', outline: 'none' }}
+        tabIndex={0}
+        width="100%"
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        onMouseDown={e => {
+          // Handle ctrl+click on macOS which triggers contextmenu instead of click
+          if (e.ctrlKey || e.metaKey) {
+            handleClick()
+          }
+        }}
+      >
+        <Flex centered height="100%" width="100%">
+          <CellContent
+            cellCandidates={cellCandidates}
+            cellValue={cellValue}
+            hasViolation={hasViolation}
+            highlightedNumber={highlightedNumber}
+            isIncorrect={isIncorrect}
+            isOriginal={isOriginal}
+            isSelected={isSelected}
+            isThemeDark={isThemeDark}
+          />
+        </Flex>
+      </Bordered>
+    </Transition>
   )
 }
 

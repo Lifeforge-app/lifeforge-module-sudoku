@@ -1,6 +1,14 @@
 import { useNavigate } from 'react-router'
 
-import { Button, GoBackButton, WithQuery, useModalStore } from '@lifeforge/ui'
+import {
+  Box,
+  Button,
+  Flex,
+  GoBackButton,
+  Stack,
+  WithQuery,
+  useModalStore
+} from '@lifeforge/ui'
 
 import TimerDisplay from './components/TimerDisplay'
 import BoardSelector from './components/board/BoardSelector'
@@ -53,8 +61,8 @@ function PlayContent() {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="flex-between">
+    <Flex direction="column" flex="1">
+      <Flex justify="between">
         <GoBackButton
           onClick={() => {
             syncToDatabaseHandler()
@@ -68,54 +76,73 @@ function PlayContent() {
             open(SettingsModal, { autoCheckMode, setAutoCheckMode })
           }
         />
-      </div>
+      </Flex>
       <WithQuery query={sessionQuery}>
         {() =>
           isInitialized && boards.length > 0 ? (
             <>
               <BoardSelector onBoardSwitch={handleBoardSwitch} />
-              <div className="flex-center flex-1">
-                <div className="flex-center relative mb-4 w-full flex-1 flex-col sm:mb-8 lg:mb-0 lg:flex-row lg:items-start lg:justify-center lg:gap-4">
+              <Flex centered flex="1">
+                <Flex
+                  align={{ base: 'center', lg: 'start' }}
+                  direction={{ base: 'column', lg: 'row' }}
+                  flex="1"
+                  gap={{ lg: 'md' }}
+                  justify="center"
+                  mb={{ base: 'md', sm: 'xl', lg: 'none' }}
+                  position="relative"
+                  width="100%"
+                >
                   {/* Left toolbar - action buttons (icon only, vertical) */}
                   {!isBoardCompleted && (
-                    <div className="mt-14 hidden lg:block">
+                    <Box
+                      display={{ base: 'none', lg: 'block' }}
+                      style={{ marginTop: '3.5rem' }}
+                    >
                       <LeftToolbar />
-                    </div>
+                    </Box>
                   )}
 
-                  <div className="w-full space-y-4 md:w-auto md:min-w-xl">
+                  <Stack
+                    gap="md"
+                    minWidth={{ md: '36rem' }}
+                    width={{ base: '100%', md: 'auto' }}
+                  >
                     <TimerDisplay />
-                    <div className="flex-center relative">
+                    <Flex centered position="relative">
                       <InteractiveBoard />
                       <PauseOverlay />
                       {isBoardCompleted && (
                         <VictoryOverlay onBoardSwitch={handleBoardSwitch} />
                       )}
-                    </div>
-                  </div>
+                    </Flex>
+                  </Stack>
 
                   {/* Right toolbar - mode toggle, 3x3 numbers, delete */}
                   {!isBoardCompleted && (
-                    <div className="mt-14 hidden lg:block">
+                    <Box
+                      display={{ base: 'none', lg: 'block' }}
+                      style={{ marginTop: '3.5rem' }}
+                    >
                       <RightToolbar />
-                    </div>
+                    </Box>
                   )}
 
                   {/* Mobile: bottom toolbar (combined) */}
                   {!isBoardCompleted && (
-                    <div className="w-full lg:hidden">
+                    <Box display={{ base: 'block', lg: 'none' }} width="100%">
                       <BottomToolbar />
-                    </div>
+                    </Box>
                   )}
-                </div>
-              </div>
+                </Flex>
+              </Flex>
             </>
           ) : (
             <></>
           )
         }
       </WithQuery>
-    </div>
+    </Flex>
   )
 }
 

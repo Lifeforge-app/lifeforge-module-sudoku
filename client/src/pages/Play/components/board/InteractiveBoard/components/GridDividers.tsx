@@ -1,16 +1,35 @@
 import { memo } from 'react'
 
+import { Box, Flex } from '@lifeforge/ui'
+
 function GridDividers() {
   return (
     <>
-      <div className="pointer-events-none absolute top-0 left-0 flex size-full justify-evenly">
-        <div className="bg-bg-500 h-full w-px sm:w-[2px]" />
-        <div className="bg-bg-500 h-full w-px sm:w-[2px]" />
-      </div>
-      <div className="pointer-events-none absolute top-0 left-0 flex size-full flex-col justify-evenly">
-        <div className="bg-bg-500 h-px w-full sm:h-[2px]" />
-        <div className="bg-bg-500 h-px w-full sm:h-[2px]" />
-      </div>
+      <Flex
+        height="100%"
+        justify="evenly"
+        left="0"
+        position="absolute"
+        style={{ pointerEvents: 'none' }}
+        top="0"
+        width="100%"
+      >
+        <Box bg="bg-500" height="100%" width={{ base: '1px', sm: '2px' }} />
+        <Box bg="bg-500" height="100%" width={{ base: '1px', sm: '2px' }} />
+      </Flex>
+      <Flex
+        direction="column"
+        height="100%"
+        justify="evenly"
+        left="0"
+        position="absolute"
+        style={{ pointerEvents: 'none' }}
+        top="0"
+        width="100%"
+      >
+        <Box bg="bg-500" height={{ base: '1px', sm: '2px' }} width="100%" />
+        <Box bg="bg-500" height={{ base: '1px', sm: '2px' }} width="100%" />
+      </Flex>
     </>
   )
 }

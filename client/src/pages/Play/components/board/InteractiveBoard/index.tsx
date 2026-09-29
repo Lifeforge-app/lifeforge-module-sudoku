@@ -1,5 +1,7 @@
 import { memo, useCallback } from 'react'
 
+import { Bordered, Box, Grid } from '@lifeforge/ui'
+
 import {
   GRID_INDICES,
   GRID_SIZE,
@@ -86,14 +88,16 @@ function InteractiveBoard() {
   if (!currentBoard) return null
 
   return (
-    <div className="aspect-square w-full max-w-xl">
-      <div className="border-bg-500 relative grid size-full grid-cols-9 border-2 sm:border-[3px]">
-        {GRID_INDICES.map(col => (
-          <Column key={col} col={col} onKeyDown={handleKeyDown} />
-        ))}
-        <GridDividers />
-      </div>
-    </div>
+    <Box aspectRatio="1" maxWidth="36rem" width="100%">
+      <Bordered asChild borderColor="bg-500" borderWidth="2px">
+        <Grid height="100%" position="relative" templateCols={9} width="100%">
+          {GRID_INDICES.map(col => (
+            <Column key={col} col={col} onKeyDown={handleKeyDown} />
+          ))}
+          <GridDividers />
+        </Grid>
+      </Bordered>
+    </Box>
   )
 }
 

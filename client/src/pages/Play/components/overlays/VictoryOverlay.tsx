@@ -1,5 +1,13 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Button, ConfirmationModal, Icon, useModalStore } from '@lifeforge/ui'
+import {
+  Button,
+  ConfirmationModal,
+  Flex,
+  Icon,
+  Text,
+  colorWithOpacity,
+  useModalStore
+} from '@lifeforge/ui'
 
 import { useSession, useSync } from '../../providers'
 
@@ -31,25 +39,58 @@ function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
   }
 
   return (
-    <div className="bg-bg-50/50 dark:bg-bg-900/50 absolute inset-0 flex items-center justify-center">
-      <div className="bg-bg-50 dark:bg-bg-900 flex w-full flex-col items-center gap-6 rounded-2xl p-8 shadow-2xl backdrop-blur-sm sm:w-[30vw]">
-        <div className="bg-custom-500/20 flex size-20 items-center justify-center rounded-full">
-          <Icon className="text-custom-500 size-10" icon="tabler:trophy" />
-        </div>
-        <div className="text-center">
-          <h2 className="text-bg-800 dark:text-bg-100 text-2xl font-bold">
+    <Flex
+      align="center"
+      bg={{
+        base: colorWithOpacity('bg-50', '50%'),
+        dark: colorWithOpacity('bg-900', '50%')
+      }}
+      inset="0"
+      justify="center"
+      position="absolute"
+    >
+      <Flex
+        shadow
+        align="center"
+        bg={{ base: 'bg-50', dark: 'bg-900' }}
+        direction="column"
+        gap="lg"
+        p="xl"
+        r="2xl"
+        style={{ backdropFilter: 'blur(4px)' }}
+        width={{ base: '100%', sm: '30vw' }}
+      >
+        <Flex
+          centered
+          bg={colorWithOpacity('primary', '20%')}
+          height="5rem"
+          r="full"
+          width="5rem"
+        >
+          <Icon color="primary" icon="tabler:trophy" size="2.5rem" />
+        </Flex>
+        <Flex align="center" direction="column">
+          <Text
+            align="center"
+            as="h2"
+            color={{ base: 'bg-800', dark: 'bg-100' }}
+            size="2xl"
+            weight="bold"
+          >
             {t('messages.congratulations')}
-          </h2>
-          <p className="text-bg-500 mt-2">{t('messages.puzzleSolved')}</p>
-        </div>
-        <div className="flex items-center gap-3">
+          </Text>
+          <Text align="center" as="p" color="muted" mt="sm">
+            {t('messages.puzzleSolved')}
+          </Text>
+        </Flex>
+        <Flex align="center" gap="sm">
           <Button
             icon="tabler:refresh"
             loading={resetBoardMutation.isPending}
             variant="secondary"
             onClick={handlePlayAgain}
           >
-            {t('buttons.retry')}
+            retry
           </Button>
           {hasNextBoard && (
             <Button
@@ -57,12 +98,12 @@ function VictoryOverlay({ onBoardSwitch }: VictoryOverlayProps) {
               variant="primary"
               onClick={handleNextBoard}
             >
-              {t('buttons.nextBoard')}
+              Next Board
             </Button>
           )}
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
 

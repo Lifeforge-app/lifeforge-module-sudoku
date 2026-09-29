@@ -1,14 +1,22 @@
-import { Card } from '@lifeforge/ui'
+import { Bordered, Card } from '@lifeforge/ui'
 
 import ActionButtons from './components/ActionButtons'
 import NumberButtons from './components/NumberButtons'
 
 function BottomToolbar() {
   return (
-    <Card className="mt-4 flex w-full flex-col gap-4 rounded-xl border shadow-lg backdrop-blur-sm lg:mt-0 lg:w-auto lg:gap-6">
-      <NumberButtons />
-      <ActionButtons />
-    </Card>
+    <Bordered asChild>
+      <Card
+        gap={{ base: 'md', lg: 'lg' }}
+        mt={{ base: 'md', lg: 'none' }}
+        r="xl"
+        style={{ backdropFilter: 'blur(4px)' }}
+        width={{ base: '100%', lg: 'auto' }}
+      >
+        <NumberButtons />
+        <ActionButtons />
+      </Card>
+    </Bordered>
   )
 }
 

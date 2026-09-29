@@ -1,5 +1,11 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Button, Card, ConfirmationModal, useModalStore } from '@lifeforge/ui'
+import {
+  Box,
+  Button,
+  Card,
+  ConfirmationModal,
+  useModalStore
+} from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '../../../providers'
 
@@ -49,53 +55,59 @@ function LeftToolbar() {
   const canUseHint = hintsUsed < MAX_HINTS
 
   return (
-    <Card className="flex flex-row gap-2 lg:flex-col">
+    <Card direction={{ base: 'row', lg: 'column' }} gap="sm">
       <Button
-        className="!p-3"
         disabled={!canUndo}
         icon="tabler:arrow-back-up"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
+        p="sm"
         variant="plain"
         onClick={undo}
       />
       <Button
-        className="!p-3"
         disabled={!canRedo}
         icon="tabler:arrow-forward-up"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
+        p="sm"
         variant="plain"
         onClick={redo}
       />
-      <div className="bg-bg-300 dark:bg-bg-600 my-1 hidden h-px w-full lg:block" />
+      <Box
+        bg={{ base: 'bg-300', dark: 'bg-600' }}
+        display={{ base: 'none', lg: 'block' }}
+        height="1px"
+        my="xs"
+        width="100%"
+      />
       <Button
-        className="!p-3"
         disabled={!canUseHint}
         icon="tabler:bulb"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
+        p="sm"
         variant="plain"
         onClick={() => {
           useHint()
         }}
       />
       <Button
-        className="!p-3"
         icon="mage:stars-c"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
+        p="sm"
         variant="plain"
         onClick={handleSmartFill}
       />
       <Button
-        className="!p-3"
         icon="tabler:eraser"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
+        p="sm"
         variant="plain"
         onClick={handleClearBoard}
       />
       <Button
-        className="!p-3"
         icon="tabler:cloud-upload"
-        iconClassName="!size-6"
+        iconProps={{ size: '1.5rem' }}
         loading={syncLoading}
+        p="sm"
         variant="plain"
         onClick={onSyncToDB}
       />

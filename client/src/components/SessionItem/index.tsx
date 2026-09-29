@@ -5,13 +5,17 @@ import { useNavigate } from 'react-router'
 
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
+  Box,
   Card,
   ConfirmationModal,
   ContextMenu,
   ContextMenuItem,
+  Flex,
   Icon,
   TAILWIND_PALETTE,
   TagChip,
+  Text,
+  Transition,
   anyColorToHex,
   useModalStore
 } from '@lifeforge/ui'
@@ -65,82 +69,118 @@ function SessionItem({ session }: { session: Session }) {
   return (
     <Card
       isInteractive
+      align="center"
       as="li"
-      className="flex-between cursor-pointer gap-4"
+      direction="row"
+      gap="md"
+      justify="between"
       onClick={handleContinue}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-4">
-        <div
-          className="hidden size-16 min-w-0 shrink-0 items-center justify-center rounded-lg p-3 text-lg font-bold text-white sm:flex"
+      <Flex align="center" flex="1" gap="md" minWidth="0">
+        <Flex
+          centered
+          display={{ base: 'none', sm: 'flex' }}
+          flexShrink="0"
+          height="4rem"
+          minWidth="0"
+          p="md"
+          r="lg"
           style={{ backgroundColor: anyColorToHex(difficultyColor) + '20' }}
+          width="4rem"
         >
           <Icon
-            className="size-full"
             icon="uil:table"
-            style={{
-              color: difficultyColor
-            }}
+            size="100%"
+            style={{ color: difficultyColor }}
           />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex min-w-0 flex-col-reverse items-start gap-2 sm:flex-row sm:items-center">
-            <h3 className="w-full min-w-0 truncate text-xl font-medium sm:w-auto">
-              Session {dayjs(session.created).format('DD MMM YYYY HH:mm')}
-            </h3>
+        </Flex>
+        <Box flex="1" minWidth="0">
+          <Flex
+            align={{ base: 'start', sm: 'center' }}
+            direction={{ base: 'column-reverse', sm: 'row' }}
+            gap="sm"
+            minWidth="0"
+          >
+            <Box asChild minWidth="0" width={{ base: '100%', sm: 'auto' }}>
+              <Text truncate as="h3" size="xl" weight="medium">
+                Session {dayjs(session.created).format('DD MMM YYYY HH:mm')}
+              </Text>
+            </Box>
             <TagChip
               color={difficultyColor}
               icon="tabler:puzzle"
               label={t('difficulties.' + session.difficulty)}
             />
-          </div>
-          <p className="text-bg-500 mt-1 flex flex-wrap items-center gap-x-4">
-            <span className="flex items-center gap-1">
-              <Icon className="size-4.5" icon="tabler:grid-3x3" />
-              {t('session.boards')}: {session.boardCount}
-            </span>
+          </Flex>
+          <Flex align="center" as="p" gapX="md" mt="xs" wrap="wrap">
+            <Flex align="center" as="span" gap="xs">
+              <Icon color="muted" icon="tabler:grid-3x3" size="1.125rem" />
+              <Text color="muted">
+                {t('session.boards')}: {session.boardCount}
+              </Text>
+            </Flex>
             {session.progress.total > 0 && (
-              <span className="flex items-center gap-1">
-                <Icon className="size-4.5" icon="tabler:clock" />
-                {t('session.avgTime')}:
-                <span className="text-custom-500 font-mono font-semibold">
+              <Flex align="center" as="span" gap="xs">
+                <Icon color="muted" icon="tabler:clock" size="1.125rem" />
+                <Text color="muted">{t('session.avgTime')}:</Text>
+                <Text
+                  color="primary"
+                  style={{ fontFamily: 'monospace' }}
+                  weight="semibold"
+                >
                   {formatTime(
                     Math.round(session.totalDuration / session.boardCount)
                   )}
-                </span>
-              </span>
+                </Text>
+              </Flex>
             )}
-          </p>
-        </div>
-        <div className="hidden w-32 flex-col items-end gap-1 sm:flex">
+          </Flex>
+        </Box>
+        <Flex
+          align="end"
+          direction="column"
+          display={{ base: 'none', sm: 'flex' }}
+          gap="xs"
+          width="8rem"
+        >
           {progressPercent === 100 ? (
-            <div className="flex items-center gap-2">
-              <Icon className="size-4.5" icon="tabler:check" />
+            <Flex align="center" gap="sm">
+              <Icon icon="tabler:check" size="1.125rem" />
               {t('session.completed')}
-            </div>
+            </Flex>
           ) : (
             <>
-              <div className="text-bg-500">
+              <Text color="muted">
                 {progressPercent}% {t('session.complete')}
-              </div>
-              <div className="bg-bg-200 dark:bg-bg-700 h-2 w-full overflow-hidden rounded-full">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: `${progressPercent}%`,
-                    backgroundColor:
-                      correctPercent >= 80
-                        ? TAILWIND_PALETTE.green[500]
-                        : correctPercent >= 50
-                          ? TAILWIND_PALETTE.yellow[500]
-                          : TAILWIND_PALETTE.red[500]
-                  }}
-                />
-              </div>
+              </Text>
+              <Box
+                bg={{ base: 'bg-200', dark: 'bg-700' }}
+                height="0.5rem"
+                overflow="hidden"
+                r="full"
+                width="100%"
+              >
+                <Transition duration="150ms" property="all">
+                  <Box
+                    height="100%"
+                    r="full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor:
+                        correctPercent >= 80
+                          ? TAILWIND_PALETTE.green[500]
+                          : correctPercent >= 50
+                            ? TAILWIND_PALETTE.yellow[500]
+                            : TAILWIND_PALETTE.red[500]
+                    }}
+                  />
+                </Transition>
+              </Box>
             </>
           )}
-        </div>
-      </div>
-      <ContextMenu classNames={{ wrapper: 'shrink-0' }}>
+        </Flex>
+      </Flex>
+      <ContextMenu>
         <ContextMenuItem
           icon="tabler:printer"
           label="print"

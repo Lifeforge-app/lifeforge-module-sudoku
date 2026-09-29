@@ -1,4 +1,4 @@
-import { Icon } from '@lifeforge/ui'
+import { Box, Flex, Icon, Text, Transition } from '@lifeforge/ui'
 
 import { formatTime } from '../../../utils/time'
 import { useBoardState, useTimer } from '../providers'
@@ -8,30 +8,29 @@ function TimerDisplay() {
   const { isBoardCompleted } = useBoardState()
 
   return (
-    <div className="flex-center mt-4 gap-3">
+    <Flex centered gap="sm" mt="md">
       {!isBoardCompleted && (
-        <button
-          className="text-bg-500 hover:text-custom-500 transition-colors"
-          type="button"
-          onClick={togglePause}
-        >
-          <Icon
-            className="size-5"
-            icon={
-              isPaused
-                ? 'tabler:player-play-filled'
-                : 'tabler:player-pause-filled'
-            }
-          />
-        </button>
+        <Box as="button" type="button" onClick={togglePause}>
+          <Transition property="color">
+            <Icon
+              color={{ base: 'muted', hover: 'primary' }}
+              icon={
+                isPaused
+                  ? 'tabler:player-play-filled'
+                  : 'tabler:player-pause-filled'
+              }
+              size="1.25rem"
+            />
+          </Transition>
+        </Box>
       )}
-      <div className="flex-center gap-2">
-        <Icon className="text-bg-500 size-5" icon="tabler:clock" />
-        <span className="text-bg-500 font-mono text-lg">
+      <Flex centered gap="sm">
+        <Icon color="muted" icon="tabler:clock" size="1.25rem" />
+        <Text color="muted" size="lg" style={{ fontFamily: 'monospace' }}>
           {formatTime(elapsedTime)}
-        </span>
-      </div>
-    </div>
+        </Text>
+      </Flex>
+    </Flex>
   )
 }
 

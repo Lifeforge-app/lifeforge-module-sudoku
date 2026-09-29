@@ -1,4 +1,11 @@
-import clsx from 'clsx'
+import {
+  Box,
+  Flex,
+  Ring,
+  Text,
+  Transition,
+  colorWithOpacity
+} from '@lifeforge/ui'
 
 import { formatTime } from '@/utils/time'
 
@@ -47,8 +54,14 @@ function BoardSelector({ onBoardSwitch }: BoardSelectorProps) {
   })
 
   return (
-    <div className="mt-4 flex flex-col items-center gap-3 px-4">
-      <div className="flex max-w-full flex-wrap items-center justify-center gap-2">
+    <Flex align="center" direction="column" gap="sm" mt="md" px="md">
+      <Flex
+        align="center"
+        gap="sm"
+        justify="center"
+        maxWidth="100%"
+        wrap="wrap"
+      >
         {boards.map((_, index) => {
           const status = boardStatuses[index]
 
@@ -57,50 +70,77 @@ function BoardSelector({ onBoardSwitch }: BoardSelectorProps) {
           const isCompleted = status.isCompleted
 
           return (
-            <button
-              key={index}
-              className={clsx(
-                'group relative flex w-24 flex-col items-center gap-1 rounded-lg px-3 py-2 transition-all sm:w-28 sm:px-4 md:w-32',
-                isActive
-                  ? 'bg-custom-500/20 ring-custom-500 ring-2'
-                  : 'bg-bg-200/50 dark:bg-bg-700/30 hover:bg-bg-200 dark:hover:bg-bg-700/50'
-              )}
-              type="button"
-              onClick={() => onBoardSwitch(index)}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className={clsx(
-                    'text-xs font-medium sm:text-sm',
+            <Transition key={index} property="all">
+              <Ring asChild ringWidth={isActive ? '2px' : '0px'}>
+                <Flex
+                  align="center"
+                  as="button"
+                  bg={
                     isActive
-                      ? 'text-custom-500'
-                      : 'text-bg-600 dark:text-bg-300'
-                  )}
+                      ? colorWithOpacity('primary', '20%')
+                      : {
+                          base: colorWithOpacity('bg-200', '50%'),
+                          dark: colorWithOpacity('bg-700', '30%'),
+                          hover: 'bg-200',
+                          darkHover: colorWithOpacity('bg-700', '50%')
+                        }
+                  }
+                  direction="column"
+                  gap="xs"
+                  position="relative"
+                  px={{ base: 'sm', sm: 'md' }}
+                  py="sm"
+                  r="lg"
+                  type="button"
+                  width={{ base: '6rem', sm: '7rem', md: '8rem' }}
+                  onClick={() => onBoardSwitch(index)}
                 >
-                  Board {index + 1}
-                </span>
-              </div>
+                  <Flex align="center" gap="sm">
+                    <Text
+                      color={
+                        isActive
+                          ? 'primary'
+                          : { base: 'bg-600', dark: 'bg-300' }
+                      }
+                      size={{ base: 'xs', sm: 'sm' }}
+                      weight="medium"
+                    >
+                      Board {index + 1}
+                    </Text>
+                  </Flex>
 
-              {/* Progress bar */}
-              <div className="bg-bg-300 dark:bg-bg-600 h-1 w-full overflow-hidden rounded-full">
-                <div
-                  className={clsx(
-                    'h-full rounded-full transition-all',
-                    isCompleted ? 'bg-green-500' : 'bg-custom-500'
-                  )}
-                  style={{ width: `${status.progress}%` }}
-                />
-              </div>
+                  {/* Progress bar */}
+                  <Box
+                    bg={{ base: 'bg-300', dark: 'bg-600' }}
+                    height="0.25rem"
+                    overflow="hidden"
+                    r="full"
+                    width="100%"
+                  >
+                    <Transition property="all">
+                      <Box
+                        bg={isCompleted ? 'green-500' : 'primary'}
+                        height="100%"
+                        r="full"
+                        style={{ width: `${status.progress}%` }}
+                      />
+                    </Transition>
+                  </Box>
 
-              {/* Time indicator */}
-              <span className="text-bg-500 text-[10px] sm:text-xs">
-                {formatTime(status.duration)}
-              </span>
-            </button>
+                  {/* Time indicator */}
+                  <Text
+                    color="muted"
+                    style={{ fontSize: 'clamp(0.625rem, 2vw, 0.75rem)' }}
+                  >
+                    {formatTime(status.duration)}
+                  </Text>
+                </Flex>
+              </Ring>
+            </Transition>
           )
         })}
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   )
 }
 

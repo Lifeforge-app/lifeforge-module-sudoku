@@ -1,6 +1,12 @@
 /* eslint-disable react-compiler/react-compiler */
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Button, ConfirmationModal, useModalStore } from '@lifeforge/ui'
+import {
+  Button,
+  ConfirmationModal,
+  Flex,
+  Text,
+  useModalStore
+} from '@lifeforge/ui'
 
 import { useBoardState, useSync, useTimer } from '@/pages/Play/providers'
 
@@ -51,70 +57,76 @@ function ActionButtons() {
   const canUseHint = hintsUsed < MAX_HINTS
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <Flex gap="sm" wrap="wrap">
       {/* Undo/Redo buttons */}
       <Button
-        className="min-w-32 flex-1"
         disabled={!canUndo}
+        flex="1"
         icon="tabler:arrow-back-up"
+        minWidth="8rem"
         variant="secondary"
         onClick={undo}
       >
-        <span className="truncate">{t('buttons.undo')}</span>
+        <Text truncate>{t('buttons.undo')}</Text>
       </Button>
       <Button
-        className="min-w-32 flex-1"
         disabled={!canRedo}
+        flex="1"
         icon="tabler:arrow-forward-up"
+        minWidth="8rem"
         variant="secondary"
         onClick={redo}
       >
-        <span className="truncate">{t('buttons.redo')}</span>
+        <Text truncate>{t('buttons.redo')}</Text>
       </Button>
 
       {/* Other action buttons */}
       <Button
-        className="min-w-48 flex-1"
         disabled={!canUseHint}
+        flex="1"
         icon="tabler:bulb"
+        minWidth="12rem"
         variant="secondary"
         onClick={() => {
           useHint()
         }}
       >
-        <span className="truncate">
+        <Text truncate>
           {t('buttons.hint')}{' '}
-          <span className="text-bg-500 text-xs">
+          <Text color="muted" size="xs">
             ({MAX_HINTS - hintsUsed}/{MAX_HINTS})
-          </span>
-        </span>
+          </Text>
+        </Text>
       </Button>
       <Button
-        className="min-w-32 flex-1"
+        flex="1"
         icon="mage:stars-c"
+        minWidth="8rem"
         variant="secondary"
         onClick={handleSmartFill}
       >
-        <span className="truncate">{t('buttons.smartFill')}</span>
+        <Text truncate>{t('buttons.smartFill')}</Text>
       </Button>
       <Button
-        className="min-w-32 flex-1"
+        flex="1"
         icon="tabler:eraser"
+        minWidth="8rem"
         variant="secondary"
         onClick={handleClearBoard}
       >
-        <span className="truncate">{t('buttons.clearBoard')}</span>
+        <Text truncate>{t('buttons.clearBoard')}</Text>
       </Button>
       <Button
-        className="min-w-32 flex-1"
+        flex="1"
         icon="tabler:cloud-upload"
         loading={syncLoading}
+        minWidth="8rem"
         variant="secondary"
         onClick={onSyncToDB}
       >
-        <span className="truncate">{t('buttons.sync')}</span>
+        <Text truncate>{t('buttons.sync')}</Text>
       </Button>
-    </div>
+    </Flex>
   )
 }
 

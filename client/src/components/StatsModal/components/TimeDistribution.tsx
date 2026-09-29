@@ -1,5 +1,5 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Widget } from '@lifeforge/ui'
+import { Box, Flex, Stack, Text, Widget, surface } from '@lifeforge/ui'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
 
@@ -21,6 +21,22 @@ interface TimeDistributionProps {
   stats: DifficultyStat[]
 }
 
+const SEGMENTS = [
+  { key: 'under2min', bg: 'green-500', label: '<2m', title: '<2min' },
+  { key: 'under5min', bg: 'teal-500', label: '2-5m', title: '2-5min' },
+  { key: 'under10min', bg: 'yellow-500', label: '5-10m', title: '5-10min' },
+  { key: 'under20min', bg: 'orange-500', label: '10-20m', title: '10-20min' },
+  { key: 'over20min', bg: 'red-500', label: '>20m', title: '>20min' }
+] as const
+
+const LEGEND = [
+  { bg: 'green-500', label: '<2min' },
+  { bg: 'teal-500', label: '2-5min' },
+  { bg: 'yellow-500', label: '5-10min' },
+  { bg: 'orange-500', label: '10-20min' },
+  { bg: 'red-500', label: '>20min' }
+] as const
+
 function TimeDistribution({ stats }: TimeDistributionProps) {
   const { t } = useModuleTranslation()
 
@@ -28,11 +44,12 @@ function TimeDistribution({ stats }: TimeDistributionProps) {
 
   return (
     <Widget
-      className="component-bg-lighter"
+      bg={surface.light}
       icon="tabler:chart-histogram"
+      namespace={false}
       title={t('stats.timeDistribution')}
     >
-      <div className="space-y-4">
+      <Stack gap="md">
         {statsWithBoards.map(stat => {
           const dist = stat.timeDistribution
 
@@ -44,110 +61,72 @@ function TimeDistribution({ stats }: TimeDistributionProps) {
             dist.over20min
 
           return (
-            <div key={stat.difficulty}>
-              <div className="mb-2 flex items-center gap-2">
-                <div
-                  className="size-3 rounded-md"
+            <Box key={stat.difficulty}>
+              <Flex align="center" gap="sm" mb="sm">
+                <Box
+                  height="0.75rem"
+                  r="md"
                   style={{
                     backgroundColor: DIFFICULTY_COLORS[stat.difficulty]
                   }}
+                  width="0.75rem"
                 />
-                <span className="text-bg-800 dark:text-bg-100 font-medium capitalize">
+                <Text
+                  color={{ base: 'bg-800', dark: 'bg-100' }}
+                  transform="capitalize"
+                  weight="medium"
+                >
                   {t(`difficulties.${stat.difficulty}`)}
-                </span>
-                <span className="text-bg-500 text-sm">
+                </Text>
+                <Text color="muted" size="sm">
                   ({stat.totalBoards} {t('stats.completed').toLowerCase()})
-                </span>
-              </div>
-              <div className="flex h-6 overflow-hidden rounded-full">
-                {dist.under2min > 0 && (
-                  <div
-                    className="flex items-center justify-center bg-green-500 text-[10px] font-bold text-white"
-                    style={{
-                      width: `${(dist.under2min / total) * 100}%`
-                    }}
-                    title="<2min"
-                  >
-                    {dist.under2min > 1 && '<2m'}
-                  </div>
-                )}
-                {dist.under5min > 0 && (
-                  <div
-                    className="flex items-center justify-center bg-teal-500 text-[10px] font-bold text-white"
-                    style={{
-                      width: `${(dist.under5min / total) * 100}%`
-                    }}
-                    title="2-5min"
-                  >
-                    {dist.under5min > 1 && '2-5m'}
-                  </div>
-                )}
-                {dist.under10min > 0 && (
-                  <div
-                    className="flex items-center justify-center bg-yellow-500 text-[10px] font-bold text-white"
-                    style={{
-                      width: `${(dist.under10min / total) * 100}%`
-                    }}
-                    title="5-10min"
-                  >
-                    {dist.under10min > 1 && '5-10m'}
-                  </div>
-                )}
-                {dist.under20min > 0 && (
-                  <div
-                    className="flex items-center justify-center bg-orange-500 text-[10px] font-bold text-white"
-                    style={{
-                      width: `${(dist.under20min / total) * 100}%`
-                    }}
-                    title="10-20min"
-                  >
-                    {dist.under20min > 1 && '10-20m'}
-                  </div>
-                )}
-                {dist.over20min > 0 && (
-                  <div
-                    className="flex items-center justify-center bg-red-500 text-[10px] font-bold text-white"
-                    style={{
-                      width: `${(dist.over20min / total) * 100}%`
-                    }}
-                    title=">20min"
-                  >
-                    {dist.over20min > 1 && '>20m'}
-                  </div>
-                )}
-              </div>
-            </div>
+                </Text>
+              </Flex>
+              <Flex height="1.5rem" overflow="hidden" r="full">
+                {SEGMENTS.map(({ key, bg, label, title }) => {
+                  const value = dist[key]
+
+                  if (value <= 0) return null
+
+                  return (
+                    <Flex
+                      key={key}
+                      centered
+                      bg={bg}
+                      style={{ width: `${(value / total) * 100}%` }}
+                      title={title}
+                    >
+                      {value > 1 && (
+                        <Text
+                          color="bg-50"
+                          style={{ fontSize: '10px' }}
+                          weight="bold"
+                        >
+                          {label}
+                        </Text>
+                      )}
+                    </Flex>
+                  )
+                })}
+              </Flex>
+            </Box>
           )
         })}
         {stats.length === 0 && (
-          <div className="text-bg-500 py-4 text-center text-sm">
+          <Text align="center" color="muted" size="sm">
             {t('stats.noTimeData')}
-          </div>
+          </Text>
         )}
-      </div>
+      </Stack>
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap justify-center gap-4">
-        <div className="flex items-center gap-2">
-          <div className="size-3 rounded-md bg-green-500" />
-          <span className="text-bg-500">&lt;2min</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-3 rounded-md bg-teal-500" />
-          <span className="text-bg-500">2-5min</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-3 rounded-md bg-yellow-500" />
-          <span className="text-bg-500">5-10min</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-3 rounded-md bg-orange-500" />
-          <span className="text-bg-500">10-20min</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-3 rounded-md bg-red-500" />
-          <span className="text-bg-500">&gt;20min</span>
-        </div>
-      </div>
+      <Flex gap="md" justify="center" mt="md" wrap="wrap">
+        {LEGEND.map(({ bg, label }) => (
+          <Flex key={label} align="center" gap="sm">
+            <Box bg={bg} height="0.75rem" r="md" width="0.75rem" />
+            <Text color="muted">{label}</Text>
+          </Flex>
+        ))}
+      </Flex>
     </Widget>
   )
 }

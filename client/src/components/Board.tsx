@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { Bordered, Box, Flex, Grid, Text } from '@lifeforge/ui'
 
 import type { SudokuBoard } from '..'
 
@@ -12,82 +12,109 @@ function Board({
   boardCount: number
 }) {
   return (
-    <div className="aspect-square w-full p-[1rem]">
-      <div className="border-bg-800 dark:border-bg-100 relative grid size-full grid-cols-9 border-[3px] print:border-black">
-        {Array(9)
-          .fill(0)
-          .map((_, j) => (
-            <div
-              key={j}
-              className={clsx(
-                'grid size-full grid-rows-9',
-                ![2, 5, 8].includes(j) &&
-                  'border-bg-500 print:border-bg-400! border-r'
-              )}
-            >
-              {Array(9)
-                .fill(0)
-                .map((_, k) => (
-                  <div
-                    key={k}
-                    className={clsx(
-                      'size-full',
-                      ![2, 5, 8].includes(k) &&
-                        'border-bg-500 print:border-bg-400! border-b'
-                    )}
-                  >
-                    <div
-                      className={clsx(
-                        'flex size-full items-center justify-center font-medium',
-                        boardCount === 1
-                          ? 'print:text-[2rem]'
-                          : 'print:text-[1rem]'
-                      )}
-                    >
-                      {(() => {
-                        const target = showSolution
-                          ? data.solution
-                          : data.mission
+    <Box aspectRatio="1" p="md" width="100%">
+      <Bordered
+        asChild
+        borderColor={{ base: 'bg-800', dark: 'bg-100', print: 'black' }}
+        borderWidth="3px"
+      >
+        <Grid height="100%" position="relative" templateCols={9} width="100%">
+          {Array(9)
+            .fill(0)
+            .map((_, j) => (
+              <Bordered
+                key={j}
+                asChild
+                borderColor={{ base: 'bg-500', print: 'bg-400' }}
+                borderSide={![2, 5, 8].includes(j) ? 'right' : 'none'}
+              >
+                <Grid height="100%" templateRows={9} width="100%">
+                  {Array(9)
+                    .fill(0)
+                    .map((_, k) => (
+                      <Bordered
+                        key={k}
+                        asChild
+                        borderColor={{ base: 'bg-500', print: 'bg-400' }}
+                        borderSide={![2, 5, 8].includes(k) ? 'bottom' : 'none'}
+                      >
+                        <Flex centered height="100%" width="100%">
+                          {(() => {
+                            const target = showSolution
+                              ? data.solution
+                              : data.mission
 
-                        return (
-                          <span
-                            className={clsx(
-                              showSolution &&
-                                data.mission[k * 9 + j] === '0' &&
-                                'text-custom-500 print:hidden!'
-                            )}
-                          >
-                            {target[k * 9 + j] !== '0' && target[k * 9 + j]}
-                          </span>
-                        )
-                      })()}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          ))}
-        <div className="absolute top-0 left-0 flex size-full justify-evenly">
-          {Array(2)
-            .fill(0)
-            .map((_, j) => (
-              <div
-                key={j}
-                className="bg-bg-800 dark:bg-bg-100 h-full w-[2px] print:bg-black!"
-              />
+                            const value = target[k * 9 + j]
+
+                            const isSolutionEmpty =
+                              showSolution && data.mission[k * 9 + j] === '0'
+
+                            return (
+                              <Text
+                                align="center"
+                                color={isSolutionEmpty ? 'primary' : undefined}
+                                display={
+                                  isSolutionEmpty
+                                    ? { print: 'none' }
+                                    : undefined
+                                }
+                                size={{
+                                  print: boardCount === 1 ? '3xl' : 'base'
+                                }}
+                                weight="medium"
+                              >
+                                {value !== '0' && value}
+                              </Text>
+                            )
+                          })()}
+                        </Flex>
+                      </Bordered>
+                    ))}
+                </Grid>
+              </Bordered>
             ))}
-        </div>
-        <div className="absolute top-0 left-0 flex size-full flex-col justify-evenly">
-          {Array(2)
-            .fill(0)
-            .map((_, j) => (
-              <div
-                key={j}
-                className="bg-bg-800 dark:bg-bg-100 h-[2px] w-full print:bg-black!"
-              />
-            ))}
-        </div>
-      </div>
-    </div>
+          <Flex
+            height="100%"
+            justify="evenly"
+            left="0"
+            position="absolute"
+            top="0"
+            width="100%"
+          >
+            {Array(2)
+              .fill(0)
+              .map((_, j) => (
+                <Box
+                  key={j}
+                  bg={{ base: 'bg-800', dark: 'bg-100', print: 'black' }}
+                  height="100%"
+                  width="2px"
+                />
+              ))}
+          </Flex>
+          <Flex
+            direction="column"
+            height="100%"
+            justify="evenly"
+            left="0"
+            position="absolute"
+            top="0"
+            width="100%"
+          >
+            {Array(2)
+              .fill(0)
+              .map((_, j) => (
+                <Box
+                  key={j}
+                  bg={{ base: 'bg-800', dark: 'bg-100', print: 'black' }}
+                  height="2px"
+                  width="100%"
+                />
+              ))}
+          </Flex>
+        </Grid>
+      </Bordered>
+    </Box>
   )
 }
 

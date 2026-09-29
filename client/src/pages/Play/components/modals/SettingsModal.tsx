@@ -1,9 +1,17 @@
-import { FormModal, defineForm } from '@lifeforge/ui'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
+
+import { CheckboxField, FormModal, createDefaultValues } from '@lifeforge/ui'
 
 interface SettingsModalData {
   autoCheckMode: boolean
   setAutoCheckMode: (value: boolean) => void
 }
+
+const schema = z.object({
+  autoCheckMode: z.boolean()
+})
 
 function SettingsModal({
   onClose,
@@ -12,33 +20,36 @@ function SettingsModal({
   onClose: () => void
   data: SettingsModalData
 }) {
-  const { formProps } = defineForm<{
-    autoCheckMode: boolean
-  }>({
-    icon: 'tabler:settings',
-    title: 'settings',
-    onClose,
-    namespace: 'apps.sudoku',
-    submitButton: 'update'
-  })
-    .typesMap({
-      autoCheckMode: 'checkbox'
-    })
-    .setupFields({
-      autoCheckMode: {
-        label: 'autoCheckMode',
-        icon: 'tabler:check'
-      }
-    })
-    .initialData({
+  const form = useForm({
+    defaultValues: {
+      ...createDefaultValues(schema),
       autoCheckMode
-    })
-    .onSubmit(async formData => {
-      setAutoCheckMode(formData.autoCheckMode)
-    })
-    .build()
+    },
+    resolver: zodResolver(schema)
+  })
 
-  return <FormModal {...formProps} />
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        template: 'update',
+        handler: data => setAutoCheckMode(data.autoCheckMode)
+      }}
+      uiConfig={{
+        icon: 'tabler:settings',
+        title: 'settings',
+        namespace: 'apps.sudoku',
+        onClose
+      }}
+    >
+      <CheckboxField
+        control={form.control}
+        icon="tabler:check"
+        label="autoCheckMode"
+        name="autoCheckMode"
+      />
+    </FormModal>
+  )
 }
 
 export default SettingsModal

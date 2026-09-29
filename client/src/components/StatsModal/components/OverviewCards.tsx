@@ -1,5 +1,14 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Icon } from '@lifeforge/ui'
+import {
+  Box,
+  Card,
+  Flex,
+  Grid,
+  Icon,
+  Text,
+  colorWithOpacity,
+  surface
+} from '@lifeforge/ui'
 
 // Helper to parse play time into hours/minutes/seconds
 function parsePlayTime(seconds: number): {
@@ -34,63 +43,114 @@ function OverviewCards({
   const { t } = useModuleTranslation()
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+    <Grid gap="md" templateCols={{ base: 1, sm: 2, md: 3 }}>
       {/* Total Boards */}
-      <div className="component-bg-lighter shadow-custom flex flex-col gap-2 rounded-lg p-3 pb-6 sm:p-6">
-        <div className="flex w-full flex-row items-center gap-2 sm:flex-col sm:items-start">
-          <div className="bg-bg-50 dark:bg-bg-700/50 shadow-custom flex rounded-lg p-2 sm:p-4">
+      <Card
+        bg={surface.light}
+        gap="sm"
+        p={{ base: 'sm', sm: 'lg' }}
+        pb="lg"
+        r="lg"
+      >
+        <Flex
+          align={{ base: 'center', sm: 'start' }}
+          direction={{ base: 'row', sm: 'column' }}
+          gap="sm"
+          width="100%"
+        >
+          <Box
+            shadow
+            bg={{ base: 'bg-50', dark: colorWithOpacity('bg-700', '50%') }}
+            p={{ base: 'sm', sm: 'md' }}
+            r="lg"
+          >
             <Icon
-              className="text-2xl text-blue-500 sm:text-3xl"
+              color="blue-500"
               icon="tabler:layout-grid"
+              size={{ base: '1.5rem', sm: '1.875rem' }}
             />
-          </div>
-          <div className="text-bg-500 text-lg whitespace-nowrap">
+          </Box>
+          <Text color="muted" size="lg" whiteSpace="nowrap">
             {t('stats.totalBoards')}
-          </div>
-        </div>
-        <div className="mt-2 text-4xl font-semibold whitespace-nowrap">
+          </Text>
+        </Flex>
+        <Text mt="sm" size="4xl" weight="semibold" whiteSpace="nowrap">
           {totalBoards}
-        </div>
-      </div>
+        </Text>
+      </Card>
 
       {/* Streak Counter */}
-      <div className="component-bg-lighter shadow-custom flex flex-col gap-2 rounded-lg p-3 pb-6 sm:p-6">
-        <div className="flex w-full flex-row items-center gap-2 sm:flex-col sm:items-start">
-          <div className="bg-bg-50 dark:bg-bg-700/50 shadow-custom flex rounded-lg p-2 sm:p-4">
+      <Card
+        bg={surface.light}
+        gap="sm"
+        p={{ base: 'sm', sm: 'lg' }}
+        pb="lg"
+        r="lg"
+      >
+        <Flex
+          align={{ base: 'center', sm: 'start' }}
+          direction={{ base: 'row', sm: 'column' }}
+          gap="sm"
+          width="100%"
+        >
+          <Box
+            shadow
+            bg={{ base: 'bg-50', dark: colorWithOpacity('bg-700', '50%') }}
+            p={{ base: 'sm', sm: 'md' }}
+            r="lg"
+          >
             <Icon
-              className="text-2xl text-orange-500 sm:text-3xl"
+              color="orange-500"
               icon="tabler:flame"
+              size={{ base: '1.5rem', sm: '1.875rem' }}
             />
-          </div>
-          <div className="text-bg-500 text-lg whitespace-nowrap">
+          </Box>
+          <Text color="muted" size="lg" whiteSpace="nowrap">
             {t('stats.streak')}
-          </div>
-        </div>
-        <div className="mt-2 text-4xl font-semibold whitespace-nowrap">
+          </Text>
+        </Flex>
+        <Text mt="sm" size="4xl" weight="semibold" whiteSpace="nowrap">
           {currentStreak}
-          <span className="text-bg-500 pl-1 text-xl font-normal">
+          <Text color="muted" pl="xs" size="xl" weight="normal">
             {t('stats.days')}
-          </span>
-        </div>
-        <div className="text-bg-500">
+          </Text>
+        </Text>
+        <Text color="muted">
           {t('stats.bestStreak')}: {longestStreak} {t('stats.days')}
-        </div>
-      </div>
+        </Text>
+      </Card>
 
       {/* Total Play Time */}
-      <div className="component-bg-lighter shadow-custom flex flex-col gap-2 rounded-lg p-3 pb-6 sm:p-6">
-        <div className="flex w-full flex-row items-center gap-2 sm:flex-col sm:items-start">
-          <div className="bg-bg-50 dark:bg-bg-700/50 shadow-custom flex rounded-lg p-2 sm:p-4">
+      <Card
+        bg={surface.light}
+        gap="sm"
+        p={{ base: 'sm', sm: 'lg' }}
+        pb="lg"
+        r="lg"
+      >
+        <Flex
+          align={{ base: 'center', sm: 'start' }}
+          direction={{ base: 'row', sm: 'column' }}
+          gap="sm"
+          width="100%"
+        >
+          <Box
+            shadow
+            bg={{ base: 'bg-50', dark: colorWithOpacity('bg-700', '50%') }}
+            p={{ base: 'sm', sm: 'md' }}
+            r="lg"
+          >
             <Icon
-              className="text-2xl text-purple-500 sm:text-3xl"
+              color="purple-500"
               icon="tabler:clock-play"
+              size={{ base: '1.5rem', sm: '1.875rem' }}
             />
-          </div>
-          <div className="text-bg-500 text-lg whitespace-nowrap">
+          </Box>
+          <Text color="muted" size="lg" whiteSpace="nowrap">
             {t('stats.totalTime')}
-          </div>
-        </div>
-        <div className="mt-2 text-4xl font-semibold whitespace-nowrap">
+          </Text>
+        </Flex>
+        <Text mt="sm" size="4xl" weight="semibold" whiteSpace="nowrap">
           {(() => {
             const time = parsePlayTime(totalPlayTime)
 
@@ -98,41 +158,41 @@ function OverviewCards({
               return (
                 <>
                   {time.hours}
-                  <span className="text-bg-500 pl-1 text-xl font-normal">
+                  <Text color="muted" pl="xs" size="xl" weight="normal">
                     {t('stats.hours')}
-                  </span>{' '}
+                  </Text>{' '}
                   {time.minutes}
-                  <span className="text-bg-500 pl-1 text-xl font-normal">
+                  <Text color="muted" pl="xs" size="xl" weight="normal">
                     {t('stats.minutes')}
-                  </span>
+                  </Text>
                 </>
               )
             } else if (time.minutes > 0) {
               return (
                 <>
                   {time.minutes}
-                  <span className="text-bg-500 pl-1 text-xl font-normal">
+                  <Text color="muted" pl="xs" size="xl" weight="normal">
                     {t('stats.minutes')}
-                  </span>
+                  </Text>
                 </>
               )
             } else {
               return (
                 <>
                   {time.seconds}
-                  <span className="text-bg-500 pl-1 text-xl font-normal">
+                  <Text color="muted" pl="xs" size="xl" weight="normal">
                     {t('stats.seconds')}
-                  </span>
+                  </Text>
                 </>
               )
             }
           })()}
-        </div>
-        <div className="text-bg-500">
+        </Text>
+        <Text color="muted">
           {daysPlayed} {t('stats.daysPlayed')}
-        </div>
-      </div>
-    </div>
+        </Text>
+      </Card>
+    </Grid>
   )
 }
 

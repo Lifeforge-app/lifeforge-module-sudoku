@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { ModalHeader, WithQuery } from '@lifeforge/ui'
+import { Box, ModalHeader, Stack, WithQuery } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
@@ -14,7 +14,7 @@ function StatsModal({ onClose }: { onClose: () => void }) {
   const statsQuery = useQuery(forgeAPI.sessions.stats.queryOptions())
 
   return (
-    <div className="min-w-[70vw]">
+    <Box minWidth="70vw">
       <ModalHeader
         icon="tabler:chart-bar"
         title="stats.title"
@@ -22,7 +22,7 @@ function StatsModal({ onClose }: { onClose: () => void }) {
       />
       <WithQuery query={statsQuery}>
         {data => (
-          <div className="space-y-6">
+          <Stack gap="lg">
             <OverviewCards
               currentStreak={data.streak.current}
               daysPlayed={data.overall.daysPlayed}
@@ -34,10 +34,10 @@ function StatsModal({ onClose }: { onClose: () => void }) {
             <BestTimes stats={data.byDifficulty} />
             <TimeDistribution stats={data.byDifficulty} />
             <DetailedStats stats={data.byDifficulty} />
-          </div>
+          </Stack>
         )}
       </WithQuery>
-    </div>
+    </Box>
   )
 }
 

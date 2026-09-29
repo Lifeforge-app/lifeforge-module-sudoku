@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { InferOutput } from '@lifeforge/api'
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
+  Box,
   Button,
   ContextMenu,
   ContextMenuItem,
@@ -10,6 +11,7 @@ import {
   FAB,
   ModuleHeader,
   Scrollbar,
+  Stack,
   TAILWIND_PALETTE,
   WithQuery,
   useModalStore
@@ -61,7 +63,7 @@ function Sudoku() {
         trailing={
           <>
             <Button
-              className="hidden md:flex"
+              display={{ base: 'none', md: 'flex' }}
               icon="tabler:plus"
               tProps={{
                 item: t('items.session')
@@ -84,14 +86,16 @@ function Sudoku() {
       <WithQuery query={sessionsQuery}>
         {sessions =>
           sessions.length ? (
-            <Scrollbar className="mt-6">
-              <ul className="mb-8 space-y-3">
+          <Box asChild mt="lg">
+            <Scrollbar>
+              <Stack as="ul" mb="xl">
                 {sessions.map(session => (
                   <SessionItem key={session.id} session={session} />
                 ))}
-              </ul>
+              </Stack>
               <FAB visibilityBreakpoint="md" onClick={handleCreateSession} />
             </Scrollbar>
+          </Box>
           ) : (
             <EmptyStateScreen
               icon="tabler:puzzle-off"

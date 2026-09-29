@@ -6,7 +6,16 @@ import { useNavigate, useParams } from 'react-router'
 import { useReactToPrint } from 'react-to-print'
 
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Button, GoBackButton, WithQuery } from '@lifeforge/ui'
+import {
+  Box,
+  Button,
+  Flex,
+  GoBackButton,
+  Grid,
+  PrintArea,
+  Text,
+  WithQuery
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
@@ -48,25 +57,25 @@ function Print() {
   const createdDate = sessionQuery.data?.session.created
 
   return (
-    <div className="flex flex-1 flex-col">
+    <Flex direction="column" flex="1">
       <GoBackButton onClick={() => navigate('/sudoku')} />
 
       <WithQuery query={sessionQuery}>
         {() => (
           <>
             {/* Print Controls */}
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-medium">
+            <Flex align="center" justify="between" mb="lg">
+              <Box>
+                <Text as="h1" size="2xl" weight="medium">
                   {t('headers.printPreview')}
-                </h1>
-                <p className="text-bg-500 mt-1">
+                </Text>
+                <Text as="p" color="muted" mt="xs">
                   {t('difficulties.' + difficulty)} • {boards.length}{' '}
                   {boards.length === 1 ? 'board' : 'boards'}
                   {createdDate &&
                     ` • ${dayjs(createdDate).format('DD MMM YYYY')}`}
-                </p>
-              </div>
+                </Text>
+              </Box>
               <Button
                 icon="tabler:printer"
                 loading={fontQuery.isLoading}
@@ -75,30 +84,44 @@ function Print() {
               >
                 {t('buttons.print')}
               </Button>
-            </div>
+            </Flex>
 
-            {/* Print Content */}
-            <div
-              ref={printRef}
-              className={`grid gap-4 ${
-                boards.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-              }`}
-              style={{ fontFamily: 'Rubik, sans-serif' }}
-            >
-              {boards.map((board, index) => (
-                <div key={index} className="break-inside-avoid">
-                  <Board
-                    boardCount={boards.length}
-                    data={board}
-                    showSolution={false}
-                  />
-                </div>
-              ))}
-            </div>
+            <Box overflow="auto" width="100%">
+              <Box
+                minHeight={{ base: '277mm', lg: 'auto', print: 'auto' }}
+                width={{ base: '190mm', lg: '100%' }}
+              >
+                <PrintArea contentRef={printRef}>
+                  <Grid
+                    gap={{ base: 'md', print: 'none' }}
+                    style={{
+                      fontFamily: 'Rubik, sans-serif',
+                      marginLeft: 'auto',
+                      marginRight: 'auto'
+                    }}
+                    templateCols={boards.length === 1 ? 1 : 2}
+                    width={{
+                      base: '100%',
+                      print: boards.length > 4 ? '97%' : '100%'
+                    }}
+                  >
+                    {boards.map((board, index) => (
+                      <Box key={index} style={{ breakInside: 'avoid' }}>
+                        <Board
+                          boardCount={boards.length}
+                          data={board}
+                          showSolution={false}
+                        />
+                      </Box>
+                    ))}
+                  </Grid>
+                </PrintArea>
+              </Box>
+            </Box>
           </>
         )}
       </WithQuery>
-    </div>
+    </Flex>
   )
 }
 

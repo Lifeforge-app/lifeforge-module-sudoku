@@ -1,17 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import { cloneElement, useState } from 'react'
 import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
 
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
+  Box,
   EmptyStateScreen,
+  Flex,
   Listbox,
   ListboxOption,
-  ReactTooltip,
+  Stack,
+  Text,
+  Tooltip,
   Widget,
   WithQuery,
   anyColorToHex,
+  colorWithOpacity,
+  surface,
   usePersonalization
 } from '@lifeforge/ui'
 
@@ -34,8 +39,9 @@ function ActivityCalendar() {
 
   return (
     <Widget
-      className="component-bg-lighter"
+      bg={surface.light}
       icon="tabler:activity"
+      namespace={false}
       title={t('stats.activityCalendar')}
     >
       <WithQuery query={dataQuery}>
@@ -43,7 +49,8 @@ function ActivityCalendar() {
           activities.length > 0 ? (
             <>
               <Listbox
-                className="dark:bg-bg-800 md:hidden"
+                bg={{ ...surface.defaultInteractive, dark: 'bg-800' }}
+                display={{ base: 'flex', md: 'none' }}
                 value={year}
                 onChange={setYear}
               >
@@ -57,8 +64,8 @@ function ActivityCalendar() {
                     />
                   ))}
               </Listbox>
-              <div className="mt-4 flex w-full gap-8">
-                <div className="h-60 w-full min-w-0">
+              <Flex gap="2xl" mt="md" width="100%">
+                <Box height="15rem" minWidth="0" width="100%">
                   <ReactActivityCalendar
                     showWeekdayLabels
                     blockMargin={5}
@@ -84,28 +91,57 @@ function ActivityCalendar() {
                       ]
                     }}
                   />
-                </div>
-                <div className="hidden space-y-2 md:block">
+                </Box>
+                <Stack
+                  display={{ base: 'none', md: 'flex' }}
+                  gap="sm"
+                  maxWidth="max-content"
+                >
                   {Array(new Date().getFullYear() - firstYear + 1)
                     .fill(0)
-                    .map((_, index) => (
-                      <button
-                        key={index}
-                        className={clsx(
-                          'flex items-start gap-2 rounded-lg p-4 px-8 font-medium sm:px-12',
-                          year === firstYear + index
-                            ? 'bg-bg-200 text-bg-800 dark:bg-bg-700/50 dark:text-bg-50 font-semibold'
-                            : 'text-bg-500 hover:bg-bg-100 dark:hover:bg-bg-700/50'
-                        )}
-                        onClick={() => {
-                          setYear(firstYear + index)
-                        }}
-                      >
-                        <span>{firstYear + index}</span>
-                      </button>
-                    ))}
-                </div>
-              </div>
+                    .map((_, index) => {
+                      const isActive = year === firstYear + index
+
+                      return (
+                        <Flex
+                          key={index}
+                          align="start"
+                          as="button"
+                          bg={
+                            isActive
+                              ? {
+                                  base: 'bg-200',
+                                  dark: colorWithOpacity('bg-700', '50%')
+                                }
+                              : {
+                                  hover: 'bg-100',
+                                  darkHover: colorWithOpacity('bg-700', '50%')
+                                }
+                          }
+                          gap="sm"
+                          p="md"
+                          px={{ base: '2xl', sm: '3xl' }}
+                          r="lg"
+                          type="button"
+                          onClick={() => {
+                            setYear(firstYear + index)
+                          }}
+                        >
+                          <Text
+                            color={
+                              isActive
+                                ? { base: 'bg-800', dark: 'bg-50' }
+                                : 'muted'
+                            }
+                            weight={isActive ? 'semibold' : 'medium'}
+                          >
+                            {firstYear + index}
+                          </Text>
+                        </Flex>
+                      )
+                    })}
+                </Stack>
+              </Flex>
             </>
           ) : (
             <EmptyStateScreen
@@ -117,7 +153,7 @@ function ActivityCalendar() {
           )
         }
       </WithQuery>
-      <ReactTooltip id="sudoku-activity-tooltip" style={{ zIndex: 9999 }} />
+      <Tooltip id="sudoku-activity-tooltip" />
     </Widget>
   )
 }

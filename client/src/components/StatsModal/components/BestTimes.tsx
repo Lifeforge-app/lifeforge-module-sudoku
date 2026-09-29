@@ -1,5 +1,13 @@
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Widget } from '@lifeforge/ui'
+import {
+  Box,
+  Flex,
+  Grid,
+  Text,
+  Widget,
+  colorWithOpacity,
+  surface
+} from '@lifeforge/ui'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
 import { formatTime } from '@/utils/time'
@@ -20,38 +28,56 @@ function BestTimes({ stats }: BestTimesProps) {
 
   return (
     <Widget
-      className="component-bg-lighter"
+      bg={surface.light}
       icon="tabler:trophy"
+      namespace={false}
       title={t('stats.bestTimes')}
     >
-      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+      <Grid gap="sm" templateCols={{ base: 1, md: 2, lg: 3 }}>
         {statsWithBestTime.map(stat => (
-          <div
+          <Flex
             key={stat.difficulty}
-            className="bg-bg-200/50 dark:bg-bg-700/50 flex items-center justify-between rounded-lg p-3"
+            align="center"
+            bg={{
+              base: colorWithOpacity('bg-200', '50%'),
+              dark: colorWithOpacity('bg-700', '50%')
+            }}
+            justify="between"
+            p="sm"
+            r="lg"
           >
-            <div className="flex items-center gap-2">
-              <div
-                className="size-3 rounded-full"
-                style={{
-                  backgroundColor: DIFFICULTY_COLORS[stat.difficulty]
-                }}
+            <Flex align="center" gap="sm">
+              <Box
+                height="0.75rem"
+                r="full"
+                style={{ backgroundColor: DIFFICULTY_COLORS[stat.difficulty] }}
+                width="0.75rem"
               />
-              <span className="text-bg-800 dark:text-bg-100 font-medium capitalize">
+              <Text
+                color={{ base: 'bg-800', dark: 'bg-100' }}
+                transform="capitalize"
+                weight="medium"
+              >
                 {t(`difficulties.${stat.difficulty}`)}
-              </span>
-            </div>
-            <div className="flex items-center gap-1 font-mono text-lg font-semibold">
+              </Text>
+            </Flex>
+            <Text
+              size="lg"
+              style={{ fontFamily: 'monospace' }}
+              weight="semibold"
+            >
               {formatTime(stat.bestTime!)}
-            </div>
-          </div>
+            </Text>
+          </Flex>
         ))}
         {statsWithBestTime.length === 0 && (
-          <div className="text-bg-500 col-span-full py-4 text-center text-sm">
-            {t('stats.noBestTimes')}
-          </div>
+          <Box py="md" style={{ gridColumn: '1 / -1' }}>
+            <Text align="center" color="muted" display="block" size="sm">
+              {t('stats.noBestTimes')}
+            </Text>
+          </Box>
         )}
-      </div>
+      </Grid>
     </Widget>
   )
 }

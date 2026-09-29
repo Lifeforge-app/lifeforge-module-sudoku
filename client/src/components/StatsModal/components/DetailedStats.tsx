@@ -1,5 +1,17 @@
+import { Fragment } from 'react'
+
 import { useModuleTranslation } from '@lifeforge/localization'
-import { Widget } from '@lifeforge/ui'
+import {
+  Bordered,
+  Box,
+  Flex,
+  Grid,
+  Stack,
+  Text,
+  Widget,
+  colorWithOpacity,
+  surface
+} from '@lifeforge/ui'
 
 import { DIFFICULTY_COLORS } from '@/constants/constants'
 import { formatTime } from '@/utils/time'
@@ -20,102 +32,232 @@ function DetailedStats({ stats }: DetailedStatsProps) {
 
   return (
     <Widget
-      className="component-bg-lighter"
+      bg={surface.light}
       icon="tabler:list-details"
+      namespace={false}
       title={t('stats.byDifficulty')}
     >
       {/* Mobile: Cards */}
-      <div className="flex flex-col gap-3 md:hidden">
+      <Flex direction="column" display={{ base: 'flex', md: 'none' }} gap="sm">
         {stats.map(stat => (
-          <div
+          <Box
             key={stat.difficulty}
-            className="bg-bg-200/50 dark:bg-bg-700/50 rounded-lg p-3"
+            bg={{
+              base: colorWithOpacity('bg-200', '50%'),
+              dark: colorWithOpacity('bg-700', '50%')
+            }}
+            p="sm"
+            r="lg"
           >
-            <div className="mb-2 flex items-center gap-2">
-              <div
-                className="size-3 rounded-full"
-                style={{
-                  backgroundColor: DIFFICULTY_COLORS[stat.difficulty]
-                }}
+            <Flex align="center" gap="sm" mb="sm">
+              <Box
+                height="0.75rem"
+                r="full"
+                style={{ backgroundColor: DIFFICULTY_COLORS[stat.difficulty] }}
+                width="0.75rem"
               />
-              <span className="text-bg-800 dark:text-bg-100 font-medium capitalize">
-                {t(`difficulties.${stat.difficulty}`)}
-              </span>
-            </div>
-            <div className="space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-bg-500">{t('stats.played')}</span>
-                <span className="text-bg-800 dark:text-bg-100 font-semibold">
-                  {stat.totalBoards}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-bg-500">{t('stats.avgTime')}</span>
-                <span className="text-bg-600 dark:text-bg-400 font-mono">
-                  {stat.avgTime ? formatTime(stat.avgTime) : '-'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-bg-500">{t('stats.bestTime')}</span>
-                <span className="font-mono text-yellow-500">
-                  {stat.bestTime ? formatTime(stat.bestTime) : '-'}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop: Table */}
-      <div className="hidden overflow-x-auto md:block">
-        <table className="w-full">
-          <thead>
-            <tr className="text-bg-500 border-bg-200 dark:border-bg-700 border-b-2! text-left">
-              <th className="px-2 py-4 font-medium">{t('stats.difficulty')}</th>
-              <th className="py-4 text-center font-medium">
-                {t('stats.played')}
-              </th>
-              <th className="pb-2 text-center font-medium">
-                {t('stats.avgTime')}
-              </th>
-              <th className="pb-2 text-center font-medium">
-                {t('stats.bestTime')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.map(stat => (
-              <tr
-                key={stat.difficulty}
-                className="border-bg-200 dark:border-bg-700/50 border-b last:border-0"
+              <Text
+                color={{ base: 'bg-800', dark: 'bg-100' }}
+                transform="capitalize"
+                weight="medium"
               >
-                <td className="px-2 py-4">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="size-3 rounded-full"
+                {t(`difficulties.${stat.difficulty}`)}
+              </Text>
+            </Flex>
+            <Stack gap="xs">
+              <Flex justify="between">
+                <Text color="muted" size="sm">
+                  {t('stats.played')}
+                </Text>
+                <Text
+                  color={{ base: 'bg-800', dark: 'bg-100' }}
+                  size="sm"
+                  weight="semibold"
+                >
+                  {stat.totalBoards}
+                </Text>
+              </Flex>
+              <Flex justify="between">
+                <Text color="muted" size="sm">
+                  {t('stats.avgTime')}
+                </Text>
+                <Text
+                  color={{ base: 'bg-600', dark: 'bg-400' }}
+                  size="sm"
+                  style={{ fontFamily: 'monospace' }}
+                >
+                  {stat.avgTime ? formatTime(stat.avgTime) : '-'}
+                </Text>
+              </Flex>
+              <Flex justify="between">
+                <Text color="muted" size="sm">
+                  {t('stats.bestTime')}
+                </Text>
+                <Text
+                  color="yellow-500"
+                  size="sm"
+                  style={{ fontFamily: 'monospace' }}
+                >
+                  {stat.bestTime ? formatTime(stat.bestTime) : '-'}
+                </Text>
+              </Flex>
+            </Stack>
+          </Box>
+        ))}
+      </Flex>
+
+      {/* Desktop: Grid */}
+      <Box display={{ base: 'none', md: 'block' }} overflowX="auto">
+        <Grid templateCols={4} width="100%">
+          <Bordered
+            asChild
+            borderColor={{ base: 'bg-200', dark: 'bg-700' }}
+            borderSide="bottom"
+            borderWidth="2px"
+          >
+            <Text color="muted" display="block" px="sm" py="md" weight="medium">
+              {t('stats.difficulty')}
+            </Text>
+          </Bordered>
+          <Bordered
+            asChild
+            borderColor={{ base: 'bg-200', dark: 'bg-700' }}
+            borderSide="bottom"
+            borderWidth="2px"
+          >
+            <Text
+              align="center"
+              color="muted"
+              display="block"
+              py="md"
+              weight="medium"
+            >
+              {t('stats.played')}
+            </Text>
+          </Bordered>
+          <Bordered
+            asChild
+            borderColor={{ base: 'bg-200', dark: 'bg-700' }}
+            borderSide="bottom"
+            borderWidth="2px"
+          >
+            <Text
+              align="center"
+              color="muted"
+              display="block"
+              py="md"
+              weight="medium"
+            >
+              {t('stats.avgTime')}
+            </Text>
+          </Bordered>
+          <Bordered
+            asChild
+            borderColor={{ base: 'bg-200', dark: 'bg-700' }}
+            borderSide="bottom"
+            borderWidth="2px"
+          >
+            <Text
+              align="center"
+              color="muted"
+              display="block"
+              py="md"
+              weight="medium"
+            >
+              {t('stats.bestTime')}
+            </Text>
+          </Bordered>
+
+          {stats.map((stat, index) => {
+            const isLast = index === stats.length - 1
+
+            return (
+              <Fragment key={stat.difficulty}>
+                <Bordered
+                  asChild
+                  borderColor={{
+                    base: 'bg-200',
+                    dark: colorWithOpacity('bg-700', '50%')
+                  }}
+                  borderSide={isLast ? 'none' : 'bottom'}
+                >
+                  <Flex align="center" gap="sm" px="sm" py="md">
+                    <Box
+                      height="0.75rem"
+                      r="full"
                       style={{
                         backgroundColor: DIFFICULTY_COLORS[stat.difficulty]
                       }}
+                      width="0.75rem"
                     />
-                    <span className="text-bg-800 dark:text-bg-100 font-medium capitalize">
+                    <Text
+                      color={{ base: 'bg-800', dark: 'bg-100' }}
+                      transform="capitalize"
+                      weight="medium"
+                    >
                       {t(`difficulties.${stat.difficulty}`)}
-                    </span>
-                  </div>
-                </td>
-                <td className="text-bg-800 dark:text-bg-100 py-4 text-center font-semibold">
-                  {stat.totalBoards}
-                </td>
-                <td className="text-bg-600 dark:text-bg-400 py-4 text-center font-mono">
-                  {stat.avgTime ? formatTime(stat.avgTime) : '-'}
-                </td>
-                <td className="py-4 text-center font-mono text-yellow-500">
-                  {stat.bestTime ? formatTime(stat.bestTime) : '-'}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                    </Text>
+                  </Flex>
+                </Bordered>
+                <Bordered
+                  asChild
+                  borderColor={{
+                    base: 'bg-200',
+                    dark: colorWithOpacity('bg-700', '50%')
+                  }}
+                  borderSide={isLast ? 'none' : 'bottom'}
+                >
+                  <Text
+                    align="center"
+                    color={{ base: 'bg-800', dark: 'bg-100' }}
+                    display="block"
+                    py="md"
+                    weight="semibold"
+                  >
+                    {stat.totalBoards}
+                  </Text>
+                </Bordered>
+                <Bordered
+                  asChild
+                  borderColor={{
+                    base: 'bg-200',
+                    dark: colorWithOpacity('bg-700', '50%')
+                  }}
+                  borderSide={isLast ? 'none' : 'bottom'}
+                >
+                  <Text
+                    align="center"
+                    color={{ base: 'bg-600', dark: 'bg-400' }}
+                    display="block"
+                    py="md"
+                    style={{ fontFamily: 'monospace' }}
+                  >
+                    {stat.avgTime ? formatTime(stat.avgTime) : '-'}
+                  </Text>
+                </Bordered>
+                <Bordered
+                  asChild
+                  borderColor={{
+                    base: 'bg-200',
+                    dark: colorWithOpacity('bg-700', '50%')
+                  }}
+                  borderSide={isLast ? 'none' : 'bottom'}
+                >
+                  <Text
+                    align="center"
+                    color="yellow-500"
+                    display="block"
+                    py="md"
+                    style={{ fontFamily: 'monospace' }}
+                  >
+                    {stat.bestTime ? formatTime(stat.bestTime) : '-'}
+                  </Text>
+                </Bordered>
+              </Fragment>
+            )
+          })}
+        </Grid>
+      </Box>
     </Widget>
   )
 }

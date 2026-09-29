@@ -1,29 +1,22 @@
-import { useMemo } from 'react'
-
-import { useModuleTranslation } from '@lifeforge/localization'
-import { Card, ViewModeSelector } from '@lifeforge/ui'
+import { Card, createViewMode, surface } from '@lifeforge/ui'
 
 import { useInputMode } from '../../../providers'
 import NumberGrid from '../components/NumberGrid'
 
-function RightToolbar() {
-  const { t } = useModuleTranslation()
+const CandidateMode = createViewMode({
+  modes: [
+    { value: 'normal', icon: 'tabler:pencil', text: 'buttons.normal' },
+    { value: 'candidate', icon: 'tabler:notes', text: 'buttons.candidate' }
+  ],
+  namespace: 'apps.sudoku',
+  persistInLocalStorage: false,
+  useNuqs: false,
+  defaultValue: 'normal'
+})
 
+function RightToolbar() {
   const { isCandidate, setIsCandidate, isCandidateModeLockedRef } =
     useInputMode()
-
-  const modeOptions = useMemo(
-    () =>
-      [
-        { value: 'normal', icon: 'tabler:pencil', text: t('buttons.normal') },
-        {
-          value: 'candidate',
-          icon: 'tabler:notes',
-          text: t('buttons.candidate')
-        }
-      ] as const,
-    [t]
-  )
 
   const handleModeChange = (value: 'normal' | 'candidate') => {
     if (value === 'candidate') {
@@ -36,13 +29,13 @@ function RightToolbar() {
   }
 
   return (
-    <Card className="flex flex-col gap-3">
-      <ViewModeSelector
-        className="component-bg-lighter bg-bg-100"
+    <Card direction="column" gap="sm">
+      <CandidateMode.Root
         currentMode={isCandidate ? 'candidate' : 'normal'}
-        options={modeOptions}
         onModeChange={handleModeChange}
-      />
+      >
+        <CandidateMode.Selector bg={surface.light} />
+      </CandidateMode.Root>
 
       <NumberGrid showDeleteButton />
     </Card>

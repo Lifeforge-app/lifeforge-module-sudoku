@@ -1,5 +1,13 @@
-import clsx from 'clsx'
 import { memo } from 'react'
+
+import {
+  Box,
+  Flex,
+  Grid,
+  Text,
+  Transition,
+  colorWithOpacity
+} from '@lifeforge/ui'
 
 import {
   type CellContentProps,
@@ -22,31 +30,47 @@ function CellContent({
 
     const hasError = hasViolation || isIncorrect
 
-    const getBackgroundClass = () => {
-      if (isSelected) return hasError ? 'bg-red-500' : 'bg-custom-500'
-      if (isHighlighted) return hasError ? 'bg-red-500/20' : 'bg-custom-500/20'
-
-      return ''
-    }
-
-    const getTextClass = () => {
-      if (isSelected) return isThemeDark ? 'text-white' : 'text-bg-900'
-      if (hasError) return 'text-red-600 dark:text-red-400'
-      if (isOriginal) return 'text-bg-800 dark:text-bg-100'
-
-      return 'text-custom-600 dark:text-custom-400'
-    }
-
     return (
-      <span
-        className={clsx(
-          'flex-center relative size-[85%] rounded-full font-medium transition-all sm:text-lg',
-          getBackgroundClass(),
-          getTextClass()
-        )}
-      >
-        {cellValue}
-      </span>
+      <Transition property="all">
+        <Text
+          asChild
+          color={
+            isSelected
+              ? isThemeDark
+                ? 'bg-50'
+                : 'bg-900'
+              : hasError
+                ? { base: 'red-600', dark: 'red-400' }
+                : isOriginal
+                  ? { base: 'bg-800', dark: 'bg-100' }
+                  : { base: 'custom-600', dark: 'custom-400' }
+          }
+          size={{ sm: 'lg' }}
+          weight="medium"
+        >
+          <Flex
+            centered
+            as="span"
+            bg={
+              isSelected
+                ? hasError
+                  ? 'red-500'
+                  : 'primary'
+                : isHighlighted
+                  ? hasError
+                    ? colorWithOpacity('red-500', '20%')
+                    : colorWithOpacity('primary', '20%')
+                  : undefined
+            }
+            height="85%"
+            position="relative"
+            r="full"
+            width="85%"
+          >
+            {cellValue}
+          </Flex>
+        </Text>
+      </Transition>
     )
   }
 
@@ -58,41 +82,65 @@ function CellContent({
       cellCandidates.has(Number(highlightedNumber))
 
     return (
-      <div
-        className={clsx(
-          'relative size-[85%] rounded-full p-0.5',
-          isSelected && 'bg-custom-500/20',
-          !isSelected && hasHighlightedCandidate && 'bg-custom-500/20'
-        )}
+      <Box
+        bg={
+          isSelected || hasHighlightedCandidate
+            ? colorWithOpacity('primary', '20%')
+            : undefined
+        }
+        height="85%"
+        position="relative"
+        r="full"
+        style={{ padding: '0.125rem' }}
+        width="85%"
       >
-        <div className="grid size-full grid-cols-3 grid-rows-3">
+        <Grid height="100%" templateCols={3} templateRows={3} width="100%">
           {NUMBERS.map(num => {
             const hasCandidate = cellCandidates.has(num)
 
             const isHighlighted = highlightedNumber === String(num)
 
             return (
-              <span
-                key={num}
-                className={clsx(
-                  'flex-center text-[8px] leading-none transition-all sm:text-xs',
-                  hasCandidate && isHighlighted && 'text-custom-500 font-bold',
-                  hasCandidate && !isHighlighted && 'text-text-secondary'
-                )}
-              >
-                {hasCandidate ? num : ''}
-              </span>
+              <Transition key={num} property="all">
+                <Text
+                  asChild
+                  color={
+                    hasCandidate
+                      ? isHighlighted
+                        ? 'primary'
+                        : 'muted'
+                      : undefined
+                  }
+                  leading="none"
+                  weight={hasCandidate && isHighlighted ? 'bold' : undefined}
+                >
+                  <Flex
+                    centered
+                    as="span"
+                    style={{ fontSize: 'clamp(0.5rem, 2vw, 0.75rem)' }}
+                  >
+                    {hasCandidate ? num : ''}
+                  </Flex>
+                </Text>
+              </Transition>
             )
           })}
-        </div>
-      </div>
+        </Grid>
+      </Box>
     )
   }
 
   // Empty selected cell
   if (isSelected) {
     return (
-      <span className="bg-custom-500/20 flex-center relative size-[85%] rounded-full" />
+      <Flex
+        centered
+        bg={colorWithOpacity('primary', '20%')}
+        height="85%"
+        position="relative"
+        r="full"
+        width="85%"
+      />
     )
   }
 

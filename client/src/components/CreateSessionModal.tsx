@@ -1,12 +1,22 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import z from 'zod'
 
 import { useModuleTranslation } from '@lifeforge/localization'
-import { FormModal, TAILWIND_PALETTE, defineForm } from '@lifeforge/ui'
+import {
+  FormModal,
+  ListboxField,
+  TAILWIND_PALETTE,
+  createDefaultValues
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
-const DIFFICULTIES = [
+type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'evil' | 'extreme'
+
+const DIFFICULTIES: { name: Difficulty; color: string }[] = [
   { name: 'easy', color: TAILWIND_PALETTE.green[500] },
   { name: 'medium', color: TAILWIND_PALETTE.yellow[500] },
   { name: 'hard', color: TAILWIND_PALETTE.orange[500] },
@@ -16,6 +26,11 @@ const DIFFICULTIES = [
 ]
 
 const BOARD_COUNTS = [1, 2, 4, 6]
+
+const schema = z.object({
+  difficulty: z.enum(['easy', 'medium', 'hard', 'expert', 'evil', 'extreme']),
+  boardCount: z.number()
+})
 
 function CreateSessionModal({ onClose }: { onClose: () => void }) {
   const { t } = useModuleTranslation()
@@ -31,59 +46,58 @@ function CreateSessionModal({ onClose }: { onClose: () => void }) {
     })
   )
 
-  const { formProps } = defineForm<{
-    difficulty: 'easy' | 'medium' | 'hard' | 'expert' | 'evil' | 'extreme'
-    boardCount: number
-  }>({
-    icon: 'tabler:plus',
-    title: 'session.create',
-    onClose,
-    namespace: 'apps.sudoku',
-    submitButton: 'create'
-  })
-    .typesMap({
-      difficulty: 'listbox',
-      boardCount: 'listbox'
-    })
-    .setupFields({
-      difficulty: {
-        required: true,
-        multiple: false,
-        label: t('inputs.difficulty'),
-        icon: 'tabler:category',
-        options: DIFFICULTIES.map(diff => ({
-          text: t(`difficulties.${diff.name}`),
-          value: diff.name as
-            | 'easy'
-            | 'medium'
-            | 'hard'
-            | 'expert'
-            | 'evil'
-            | 'extreme',
-          color: diff.color
-        }))
-      },
-      boardCount: {
-        required: true,
-        multiple: false,
-        label: t('inputs.boardCount'),
-        icon: 'tabler:grid-dots',
-        options: BOARD_COUNTS.map(count => ({
-          text: String(count),
-          value: count
-        }))
-      }
-    })
-    .initialData({
-      difficulty: 'evil',
+  const form = useForm({
+    defaultValues: {
+      ...createDefaultValues(schema),
+      difficulty: 'evil' as const,
       boardCount: 1
-    })
-    .onSubmit(async formData => {
-      await createMutation.mutateAsync(formData)
-    })
-    .build()
+    },
+    resolver: zodResolver(schema)
+  })
 
-  return <FormModal {...formProps} />
+  const difficultyOptions = DIFFICULTIES.map(diff => ({
+    text: t(`difficulties.${diff.name}`),
+    value: diff.name,
+    color: diff.color
+  }))
+
+  const boardCountOptions = BOARD_COUNTS.map(count => ({
+    text: String(count),
+    value: count
+  }))
+
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        template: 'create',
+        handler: createMutation.mutateAsync
+      }}
+      uiConfig={{
+        icon: 'tabler:plus',
+        title: 'session.create',
+        namespace: 'apps.sudoku',
+        onClose
+      }}
+    >
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:category"
+        label="difficulty"
+        name="difficulty"
+        options={difficultyOptions}
+      />
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:grid-dots"
+        label="boardCount"
+        name="boardCount"
+        options={boardCountOptions}
+      />
+    </FormModal>
+  )
 }
 
 export default CreateSessionModal
