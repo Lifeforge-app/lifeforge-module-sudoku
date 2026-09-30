@@ -26,7 +26,7 @@ function TimerDisplay() {
       )}
       <Flex centered gap="sm">
         <Icon color="muted" icon="tabler:clock" size="1.25rem" />
-        <Text color="muted" size="lg" style={{ fontFamily: 'monospace' }}>
+        <Text as="code" color="muted" size="lg">
           {formatTime(elapsedTime)}
         </Text>
       </Flex>

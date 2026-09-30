@@ -61,11 +61,7 @@ function BestTimes({ stats }: BestTimesProps) {
                 {t(`difficulties.${stat.difficulty}`)}
               </Text>
             </Flex>
-            <Text
-              size="lg"
-              style={{ fontFamily: 'monospace' }}
-              weight="semibold"
-            >
+            <Text as="code" size="lg" weight="semibold">
               {formatTime(stat.bestTime!)}
             </Text>
           </Flex>

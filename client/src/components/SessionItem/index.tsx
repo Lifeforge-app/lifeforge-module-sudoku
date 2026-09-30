@@ -123,11 +123,7 @@ function SessionItem({ session }: { session: Session }) {
               <Flex align="center" as="span" gap="xs">
                 <Icon color="muted" icon="tabler:clock" size="1.125rem" />
                 <Text color="muted">{t('session.avgTime')}:</Text>
-                <Text
-                  color="primary"
-                  style={{ fontFamily: 'monospace' }}
-                  weight="semibold"
-                >
+                <Text as="code" color="primary" weight="semibold">
                   {formatTime(
                     Math.round(session.totalDuration / session.boardCount)
                   )}

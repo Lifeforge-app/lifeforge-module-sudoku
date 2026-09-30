@@ -82,9 +82,9 @@ function DetailedStats({ stats }: DetailedStatsProps) {
                   {t('stats.avgTime')}
                 </Text>
                 <Text
+                  as="code"
                   color={{ base: 'bg-600', dark: 'bg-400' }}
                   size="sm"
-                  style={{ fontFamily: 'monospace' }}
                 >
                   {stat.avgTime ? formatTime(stat.avgTime) : '-'}
                 </Text>
@@ -93,11 +93,7 @@ function DetailedStats({ stats }: DetailedStatsProps) {
                 <Text color="muted" size="sm">
                   {t('stats.bestTime')}
                 </Text>
-                <Text
-                  color="yellow-500"
-                  size="sm"
-                  style={{ fontFamily: 'monospace' }}
-                >
+                <Text as="code" color="yellow-500" size="sm">
                   {stat.bestTime ? formatTime(stat.bestTime) : '-'}
                 </Text>
               </Flex>
@@ -227,10 +223,10 @@ function DetailedStats({ stats }: DetailedStatsProps) {
                 >
                   <Text
                     align="center"
+                    as="code"
                     color={{ base: 'bg-600', dark: 'bg-400' }}
                     display="block"
                     py="md"
-                    style={{ fontFamily: 'monospace' }}
                   >
                     {stat.avgTime ? formatTime(stat.avgTime) : '-'}
                   </Text>
@@ -245,10 +241,10 @@ function DetailedStats({ stats }: DetailedStatsProps) {
                 >
                   <Text
                     align="center"
+                    as="code"
                     color="yellow-500"
                     display="block"
                     py="md"
-                    style={{ fontFamily: 'monospace' }}
                   >
                     {stat.bestTime ? formatTime(stat.bestTime) : '-'}
                   </Text>
