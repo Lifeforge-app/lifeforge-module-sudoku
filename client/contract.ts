@@ -176,32 +176,30 @@ export const contract = {
             "session": {
               "type": "object",
               "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
                 "current_board_index": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 2147483647
                 },
                 "created": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "updated": {
-                  "type": "string"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "collectionId": {
-                  "type": "string"
-                },
-                "collectionName": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "date-time"
                 }
               },
               "required": [
+                "id",
                 "current_board_index",
                 "created",
-                "updated",
-                "id",
-                "collectionId",
-                "collectionName"
+                "updated"
               ],
               "additionalProperties": false
             },
@@ -210,41 +208,96 @@ export const contract = {
               "items": {
                 "type": "object",
                 "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
                   "difficulty": {
                     "type": "string"
                   },
                   "duration_elapsed": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": -2147483648,
+                    "maximum": 2147483647
                   },
-                  "board": {},
-                  "user_answers": {},
-                  "user_candidates": {},
+                  "board": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "mission": {
+                            "type": "string"
+                          },
+                          "solution": {
+                            "type": "string"
+                          },
+                          "win_rate": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "mission",
+                          "solution",
+                          "win_rate"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "user_answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "user_candidates": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
                   "session": {
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "index": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": -2147483648,
+                    "maximum": 2147483647
                   },
                   "is_completed": {
                     "type": "boolean"
                   },
                   "created": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                   },
                   "updated": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  },
-                  "collectionId": {
-                    "type": "string"
-                  },
-                  "collectionName": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                   }
                 },
                 "required": [
+                  "id",
                   "difficulty",
                   "duration_elapsed",
                   "board",
@@ -254,10 +307,7 @@ export const contract = {
                   "index",
                   "is_completed",
                   "created",
-                  "updated",
-                  "id",
-                  "collectionId",
-                  "collectionName"
+                  "updated"
                 ],
                 "additionalProperties": false
               }
@@ -268,8 +318,7 @@ export const contract = {
             "entries"
           ],
           "additionalProperties": false
-        },
-        "NOT_FOUND": true
+        }
       }
     },
     "getActive": {
@@ -290,32 +339,30 @@ export const contract = {
                 "session": {
                   "type": "object",
                   "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
                     "current_board_index": {
-                      "type": "number"
+                      "type": "integer",
+                      "minimum": -2147483648,
+                      "maximum": 2147483647
                     },
                     "created": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "date-time"
                     },
                     "updated": {
-                      "type": "string"
-                    },
-                    "id": {
-                      "type": "string"
-                    },
-                    "collectionId": {
-                      "type": "string"
-                    },
-                    "collectionName": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "date-time"
                     }
                   },
                   "required": [
+                    "id",
                     "current_board_index",
                     "created",
-                    "updated",
-                    "id",
-                    "collectionId",
-                    "collectionName"
+                    "updated"
                   ],
                   "additionalProperties": false
                 },
@@ -324,41 +371,96 @@ export const contract = {
                   "items": {
                     "type": "object",
                     "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
                       "difficulty": {
                         "type": "string"
                       },
                       "duration_elapsed": {
-                        "type": "number"
+                        "type": "integer",
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
                       },
-                      "board": {},
-                      "user_answers": {},
-                      "user_candidates": {},
+                      "board": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "mission": {
+                                "type": "string"
+                              },
+                              "solution": {
+                                "type": "string"
+                              },
+                              "win_rate": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "mission",
+                              "solution",
+                              "win_rate"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "user_answers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "user_candidates": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          }
+                        }
+                      },
                       "session": {
-                        "type": "string"
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
                       },
                       "index": {
-                        "type": "number"
+                        "type": "integer",
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
                       },
                       "is_completed": {
                         "type": "boolean"
                       },
                       "created": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                       },
                       "updated": {
-                        "type": "string"
-                      },
-                      "id": {
-                        "type": "string"
-                      },
-                      "collectionId": {
-                        "type": "string"
-                      },
-                      "collectionName": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                       }
                     },
                     "required": [
+                      "id",
                       "difficulty",
                       "duration_elapsed",
                       "board",
@@ -368,10 +470,7 @@ export const contract = {
                       "index",
                       "is_completed",
                       "created",
-                      "updated",
-                      "id",
-                      "collectionId",
-                      "collectionName"
+                      "updated"
                     ],
                     "additionalProperties": false
                   }
@@ -514,10 +613,12 @@ export const contract = {
                 "type": "number"
               },
               "created": {
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
               },
               "updated": {
-                "type": "string"
+                "type": "string",
+                "format": "date-time"
               }
             },
             "required": [
@@ -574,10 +675,6 @@ export const contract = {
             "success"
           ],
           "additionalProperties": false
-        },
-        "BAD_REQUEST": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "string"
         }
       }
     },
@@ -604,8 +701,7 @@ export const contract = {
         }
       },
       "output": {
-        "NO_CONTENT": true,
-        "NOT_FOUND": true
+        "NO_CONTENT": true
       }
     },
     "resetBoard": {
@@ -647,10 +743,6 @@ export const contract = {
             "success"
           ],
           "additionalProperties": false
-        },
-        "BAD_REQUEST": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "string"
         }
       }
     },

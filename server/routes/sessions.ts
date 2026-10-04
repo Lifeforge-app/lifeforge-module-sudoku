@@ -1,7 +1,24 @@
+import { asc, desc, eq } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-orm/zod'
 import z from 'zod'
 
 import forge from '../forge'
-import sudokuSchemas from '../schema'
+import { sudokuEntries, sudokuSessions } from '../schema.drizzle'
+
+const boardSchema = z.object({
+  id: z.number(),
+  mission: z.string(),
+  solution: z.string(),
+  win_rate: z.number()
+})
+
+const sessionDto = createSelectSchema(sudokuSessions)
+
+const entryDto = createSelectSchema(sudokuEntries).extend({
+  board: boardSchema.nullable(),
+  user_answers: z.array(z.string()),
+  user_candidates: z.array(z.array(z.number()))
+})
 
 const SessionWithInfoSchema = z.object({
   id: z.string(),
@@ -14,13 +31,13 @@ const SessionWithInfoSchema = z.object({
     correct: z.number()
   }),
   totalDuration: z.number(),
-  created: z.string(),
-  updated: z.string()
+  created: z.date(),
+  updated: z.date()
 })
 
 const SessionWithEntriesSchema = z.object({
-  session: sudokuSchemas.sessions,
-  entries: z.array(sudokuSchemas.entries)
+  session: sessionDto,
+  entries: z.array(entryDto)
 })
 
 const StatsResponseSchema = z.object({
@@ -78,41 +95,31 @@ export const list = forge
       OK: z.array(SessionWithInfoSchema)
     }
   })
-  .callback(async ({ pb, query: { difficulty }, response }) => {
-    const allEntries = await pb.getFullList
-      .collection('entries')
-      .expand({
-        session: 'sessions'
-      })
-      .sort(['session', 'index'])
-      .execute()
+  .callback(async ({ db, query: { difficulty }, response }) => {
+    const allEntries = await db.query.entries.findMany({
+      with: { session_info: true },
+      orderBy: (entries, { asc: ascOp }) => [
+        ascOp(entries.session),
+        ascOp(entries.index)
+      ]
+    })
 
     const entriesBySession = new Map<
       string,
       {
-        session: {
-          id: string
-          current_board_index: number
-          created: string
-          updated: string
-        }
+        session: NonNullable<(typeof allEntries)[number]['session_info']>
         entries: typeof allEntries
       }
     >()
 
     for (const entry of allEntries) {
-      const session = entry.expand?.session
+      const session = entry.session_info
 
       if (!session) continue
 
       if (!entriesBySession.has(session.id)) {
         entriesBySession.set(session.id, {
-          session: {
-            id: session.id,
-            current_board_index: session.current_board_index,
-            created: session.created,
-            updated: session.updated
-          },
+          session,
           entries: []
         })
       }
@@ -128,9 +135,9 @@ export const list = forge
         let correctCells = 0
 
         for (const entry of entries) {
-          const board = entry.board as { mission: string; solution: string }
+          const board = entry.board!
 
-          const userAnswers = (entry.user_answers as string[]) || []
+          const userAnswers = entry.user_answers || []
 
           for (let i = 0; i < 81; i++) {
             if (board.mission[i] === '0') {
@@ -158,7 +165,7 @@ export const list = forge
             correct: correctCells
           },
           totalDuration: entries.reduce(
-            (sum, entry) => sum + ((entry.duration_elapsed as number) || 0),
+            (sum, entry) => sum + (entry.duration_elapsed || 0),
             0
           ),
           created: session.created,
@@ -183,25 +190,21 @@ export const get = forge
     description: 'Get a specific Sudoku session',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), sudokuSessions)
       })
     },
-    existenceCheck: {
-      query: { id: 'sessions' }
-    },
     output: {
-      OK: SessionWithEntriesSchema,
-      NOT_FOUND: true
+      OK: SessionWithEntriesSchema
     }
   })
-  .callback(async ({ pb, query: { id }, response }) => {
-    const session = await pb.getOne.collection('sessions').id(id).execute()
+  .callback(async ({ db, query: { id }, response }) => {
+    const session = (await db.query.sessions.findFirst({ where: { id } }))!
 
-    const entries = await pb.getFullList
-      .collection('entries')
-      .filter([{ field: 'session', operator: '=', value: id }])
-      .sort(['index'])
-      .execute()
+    const entries = await db
+      .select()
+      .from(sudokuEntries)
+      .where(eq(sudokuEntries.session, id))
+      .orderBy(asc(sudokuEntries.index))
 
     return response.ok({
       session,
@@ -216,23 +219,22 @@ export const getActive = forge
       OK: SessionWithEntriesSchema.nullable()
     }
   })
-  .callback(async ({ pb, response }) => {
-    const sessions = await pb.getFullList
-      .collection('sessions')
-      .sort(['-updated'])
-      .execute()
+  .callback(async ({ db, response }) => {
+    const [session] = await db
+      .select()
+      .from(sudokuSessions)
+      .orderBy(desc(sudokuSessions.updated))
+      .limit(1)
 
-    if (sessions.length === 0) {
+    if (!session) {
       return response.ok(null)
     }
 
-    const session = sessions[0]
-
-    const entries = await pb.getFullList
-      .collection('entries')
-      .filter([{ field: 'session', operator: '=', value: session.id }])
-      .sort(['index'])
-      .execute()
+    const entries = await db
+      .select()
+      .from(sudokuEntries)
+      .where(eq(sudokuEntries.session, session.id))
+      .orderBy(asc(sudokuEntries.index))
 
     return response.ok({
       session,
@@ -270,7 +272,7 @@ export const create = forge
       })
     }
   })
-  .callback(async ({ pb, body: { difficulty, boardCount }, response }) => {
+  .callback(async ({ db, body: { difficulty, boardCount }, response }) => {
     const boards: {
       id: number
       mission: string
@@ -292,26 +294,21 @@ export const create = forge
       boards.push(data)
     }
 
-    const session = await pb.create
-      .collection('sessions')
-      .data({ current_board_index: 0 })
-      .execute()
+    const [session] = await db
+      .insert(sudokuSessions)
+      .values({ current_board_index: 0 })
+      .returning()
 
-    await Promise.all(
-      boards.map((board, index) =>
-        pb.create
-          .collection('entries')
-          .data({
-            session: session.id,
-            index,
-            difficulty,
-            board,
-            user_answers: Array(81).fill(''),
-            user_candidates: Array(81).fill([]),
-            duration_elapsed: 0
-          })
-          .execute()
-      )
+    await db.insert(sudokuEntries).values(
+      boards.map((board, index) => ({
+        session: session.id,
+        index,
+        difficulty,
+        board,
+        user_answers: Array(81).fill(''),
+        user_candidates: Array(81).fill([]),
+        duration_elapsed: 0
+      }))
     )
 
     return response.ok({ sessionId: session.id, boards })
@@ -346,7 +343,7 @@ export const save = forge
   })
   .callback(
     async ({
-      pb,
+      db,
       body: {
         sessionId,
         currentBoardIndex,
@@ -361,60 +358,37 @@ export const save = forge
       let session: { id: string }
 
       if (sessionId) {
-        session = await pb.update
-          .collection('sessions')
-          .id(sessionId)
-          .data({ current_board_index: currentBoardIndex })
-          .execute()
+        const [updated] = await db
+          .update(sudokuSessions)
+          .set({ current_board_index: currentBoardIndex, updated: new Date() })
+          .where(eq(sudokuSessions.id, sessionId))
+          .returning()
 
-        const existingEntries = await pb.getFullList
-          .collection('entries')
-          .filter([{ field: 'session', operator: '=', value: sessionId }])
-          .sort(['index'])
-          .execute()
+        session = updated
+
+        const existingEntries = await db
+          .select()
+          .from(sudokuEntries)
+          .where(eq(sudokuEntries.session, sessionId))
+          .orderBy(asc(sudokuEntries.index))
 
         await Promise.all(
           boards.map(async (board, index) => {
             const existingEntry = existingEntries.find(e => e.index === index)
 
             if (existingEntry) {
-              return pb.update
-                .collection('entries')
-                .id(existingEntry.id)
-                .data({
+              await db
+                .update(sudokuEntries)
+                .set({
                   user_answers: userInputs[index],
                   user_candidates: candidates[index],
-                  duration_elapsed: durationsElapsed[index] ?? 0
+                  duration_elapsed: durationsElapsed[index] ?? 0,
+                  updated: new Date()
                 })
-                .execute()
+                .where(eq(sudokuEntries.id, existingEntry.id))
             } else {
-              return pb.create
-                .collection('entries')
-                .data({
-                  session: sessionId,
-                  index,
-                  difficulty,
-                  board,
-                  user_answers: userInputs[index],
-                  user_candidates: candidates[index],
-                  duration_elapsed: durationsElapsed[index] ?? 0
-                })
-                .execute()
-            }
-          })
-        )
-      } else {
-        session = await pb.create
-          .collection('sessions')
-          .data({ current_board_index: currentBoardIndex })
-          .execute()
-
-        await Promise.all(
-          boards.map((board, index) =>
-            pb.create
-              .collection('entries')
-              .data({
-                session: session.id,
+              await db.insert(sudokuEntries).values({
+                session: sessionId,
                 index,
                 difficulty,
                 board,
@@ -422,8 +396,27 @@ export const save = forge
                 user_candidates: candidates[index],
                 duration_elapsed: durationsElapsed[index] ?? 0
               })
-              .execute()
-          )
+            }
+          })
+        )
+      } else {
+        const [created] = await db
+          .insert(sudokuSessions)
+          .values({ current_board_index: currentBoardIndex })
+          .returning()
+
+        session = created
+
+        await db.insert(sudokuEntries).values(
+          boards.map((board, index) => ({
+            session: session.id,
+            index,
+            difficulty,
+            board,
+            user_answers: userInputs[index],
+            user_candidates: candidates[index],
+            duration_elapsed: durationsElapsed[index] ?? 0
+          }))
         )
       }
 
@@ -436,30 +429,17 @@ export const remove = forge
     description: 'Delete Sudoku session',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), sudokuSessions)
       })
     },
-    existenceCheck: {
-      query: { id: 'sessions' }
-    },
     output: {
-      NO_CONTENT: true,
-      NOT_FOUND: true
+      NO_CONTENT: true
     }
   })
-  .callback(async ({ pb, query: { id }, response }) => {
-    const entries = await pb.getFullList
-      .collection('entries')
-      .filter([{ field: 'session', operator: '=', value: id }])
-      .execute()
+  .callback(async ({ db, query: { id }, response }) => {
+    await db.delete(sudokuEntries).where(eq(sudokuEntries.session, id))
 
-    await Promise.all(
-      entries.map(entry =>
-        pb.delete.collection('entries').id(entry.id).execute()
-      )
-    )
-
-    await pb.delete.collection('sessions').id(id).execute()
+    await db.delete(sudokuSessions).where(eq(sudokuSessions.id, id))
 
     return response.noContent()
   })
@@ -474,28 +454,24 @@ export const markComplete = forge
       })
     },
     output: {
-      OK: z.object({ success: z.boolean() }),
-      BAD_REQUEST: z.string()
+      OK: z.object({ success: z.boolean() })
     }
   })
-  .callback(async ({ pb, body: { sessionId, boardIndex }, response }) => {
-    const entries = await pb.getFullList
-      .collection('entries')
-      .filter([
-        { field: 'session', operator: '=', value: sessionId },
-        { field: 'index', operator: '=', value: boardIndex }
-      ])
-      .execute()
+  .callback(async ({ db, body: { sessionId, boardIndex }, response }) => {
+    const entry = await db.query.entries.findFirst({
+      where: {
+        AND: [{ session: sessionId }, { index: boardIndex }]
+      }
+    })
 
-    if (entries.length === 0) {
+    if (!entry) {
       return response.badRequest('Board entry not found')
     }
 
-    await pb.update
-      .collection('entries')
-      .id(entries[0].id)
-      .data({ is_completed: true })
-      .execute()
+    await db
+      .update(sudokuEntries)
+      .set({ is_completed: true, updated: new Date() })
+      .where(eq(sudokuEntries.id, entry.id))
 
     return response.ok({ success: true })
   })
@@ -510,32 +486,29 @@ export const resetBoard = forge
       })
     },
     output: {
-      OK: z.object({ success: z.boolean() }),
-      BAD_REQUEST: z.string()
+      OK: z.object({ success: z.boolean() })
     }
   })
-  .callback(async ({ pb, body: { sessionId, boardIndex }, response }) => {
-    const entries = await pb.getFullList
-      .collection('entries')
-      .filter([
-        { field: 'session', operator: '=', value: sessionId },
-        { field: 'index', operator: '=', value: boardIndex }
-      ])
-      .execute()
+  .callback(async ({ db, body: { sessionId, boardIndex }, response }) => {
+    const entry = await db.query.entries.findFirst({
+      where: {
+        AND: [{ session: sessionId }, { index: boardIndex }]
+      }
+    })
 
-    if (entries.length === 0) {
+    if (!entry) {
       return response.badRequest('Board entry not found')
     }
 
-    await pb.update
-      .collection('entries')
-      .id(entries[0].id)
-      .data({
+    await db
+      .update(sudokuEntries)
+      .set({
         user_answers: Array(81).fill(''),
         user_candidates: Array(81).fill([]),
-        is_completed: false
+        is_completed: false,
+        updated: new Date()
       })
-      .execute()
+      .where(eq(sudokuEntries.id, entry.id))
 
     return response.ok({ success: true })
   })
@@ -547,11 +520,10 @@ export const stats = forge
       OK: StatsResponseSchema
     }
   })
-  .callback(async ({ pb, response }) => {
-    const allEntries = await pb.getFullList
-      .collection('entries')
-      .expand({ session: 'sessions' })
-      .execute()
+  .callback(async ({ db, response }) => {
+    const allEntries = await db.query.entries.findMany({
+      with: { session_info: true }
+    })
 
     const difficulties = ['easy', 'medium', 'hard', 'expert', 'evil', 'extreme']
 
@@ -588,7 +560,7 @@ export const stats = forge
     for (const entry of allEntries) {
       const difficulty = entry.difficulty as string
 
-      const session = entry.expand?.session
+      const session = entry.session_info
 
       if (!statsByDifficulty[difficulty]) continue
 
@@ -596,9 +568,9 @@ export const stats = forge
 
       const isCompleted = entry.is_completed as boolean
 
-      const duration = (entry.duration_elapsed as number) || 0
+      const duration = entry.duration_elapsed || 0
 
-      const createdDate = new Date(entry.created as string)
+      const createdDate = new Date(entry.created)
 
       const monthKey = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, '0')}`
 
@@ -620,7 +592,7 @@ export const stats = forge
         }
 
         if (session) {
-          const completedDate = new Date(session.updated as string)
+          const completedDate = new Date(session.updated)
             .toISOString()
             .split('T')[0]
 
@@ -823,18 +795,18 @@ export const getActivities = forge
       })
     }
   })
-  .callback(async ({ pb, query: { year }, response }) => {
-    const allEntries = await pb.getFullList
-      .collection('entries')
-      .filter([{ field: 'is_completed', operator: '=', value: true }])
-      .execute()
+  .callback(async ({ db, query: { year }, response }) => {
+    const allEntries = await db
+      .select({ created: sudokuEntries.created })
+      .from(sudokuEntries)
+      .where(eq(sudokuEntries.is_completed, true))
 
     const completionsByDate: Record<string, number> = {}
 
     let firstYear = parseInt(year)
 
     for (const entry of allEntries) {
-      const createdDate = new Date(entry.created as string)
+      const createdDate = new Date(entry.created)
 
       const entryYear = createdDate.getFullYear()
 
