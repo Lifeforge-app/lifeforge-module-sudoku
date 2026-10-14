@@ -190,7 +190,7 @@ export function BoardStateProvider({ children }: { children: ReactNode }) {
       const cands = entries.map(entry => {
         const c = (entry.user_candidates as number[][]) || Array(81).fill([])
 
-        return c.map(cell => new Set(cell ?? []))
+        return c.map(cell => new Set(cell))
       })
 
       setAllUserInputs(inputs)

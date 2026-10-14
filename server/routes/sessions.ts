@@ -299,6 +299,10 @@ export const create = forge
       .values({ current_board_index: 0 })
       .returning()
 
+    if (!session) {
+      return response.badRequest('Failed to create session')
+    }
+
     await db.insert(sudokuEntries).values(
       boards.map((board, index) => ({
         session: session.id,
@@ -364,6 +368,10 @@ export const save = forge
           .where(eq(sudokuSessions.id, sessionId))
           .returning()
 
+        if (!updated) {
+          return response.notFound()
+        }
+
         session = updated
 
         const existingEntries = await db
@@ -404,6 +412,10 @@ export const save = forge
           .insert(sudokuSessions)
           .values({ current_board_index: currentBoardIndex })
           .returning()
+
+        if (!created) {
+          return response.badRequest('Failed to create session')
+        }
 
         session = created
 
@@ -592,9 +604,8 @@ export const stats = forge
         }
 
         if (session) {
-          const completedDate = new Date(session.updated)
-            .toISOString()
-            .split('T')[0]
+          const completedDate =
+            new Date(session.updated).toISOString().split('T')[0] ?? ''
 
           completionDates.add(completedDate)
 
@@ -672,7 +683,13 @@ export const stats = forge
     }
 
     const difficultyStats = difficulties.map(diff => {
-      const stats = statsByDifficulty[diff]
+      const stats = statsByDifficulty[diff] ?? {
+        totalBoards: 0,
+        completedBoards: 0,
+        totalTime: 0,
+        bestTime: null,
+        times: []
+      }
 
       const timeRanges = {
         under2min: 0,
@@ -746,9 +763,8 @@ export const stats = forge
     const recentActivity: Array<{ date: string; count: number }> = []
 
     for (let i = 6; i >= 0; i--) {
-      const date = new Date(Date.now() - i * 86400000)
-        .toISOString()
-        .split('T')[0]
+      const date =
+        new Date(Date.now() - i * 86400000).toISOString().split('T')[0] ?? ''
 
       recentActivity.push({
         date,
@@ -815,7 +831,7 @@ export const getActivities = forge
       }
 
       if (entryYear === parseInt(year)) {
-        const dateStr = createdDate.toISOString().split('T')[0]
+        const dateStr = createdDate.toISOString().split('T')[0] ?? ''
 
         completionsByDate[dateStr] = (completionsByDate[dateStr] || 0) + 1
       }
@@ -834,7 +850,7 @@ export const getActivities = forge
       date <= endDate;
       date.setDate(date.getDate() + 1)
     ) {
-      const dateStr = date.toISOString().split('T')[0]
+      const dateStr = date.toISOString().split('T')[0] ?? ''
 
       const count = completionsByDate[dateStr] || 0
 
