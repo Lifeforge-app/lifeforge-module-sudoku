@@ -1,30 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
-import { cloneElement, useState } from 'react'
-import { ActivityCalendar as ReactActivityCalendar } from 'react-activity-calendar'
+import { useState } from 'react'
 
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
-  Box,
+  ActivityCalendar,
   EmptyStateScreen,
   Flex,
   Listbox,
   ListboxOption,
   Stack,
   Text,
-  Tooltip,
   Widget,
   WithQuery,
-  anyColorToHex,
   colorWithOpacity,
-  surface,
-  usePersonalization
+  surface
 } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
-function ActivityCalendar() {
+function SudokuActivityCalendar() {
   const { t } = useModuleTranslation()
-  const { derivedTheme, derivedThemeColor: themeColor } = usePersonalization()
   const [year, setYear] = useState(new Date().getFullYear())
 
   const dataQuery = useQuery(
@@ -45,8 +40,19 @@ function ActivityCalendar() {
       title={t('stats.activityCalendar')}
     >
       <WithQuery query={dataQuery}>
-        {({ data: activities, firstYear }) =>
-          activities.length > 0 ? (
+        {({ data: activities, firstYear }) => {
+          if (activities.length === 0) {
+            return (
+              <EmptyStateScreen
+                icon="tabler:calendar-off"
+                message={{
+                  id: 'activities'
+                }}
+              />
+            )
+          }
+
+          return (
             <>
               <Listbox
                 bg={{ ...surface.defaultInteractive, dark: 'bg-800' }}
@@ -65,33 +71,19 @@ function ActivityCalendar() {
                   ))}
               </Listbox>
               <Flex gap="2xl" mt="md" width="100%">
-                <Box height="15rem" minWidth="0" width="100%">
-                  <ReactActivityCalendar
-                    showWeekdayLabels
-                    blockMargin={5}
-                    blockSize={16}
-                    colorScheme="dark"
-                    data={activities}
-                    labels={{
-                      totalCount: `${activities.reduce((a, b) => a + b.count, 0)} ${t('stats.puzzlesCompleted')} {{year}}`
-                    }}
-                    maxLevel={4}
-                    renderBlock={(block, activity) =>
-                      cloneElement(block, {
-                        'data-tooltip-id': 'sudoku-activity-tooltip',
-                        'data-tooltip-content': `${activity.count} ${t('stats.puzzlesOn')} ${activity.date}`
-                      } as unknown as Record<string, unknown>)
-                    }
-                    theme={{
-                      dark: [
-                        derivedTheme === 'dark'
-                          ? 'rgb(38, 38, 38)'
-                          : 'rgb(229, 229, 229)',
-                        anyColorToHex(themeColor) || '#a9d066'
-                      ]
-                    }}
-                  />
-                </Box>
+                <ActivityCalendar
+                  blockMargin={5}
+                  blockSize={16}
+                  data={activities}
+                  height="15rem"
+                  labels={{
+                    totalCount: `${activities.reduce((a, b) => a + b.count, 0)} ${t('stats.puzzlesCompleted')} {{year}}`
+                  }}
+                  maxLevel={4}
+                  tooltipContent={activity =>
+                    `${activity.count} ${t('stats.puzzlesOn')} ${activity.date}`
+                  }
+                />
                 <Stack
                   display={{ base: 'none', md: 'flex' }}
                   gap="sm"
@@ -143,19 +135,11 @@ function ActivityCalendar() {
                 </Stack>
               </Flex>
             </>
-          ) : (
-            <EmptyStateScreen
-              icon="tabler:calendar-off"
-              message={{
-                id: 'activities'
-              }}
-            />
           )
-        }
+        }}
       </WithQuery>
-      <Tooltip id="sudoku-activity-tooltip" />
     </Widget>
   )
 }
 
-export default ActivityCalendar
+export default SudokuActivityCalendar
