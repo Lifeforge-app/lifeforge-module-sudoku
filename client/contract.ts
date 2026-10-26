@@ -1,1041 +1,299 @@
-export const contract = {
-  "generateBoard": {
-    "method": "get",
-    "description": "Generate Sudoku boards from external API",
-    "noAuth": false,
-    "encrypted": true,
-    "isDownloadable": false,
-    "media": null,
-    "input": {
-      "query": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "type": "object",
-        "properties": {
-          "difficulty": {
-            "type": "string",
-            "enum": [
-              "easy",
-              "medium",
-              "hard",
-              "expert",
-              "evil",
-              "extreme"
-            ]
-          },
-          "count": {
-            "default": "6",
-            "type": "string"
-          }
-        },
-        "required": [
-          "difficulty",
-          "count"
-        ],
-        "additionalProperties": false
-      }
-    },
-    "output": {
-      "OK": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "mission": {
-              "type": "string"
-            },
-            "solution": {
-              "type": "string"
-            },
-            "win_rate": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "id",
-            "mission",
-            "solution",
-            "win_rate"
-          ],
-          "additionalProperties": false
-        }
-      }
-    }
-  },
-  "sessions": {
-    "create": {
-      "method": "post",
-      "description": "Create a new Sudoku session",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "body": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "difficulty": {
-              "type": "string",
-              "enum": [
-                "easy",
-                "medium",
-                "hard",
-                "expert",
-                "evil",
-                "extreme"
-              ]
-            },
-            "boardCount": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 6
-            }
-          },
-          "required": [
-            "difficulty",
-            "boardCount"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "sessionId": {
-              "type": "string"
-            },
-            "boards": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "mission": {
-                    "type": "string"
-                  },
-                  "solution": {
-                    "type": "string"
-                  },
-                  "win_rate": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "id",
-                  "mission",
-                  "solution",
-                  "win_rate"
-                ],
-                "additionalProperties": false
-              }
-            }
-          },
-          "required": [
-            "sessionId",
-            "boards"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "get": {
-      "method": "get",
-      "description": "Get a specific Sudoku session",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "query": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "session": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uuid",
-                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                },
-                "current_board_index": {
-                  "type": "integer",
-                  "minimum": -2147483648,
-                  "maximum": 2147483647
-                },
-                "created": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updated": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              },
-              "required": [
-                "id",
-                "current_board_index",
-                "created",
-                "updated"
-              ],
-              "additionalProperties": false
-            },
-            "entries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uuid",
-                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                  },
-                  "difficulty": {
-                    "type": "string"
-                  },
-                  "duration_elapsed": {
-                    "type": "integer",
-                    "minimum": -2147483648,
-                    "maximum": 2147483647
-                  },
-                  "board": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "mission": {
-                            "type": "string"
-                          },
-                          "solution": {
-                            "type": "string"
-                          },
-                          "win_rate": {
-                            "type": "number"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "mission",
-                          "solution",
-                          "win_rate"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "user_answers": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "user_candidates": {
-                    "type": "array",
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    }
-                  },
-                  "session": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "index": {
-                    "type": "integer",
-                    "minimum": -2147483648,
-                    "maximum": 2147483647
-                  },
-                  "is_completed": {
-                    "type": "boolean"
-                  },
-                  "created": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "updated": {
-                    "type": "string",
-                    "format": "date-time"
-                  }
-                },
-                "required": [
-                  "id",
-                  "difficulty",
-                  "duration_elapsed",
-                  "board",
-                  "user_answers",
-                  "user_candidates",
-                  "session",
-                  "index",
-                  "is_completed",
-                  "created",
-                  "updated"
-                ],
-                "additionalProperties": false
-              }
-            }
-          },
-          "required": [
-            "session",
-            "entries"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "getActive": {
-      "method": "get",
-      "description": "Get the active Sudoku session",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {},
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "session": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                    },
-                    "current_board_index": {
-                      "type": "integer",
-                      "minimum": -2147483648,
-                      "maximum": 2147483647
-                    },
-                    "created": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updated": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "current_board_index",
-                    "created",
-                    "updated"
-                  ],
-                  "additionalProperties": false
-                },
-                "entries": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid",
-                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                      },
-                      "difficulty": {
-                        "type": "string"
-                      },
-                      "duration_elapsed": {
-                        "type": "integer",
-                        "minimum": -2147483648,
-                        "maximum": 2147483647
-                      },
-                      "board": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "mission": {
-                                "type": "string"
-                              },
-                              "solution": {
-                                "type": "string"
-                              },
-                              "win_rate": {
-                                "type": "number"
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "mission",
-                              "solution",
-                              "win_rate"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "user_answers": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "user_candidates": {
-                        "type": "array",
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      "session": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "format": "uuid",
-                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "index": {
-                        "type": "integer",
-                        "minimum": -2147483648,
-                        "maximum": 2147483647
-                      },
-                      "is_completed": {
-                        "type": "boolean"
-                      },
-                      "created": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updated": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "difficulty",
-                      "duration_elapsed",
-                      "board",
-                      "user_answers",
-                      "user_candidates",
-                      "session",
-                      "index",
-                      "is_completed",
-                      "created",
-                      "updated"
-                    ],
-                    "additionalProperties": false
-                  }
-                }
-              },
-              "required": [
-                "session",
-                "entries"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
-    "getActivities": {
-      "method": "get",
-      "description": "Get Sudoku activities for calendar",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "query": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "year": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "year"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "date": {
-                    "type": "string"
-                  },
-                  "count": {
-                    "type": "number"
-                  },
-                  "level": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "date",
-                  "count",
-                  "level"
-                ],
-                "additionalProperties": false
-              }
-            },
-            "firstYear": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "data",
-            "firstYear"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "list": {
-      "method": "get",
-      "description": "List all Sudoku sessions",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "query": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "difficulty": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "difficulty": {
-                "type": "string"
-              },
-              "boardCount": {
-                "type": "number"
-              },
-              "currentBoardIndex": {
-                "type": "number"
-              },
-              "progress": {
-                "type": "object",
-                "properties": {
-                  "total": {
-                    "type": "number"
-                  },
-                  "filled": {
-                    "type": "number"
-                  },
-                  "correct": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "total",
-                  "filled",
-                  "correct"
-                ],
-                "additionalProperties": false
-              },
-              "totalDuration": {
-                "type": "number"
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updated": {
-                "type": "string",
-                "format": "date-time"
-              }
-            },
-            "required": [
-              "id",
-              "difficulty",
-              "boardCount",
-              "currentBoardIndex",
-              "progress",
-              "totalDuration",
-              "created",
-              "updated"
-            ],
-            "additionalProperties": false
-          }
-        }
-      }
-    },
-    "markComplete": {
-      "method": "post",
-      "description": "Mark a Sudoku board as completed",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "body": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "sessionId": {
-              "type": "string"
-            },
-            "boardIndex": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "sessionId",
-            "boardIndex"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "success": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "success"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "remove": {
-      "method": "post",
-      "description": "Delete Sudoku session",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "query": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "NO_CONTENT": true
-      }
-    },
-    "resetBoard": {
-      "method": "post",
-      "description": "Reset a Sudoku board to initial state",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "body": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "sessionId": {
-              "type": "string"
-            },
-            "boardIndex": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "sessionId",
-            "boardIndex"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "success": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "success"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "save": {
-      "method": "post",
-      "description": "Save Sudoku session progress",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "body": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "sessionId": {
-              "type": "string"
-            },
-            "currentBoardIndex": {
-              "type": "number"
-            },
-            "difficulty": {
-              "type": "string"
-            },
-            "boards": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "mission": {
-                    "type": "string"
-                  },
-                  "solution": {
-                    "type": "string"
-                  },
-                  "win_rate": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "id",
-                  "mission",
-                  "solution",
-                  "win_rate"
-                ],
-                "additionalProperties": false
-              }
-            },
-            "userInputs": {
-              "type": "array",
-              "items": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "candidates": {
-              "type": "array",
-              "items": {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  }
-                }
-              }
-            },
-            "durationsElapsed": {
-              "default": [],
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            }
-          },
-          "required": [
-            "currentBoardIndex",
-            "difficulty",
-            "boards",
-            "userInputs",
-            "candidates",
-            "durationsElapsed"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "sessionId": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "sessionId"
-          ],
-          "additionalProperties": false
-        }
-      }
-    },
-    "stats": {
-      "method": "get",
-      "description": "Get Sudoku statistics",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {},
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "overall": {
-              "type": "object",
-              "properties": {
-                "totalBoards": {
-                  "type": "number"
-                },
-                "totalPlayTime": {
-                  "type": "number"
-                },
-                "daysPlayed": {
-                  "type": "number"
-                }
-              },
-              "required": [
-                "totalBoards",
-                "totalPlayTime",
-                "daysPlayed"
-              ],
-              "additionalProperties": false
-            },
-            "streak": {
-              "type": "object",
-              "properties": {
-                "current": {
-                  "type": "number"
-                },
-                "longest": {
-                  "type": "number"
-                },
-                "isActive": {
-                  "type": "boolean"
-                }
-              },
-              "required": [
-                "current",
-                "longest",
-                "isActive"
-              ],
-              "additionalProperties": false
-            },
-            "byDifficulty": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "difficulty": {
-                    "type": "string"
-                  },
-                  "totalBoards": {
-                    "type": "number"
-                  },
-                  "avgTime": {
-                    "anyOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "bestTime": {
-                    "anyOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "totalTime": {
-                    "type": "number"
-                  },
-                  "timeDistribution": {
-                    "type": "object",
-                    "properties": {
-                      "under2min": {
-                        "type": "number"
-                      },
-                      "under5min": {
-                        "type": "number"
-                      },
-                      "under10min": {
-                        "type": "number"
-                      },
-                      "under20min": {
-                        "type": "number"
-                      },
-                      "over20min": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "under2min",
-                      "under5min",
-                      "under10min",
-                      "under20min",
-                      "over20min"
-                    ],
-                    "additionalProperties": false
-                  }
-                },
-                "required": [
-                  "difficulty",
-                  "totalBoards",
-                  "avgTime",
-                  "bestTime",
-                  "totalTime",
-                  "timeDistribution"
-                ],
-                "additionalProperties": false
-              }
-            },
-            "completionHistory": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "month": {
-                    "type": "string"
-                  },
-                  "completed": {
-                    "type": "number"
-                  },
-                  "total": {
-                    "type": "number"
-                  },
-                  "rate": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "month",
-                  "completed",
-                  "total",
-                  "rate"
-                ],
-                "additionalProperties": false
-              }
-            },
-            "recentActivity": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "date": {
-                    "type": "string"
-                  },
-                  "count": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "date",
-                  "count"
-                ],
-                "additionalProperties": false
-              }
-            }
-          },
-          "required": [
-            "overall",
-            "streak",
-            "byDifficulty",
-            "completionHistory",
-            "recentActivity"
-          ],
-          "additionalProperties": false
-        }
-      }
-    }
-  }
-} as const
+export type EndpointGenerateBoard_OutputOK = {
+  id: number;
+  mission: string;
+  solution: string;
+  win_rate: number;
+}[];
+export type EndpointSessionsGetActive_OutputOK = {
+  session: {
+    id: string;
+    current_board_index: number;
+    created: string;
+    updated: string;
+  };
+  entries: {
+    id: string;
+    difficulty: string;
+    duration_elapsed: number;
+    board: {
+      id: number;
+      mission: string;
+      solution: string;
+      win_rate: number;
+    } | null;
+    user_answers: string[];
+    user_candidates: number[][];
+    session: string | null;
+    index: number;
+    is_completed: boolean;
+    created: string;
+    updated: string;
+  }[];
+} | null;
+export type EndpointSessionsList_OutputOK = {
+  id: string;
+  difficulty: string;
+  boardCount: number;
+  currentBoardIndex: number;
+  progress: {
+    total: number;
+    filled: number;
+    correct: number;
+  };
+  totalDuration: number;
+  created: string;
+  updated: string;
+}[];
+export type EndpointSessionsRemove_OutputNO_CONTENT = void;
 
-export default contract
+export interface Contract {
+  generateBoard: EndpointGenerateBoard;
+  sessions: {
+    create: EndpointSessionsCreate;
+    get: EndpointSessionsGet;
+    getActive: EndpointSessionsGetActive;
+    getActivities: EndpointSessionsGetActivities;
+    list: EndpointSessionsList;
+    markComplete: EndpointSessionsMarkComplete;
+    remove: EndpointSessionsRemove;
+    resetBoard: EndpointSessionsResetBoard;
+    save: EndpointSessionsSave;
+    stats: EndpointSessionsStats;
+  };
+}
+export interface EndpointGenerateBoard {
+  method: "get";
+  input: {
+    query?: EndpointGenerateBoard_InputQuery;
+  };
+  output: {
+    OK: EndpointGenerateBoard_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointGenerateBoard_InputQuery {
+  difficulty: "easy" | "medium" | "hard" | "expert" | "evil" | "extreme";
+  count: string;
+}
+export interface EndpointSessionsCreate {
+  method: "post";
+  input: {
+    body?: EndpointSessionsCreate_InputBody;
+  };
+  output: {
+    OK: EndpointSessionsCreate_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsCreate_InputBody {
+  difficulty: "easy" | "medium" | "hard" | "expert" | "evil" | "extreme";
+  boardCount: number;
+}
+export interface EndpointSessionsCreate_OutputOK {
+  sessionId: string;
+  boards: {
+    id: number;
+    mission: string;
+    solution: string;
+    win_rate: number;
+  }[];
+}
+export interface EndpointSessionsGet {
+  method: "get";
+  input: {
+    query?: EndpointSessionsGet_InputQuery;
+  };
+  output: {
+    OK: EndpointSessionsGet_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsGet_InputQuery {
+  id: string;
+}
+export interface EndpointSessionsGet_OutputOK {
+  session: {
+    id: string;
+    current_board_index: number;
+    created: string;
+    updated: string;
+  };
+  entries: {
+    id: string;
+    difficulty: string;
+    duration_elapsed: number;
+    board: {
+      id: number;
+      mission: string;
+      solution: string;
+      win_rate: number;
+    } | null;
+    user_answers: string[];
+    user_candidates: number[][];
+    session: string | null;
+    index: number;
+    is_completed: boolean;
+    created: string;
+    updated: string;
+  }[];
+}
+export interface EndpointSessionsGetActive {
+  method: "get";
+  input: {};
+  output: {
+    OK: EndpointSessionsGetActive_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsGetActivities {
+  method: "get";
+  input: {
+    query?: EndpointSessionsGetActivities_InputQuery;
+  };
+  output: {
+    OK: EndpointSessionsGetActivities_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsGetActivities_InputQuery {
+  year: string;
+}
+export interface EndpointSessionsGetActivities_OutputOK {
+  data: {
+    date: string;
+    count: number;
+    level: number;
+  }[];
+  firstYear: number;
+}
+export interface EndpointSessionsList {
+  method: "get";
+  input: {
+    query?: EndpointSessionsList_InputQuery;
+  };
+  output: {
+    OK: EndpointSessionsList_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsList_InputQuery {
+  difficulty?: string;
+}
+export interface EndpointSessionsMarkComplete {
+  method: "post";
+  input: {
+    body?: EndpointSessionsMarkComplete_InputBody;
+  };
+  output: {
+    OK: EndpointSessionsMarkComplete_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsMarkComplete_InputBody {
+  sessionId: string;
+  boardIndex: number;
+}
+export interface EndpointSessionsMarkComplete_OutputOK {
+  success: boolean;
+}
+export interface EndpointSessionsRemove {
+  method: "post";
+  input: {
+    query?: EndpointSessionsRemove_InputQuery;
+  };
+  output: {
+    NO_CONTENT: EndpointSessionsRemove_OutputNO_CONTENT;
+  };
+  media: null;
+}
+export interface EndpointSessionsRemove_InputQuery {
+  id: string;
+}
+export interface EndpointSessionsResetBoard {
+  method: "post";
+  input: {
+    body?: EndpointSessionsResetBoard_InputBody;
+  };
+  output: {
+    OK: EndpointSessionsResetBoard_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsResetBoard_InputBody {
+  sessionId: string;
+  boardIndex: number;
+}
+export interface EndpointSessionsResetBoard_OutputOK {
+  success: boolean;
+}
+export interface EndpointSessionsSave {
+  method: "post";
+  input: {
+    body?: EndpointSessionsSave_InputBody;
+  };
+  output: {
+    OK: EndpointSessionsSave_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsSave_InputBody {
+  sessionId?: string;
+  currentBoardIndex: number;
+  difficulty: string;
+  boards: {
+    id: number;
+    mission: string;
+    solution: string;
+    win_rate: number;
+  }[];
+  userInputs: string[][];
+  candidates: number[][][];
+  durationsElapsed: number[];
+}
+export interface EndpointSessionsSave_OutputOK {
+  sessionId: string;
+}
+export interface EndpointSessionsStats {
+  method: "get";
+  input: {};
+  output: {
+    OK: EndpointSessionsStats_OutputOK;
+  };
+  media: null;
+}
+export interface EndpointSessionsStats_OutputOK {
+  overall: {
+    totalBoards: number;
+    totalPlayTime: number;
+    daysPlayed: number;
+  };
+  streak: {
+    current: number;
+    longest: number;
+    isActive: boolean;
+  };
+  byDifficulty: {
+    difficulty: string;
+    totalBoards: number;
+    avgTime: number | null;
+    bestTime: number | null;
+    totalTime: number;
+    timeDistribution: {
+      under2min: number;
+      under5min: number;
+      under10min: number;
+      under20min: number;
+      over20min: number;
+    };
+  }[];
+  completionHistory: {
+    month: string;
+    completed: number;
+    total: number;
+    rate: number;
+  }[];
+  recentActivity: {
+    date: string;
+    count: number;
+  }[];
+}
