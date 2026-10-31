@@ -570,7 +570,7 @@ export const stats = forge
     > = {}
 
     for (const entry of allEntries) {
-      const difficulty = entry.difficulty as string
+      const difficulty = entry.difficulty
 
       const session = entry.session_info
 
@@ -578,7 +578,7 @@ export const stats = forge
 
       statsByDifficulty[difficulty].totalBoards++
 
-      const isCompleted = entry.is_completed as boolean
+      const isCompleted = entry.is_completed
 
       const duration = entry.duration_elapsed || 0
 
@@ -598,7 +598,7 @@ export const stats = forge
 
         if (
           statsByDifficulty[difficulty].bestTime === null ||
-          duration < statsByDifficulty[difficulty].bestTime!
+          duration < statsByDifficulty[difficulty].bestTime
         ) {
           statsByDifficulty[difficulty].bestTime = duration
         }
